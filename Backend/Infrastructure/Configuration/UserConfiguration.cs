@@ -17,5 +17,5 @@ namespace Infrastructure.Configuration
             builder.HasKey(x => x.Id);
         }
     }
-    
+
 }
