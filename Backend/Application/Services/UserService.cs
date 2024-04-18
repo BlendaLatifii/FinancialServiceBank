@@ -23,8 +23,6 @@ namespace Application.Services
 
             var usermodel = _mapper.Map<List<UserModel>>(users);
             return usermodel;
-
-
         }
 
         public async Task GetUserById( Guid userId, CancellationToken cancellationToken)

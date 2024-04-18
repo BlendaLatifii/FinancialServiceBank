@@ -12,9 +12,10 @@ namespace Infrastructure.Data
 
         }
 
-        public DbSet<User> Users { get; set; }
-        public DbSet<Role> Roles { get; set; }
-        public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<User> Users { get; set; } = default!;
+        public DbSet<Role> Roles { get; set; } = default!;
+        public DbSet<UserRole> UserRoles { get; set; } = default!;
+        public DbSet<Branch> Branches { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -60,27 +60,27 @@ namespace Api.Controllers
         [Route("{id}")]
         public async Task<IActionResult> UpdateUser([FromRoute] Guid id, UserModel model , CancellationToken cancellationToken)
         {
-            var users = await appDbContext.Users
+            var user = await appDbContext.Users
                .Where(x => x.Id == id)
                .FirstOrDefaultAsync(cancellationToken);
 
-            if (users == null)
+            if (user == null)
             {
                 return NotFound();
             }  
 
-            users.UserName = model.UserName;
-            users.LastName = model.LastName;
-            users.Email = model.Email;
+            user.UserName = model.UserName;
+            user.LastName = model.LastName;
+            user.Email = model.Email;
 
             await appDbContext.SaveChangesAsync(cancellationToken);
 
             var updatedUserModel = new UserModel
             {
-                Id = users.Id,
-                UserName = users.UserName,
-                LastName = users.LastName,
-                Email = users.Email
+                Id = user.Id, 
+                UserName = user.UserName,
+                LastName = user.LastName,
+                Email = user.Email
             };
             return Ok(updatedUserModel);
         }
