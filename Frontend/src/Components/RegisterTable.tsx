@@ -1,15 +1,29 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Table, Button, Input } from "semantic-ui-react";
-import EditUser from "./EditUser";
 import { User } from "../interfaces/users";
+import axios from 'axios';
 
-export default function RegisterTable(props: 
-  { 
-    users:User[];
-   deleteUser: (arg0: React.Key | null | undefined) => void;
-   registerUser: () => void;
-   }) {
+export default function RegisterTable() {
+
+    const [users,setUsers] = useState<User[]>([]);
+
+    function editUser(){
+
+    }
+   useEffect(()=>{
+    const fetchData = async () => {
+      try {
+        const result = await axios.put('https://localhost:7254/api/Users');
+        setUsers(result.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []); 
   return (
+
     <Fragment>
       <h1 style={{ marginLeft: "30px" }}>User Registration</h1>
       <Table
@@ -32,19 +46,19 @@ export default function RegisterTable(props:
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {props.users.map((user: User) => (
+          {users.map((user: User) => (
             <Table.Row key={user.id}>
-              <Table.Cell>{user.username}</Table.Cell>
-              <Table.Cell>{user.lastname}</Table.Cell>
+              <Table.Cell>{user.userName}</Table.Cell>
+              <Table.Cell>{user.lastName}</Table.Cell>
               <Table.Cell>{user.email}</Table.Cell>
               <Table.Cell>{user.password}</Table.Cell>
               <Table.Cell>
-              <Button type="button" className="btn btn-success" secondary onClick={() => EditUser(user)}>
+              <Button type="button" className="btn btn-success" secondary>
                     Edit
                   </Button>
               </Table.Cell>
               <Table.Cell>
-                <Button type="button" className="btn btn-danger" negative onClick={() => props.deleteUser(user.id)}>
+                <Button type="button" className="btn btn-danger" negative >
                   {" "}
                   Delete
                 </Button>

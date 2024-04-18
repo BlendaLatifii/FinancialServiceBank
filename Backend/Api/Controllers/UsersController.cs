@@ -42,9 +42,9 @@ namespace Api.Controllers
         public async Task<ActionResult<UserModel>> CreateUser(UserModel model)
         {
             var user = new User() {
-                LastName = model.LastName
-                ,UserName = model.UserName
-                ,Email = model.Email
+                LastName = model.LastName,
+                UserName = model.UserName,
+                Email = model.Email
             };
 
            var result = await userManager.CreateAsync(user,model.Password);

@@ -1,7 +1,8 @@
 export interface User {
-  id: React.Key | null | undefined;
-  username: string | null;
-  lastname: string | null;
+  id: string | null | undefined;
   email: string | null;
+  userName: string | null;
+  lastName: string | null;
   password: string | null;
+  token:string | null
 }
