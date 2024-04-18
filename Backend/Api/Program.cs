@@ -86,6 +86,7 @@ builder.Services.AddAuthentication(options =>
 // Add Dependencies here
 
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IBranchService, BranchService>();
 
 builder.Services.AddAutoMapper(typeof(UserMappings));
 
