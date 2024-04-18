@@ -6,16 +6,20 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Application.Services;
+using Domain.Interfaces;
 
 namespace Api.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class AccountController : ControllerBase
     {
         private readonly UserManager<User> userManager;
 
         private readonly TokenService tokenService;
-        private readonly AccountService accountService;
-        public AccountController(UserManager<User> userMenager, TokenService tokenService , AccountService accountService)
+        private readonly IAccountService accountService;
+        public AccountController(UserManager<User> userMenager, 
+            TokenService tokenService , IAccountService accountService)
         {
             this.userManager = userMenager;
             this.tokenService = tokenService;
@@ -32,9 +36,10 @@ namespace Api.Controllers
             }
             return Ok(userModel);
         }
+
         [HttpPost("register")]
 
-        public async Task<ActionResult> Register(RegisterModel registerModel, CancellationToken cancellationToken)
+        public async Task<ActionResult> Register([FromBody] RegisterModel registerModel, CancellationToken cancellationToken)
         {
             var result = await accountService.Register(registerModel, cancellationToken);
             if (!result.Succeeded)

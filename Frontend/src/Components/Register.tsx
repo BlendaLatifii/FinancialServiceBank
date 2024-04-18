@@ -1,10 +1,11 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 export default function Register() {
   const [formData, setFormData] = useState({
-    username: '',
-    lastname: '',
+    userName: '',
+    lastName: '',
     email: '',
     password: '',
     confirmPassword: ''
@@ -20,27 +21,21 @@ export default function Register() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (formData.password!== formData.confirmPassword) {
+    if (formData.password !== formData.confirmPassword) {
       alert('Passwords do not match');
       return;
     }
     try {
-      const response = await fetch('https://localhost:7254/api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData),
-      });
-      if (response.ok) {
-        setRegistered(true);
-        navigate("/RegisterTable");
-      } else {
-        // Handle registration errors
-        const error = await response.json();
-        console.error('Registration failed:', error);
-        alert('Registration failed: ' + error.message);
+      let body = {
+        userName: formData.userName,
+        lastName: formData.lastName,
+        email:formData.email,
+        password: formData.password
       }
+      const response = await axios.post('https://localhost:7254/api/Account/register',
+      body);
+       setRegistered(true);
+       navigate("/RegisterTable");
     } catch (error) {
       console.error('Error registering user:', error);
     }
@@ -69,7 +64,8 @@ export default function Register() {
 
                   <div className="form-outline ">
                     <input
-                      type="text" id="username" className="form-control form-control-lg "  name="username" value={formData.username}
+                      type="text" id="username" className="form-control form-control-lg " 
+                       name="userName" value={formData.userName}
                       onChange={handleChange}
                     />
                     <label className="form-label" htmlFor="username">
@@ -78,7 +74,9 @@ export default function Register() {
                   </div>
 
                   <div className="form-outline ">
-                    <input type="text" id="lastname" className="form-control form-control-lg " name="lastname" value={formData.lastname}
+                    <input type="text" id="lastname" 
+                    className="form-control form-control-lg "
+                     name="lastName" value={formData.lastName}
                       onChange={handleChange}
                     />
                     <label className="form-label" htmlFor="lastname">
