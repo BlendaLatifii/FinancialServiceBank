@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\Backend",
+    "\\Backend\\Application",
+    "\\Backend\\Application\\Mappings",
+    "\\Backend\\Application\\Services",
+    "\\Backend\\Domain",
+    "\\Backend\\Domain\\Entities",
+    "\\Backend\\Domain\\Models",
+    "\\Backend\\Infrastructure",
+    "\\Backend\\Infrastructure\\Migrations"
+  ],
+  "SelectedNode": "\\Backend\\Domain\\Entities\\BankAccount.cs",
+  "PreviewInSolutionExplorer": false
+}
