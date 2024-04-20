@@ -18,42 +18,46 @@ function Login() {
   }
   return (
     <>
-       <section className="vh-100">
-  <div className="container-fluid">
-    <div className="row">
-      <div className="col-sm-6 text-black">
-        <div className="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-5 pt-xl-0 mt-xl-n5">
+<section className="text-center">
+        <div className="p-5 bg-image" style={{
+          marginTop: "-100px",
+          backgroundImage: `url(${process.env.PUBLIC_URL}/log.jpg)`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          height: '300px'
+        }}></div>
+ 
+ <div className="card mx-4 mx-md-5 shadow-5-strong" style={{
+          marginTop: '-100px',
+          background: 'hsla(0, 0%, 100%, 0.8)',
+          backdropFilter: 'blur(40px)'
+        }}>
+    <div className="card-body py-5 px-md-5">
 
-          <form className="border border-primary p-4" style={{width: "23rem" }} onSubmit={handleSubmit(submitForm)}>
-
-          <p style={{color:'blue'}}> Financial Service Bank</p>
-            <h3 className="fw-normal mb-3">Log in</h3>
-
-            <div className="form-outline">
-                    <input type="email" id="form2Example18" className="form-control form-control-lg in-color"
-                      {...register('email', {required: 'Email is required'})}/>
-                    <label className="form-label" htmlFor="form2Example18">Email</label>
-                  </div>
-
-            <div className="form-outline">
-              <input type="password" id="form2Example28" className="form-control form-control-lg in-color"
-               {...register('password' , {required:'password is required'})} />
-              <label className="form-label" htmlFor="form2Example28">Password</label>
+      <div className="row d-flex justify-content-center">
+        <div className="col-lg-8">
+          <h2 className="fw-bold mb-5">Log in</h2>
+          <form  onSubmit={handleSubmit(submitForm)}>
+            
+            <div data-mdb-input-init className="form-outline mb-4">
+              <input type="email" id="email" className="form-control" 
+              {...register('email', {required: 'Email is required'})}/>
+              <label className="form-label" htmlFor="email">Email address</label>
             </div>
 
-            <div className="pt-1 ">
-              <button className="btn btn-info btn-lg btn-block" type="button"> {isSubmitting ? 'Logging in...' : 'Login'}</button>
+            <div data-mdb-input-init className="form-outline mb-4">
+              <input type="password" id="password" className="form-control" 
+              {...register('password' , {required:'password is required'})}/>
+              <label className="form-label" htmlFor="password">Password</label>
             </div>
-
+            
+            <button type="submit" data-mdb-button-init data-mdb-ripple-init className="btn btn-primary btn-block mb-4">
+            {isSubmitting ? 'Logging in...' : 'Login'}
+            </button>
             <p className="small mb-5 pb-lg-2"><a className="text-muted" href="#!">Forgot password?</a></p>
             <p>Don't have an account?<Link to="/Register" className="link-info">Register here</Link></p>
-
           </form>
         </div>
-      </div>
-      <div className="col-sm-6 px-0 d-none d-sm-block">
-        <img src={process.env.PUBLIC_URL + '/photoL.png'}
-          alt="Login image" className="w-70 vh-100" style={{objectFit: "cover", objectPosition: "left"}}/>
       </div>
     </div>
   </div>
@@ -63,6 +67,3 @@ function Login() {
 }
 
 export default Login;
-function useform(): { register: any; gandleSubmit: any; formState: { isSubmitting: any; }; } {
-  throw new Error('Function not implemented.');
-}

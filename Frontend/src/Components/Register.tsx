@@ -42,90 +42,82 @@ export default function Register() {
   };
 
   if (registered) {
-    return <Link to="/RegisterTable" />;
+    return <Link to="/Login" />;
   }
   return (
     <>
-      <section className="vh-100">
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-sm-6 text-black">
-              <div className="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-5 pt-xl-0 mt-xl-n5">
-                <form
-                  className="border border-primary p-4"
-                  style={{ width: '23rem' }}
-                  onSubmit={handleSubmit}
-                >
-                  <div>
-                  <i className="fa fa-credit-card" aria-hidden="true"></i>
-                  <p style={{color:'blue'}}> Financial Service Bank</p>
-                  </div>
-                  <h3 className="fw-normal">Sign up</h3>
+      <section className="text-center">
+        <div className="p-5 bg-image" style={{
+          marginTop: "-100px",
+          backgroundImage: `url(${process.env.PUBLIC_URL}/log.jpg)`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          height: '300px'
+        }}></div>
+ 
+ <div className="card mx-4 mx-md-5 shadow-5-strong" style={{
+          marginTop: '-100px',
+          background: 'hsla(0, 0%, 100%, 0.8)',
+          backdropFilter: 'blur(40px)'
+        }}>
+    <div className="card-body py-5 px-md-5">
 
-                  <div className="form-outline ">
-                    <input
-                      type="text" id="username" className="form-control form-control-lg " 
-                       name="userName" value={formData.userName}
-                      onChange={handleChange}
-                    />
-                    <label className="form-label" htmlFor="username">
-                      Name
-                    </label>
-                  </div>
+      <div className="row d-flex justify-content-center">
+        <div className="col-lg-8">
+          <h2 className="fw-bold mb-5">Sign up now</h2>
+          <form  onSubmit={handleSubmit}>
+            
+            <div className="row">
+              <div className="col-md-6 mb-4">
+                <div data-mdb-input-init className="form-outline">
+                  <input type="text" id="username" className="form-control" name="userName" value={formData.userName}
+                      onChange={handleChange}/>
+                  <label className="form-label" htmlFor="form3Example1"> Username</label>
+                </div>
+              </div>
+              <div className="col-md-6 mb-4">
+                <div data-mdb-input-init className="form-outline">
+                  <input type="text" id="lastname" name="lastname" className="form-control" value={formData.lastName}
+                      onChange={handleChange} />
+                  <label className="form-label" htmlFor="lastname">Last name</label>
+                </div>
+              </div>
+            </div>
 
-                  <div className="form-outline ">
-                    <input type="text" id="lastname" 
-                    className="form-control form-control-lg "
-                     name="lastName" value={formData.lastName}
-                      onChange={handleChange}
-                    />
-                    <label className="form-label" htmlFor="lastname">
-                      LastName
-                    </label>
-                  </div>
+            <div data-mdb-input-init className="form-outline mb-4">
+              <input type="email" id="email" name="email" className="form-control" value={formData.email}
+                      onChange={handleChange} />
+              <label className="form-label" htmlFor="email">Email address</label>
+            </div>
 
-                  <div className="form-outline ">
-                    <input type="email" id="email" className="form-control form-control-lg " name="email" value={formData.email}
-                      onChange={handleChange}
-                    />
-                    <label className="form-label" htmlFor="email">
-                      Email address
-                    </label>
-                  </div>
+            <div data-mdb-input-init className="form-outline mb-4">
+              <input type="password" id="password" className="form-control"   name="password" value={formData.password}
+                      onChange={handleChange} />
+              <label className="form-label" htmlFor="password">Password</label>
+            </div>
 
-                  <div className="form-outline">
-                    <input type="password" id="password" className="form-control form-control-lg" name="password" value={formData.password}
-                      onChange={handleChange}
-                    />
-                    <label className="form-label" htmlFor="password">  Password </label>
-                  </div>
+            <div data-mdb-input-init className="form-outline mb-4">
+              <input type="password" id="confirmPassword" className="form-control"   name="confirmPassword" value={formData.confirmPassword}
+                     onChange={handleChange}/>
+              <label className="form-label" htmlFor="confirmPassword">Confirm Password</label>
+            </div>
 
-                  <div className="form-outline">
-                    <input type="password" id="confirmPassword" className="form-control form-control-lg" name="confirmPassword" value={formData.confirmPassword}
-                      onChange={handleChange}
-                    />
-                    <label className="form-label" htmlFor="confirmPassword">Confirm Password</label>
-                  </div>
+            <button type="submit" data-mdb-button-init data-mdb-ripple-init className="btn btn-primary btn-block mb-4">
+              Sign up
+            </button>
 
-                  <div className="pt-1">
-                    <button className="btn btn-info btn-lg btn-block" type="submit"> Sign up </button>
-                  </div>
-                  <p>
+            <p>
                     Already a member?{' '}
                     <Link to="/Login" className="link-info">
                       Log in
                     </Link>
                   </p>
-                </form>
-              </div>
-              </div>
-              <div className="col-sm-6 px-0 d-none d-sm-block">
-        <img src={process.env.PUBLIC_URL + '/photoL.png'}
-          alt="Login image" className="w-70 vh-100" style={{objectFit: "cover", objectPosition: "left"}}/>
-      </div>
-          </div>
+          </form>
         </div>
-      </section>
+      </div>
+    </div>
+  </div>
+</section>
     </>
   );
 }
