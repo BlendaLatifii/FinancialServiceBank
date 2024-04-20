@@ -22,6 +22,15 @@ export default function RegisterTable() {
 
     fetchData();
   }, []); 
+
+  async function deleteUser(id: string) {
+    try {
+        await axios.delete('https://localhost:7254/api/Users/${id}');
+        setUsers(users.filter(user => user.id !== id));
+    } catch (error) {
+        console.error('Error deleting user:', error);
+    }
+}
   return (
 
     <Fragment>
@@ -58,8 +67,7 @@ export default function RegisterTable() {
                   </Button>
               </Table.Cell>
               <Table.Cell>
-                <Button type="button" className="btn btn-danger" negative >
-                  {" "}
+                <Button type="button" className="btn btn-danger" negative  onClick={() => user.id && deleteUser(user.id)}>
                   Delete
                 </Button>
               </Table.Cell>

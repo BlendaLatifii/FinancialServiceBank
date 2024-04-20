@@ -1,0 +1,30 @@
+.nav-link:active {
+    color: green;
+}
+
+.btn:hover{
+    background-color: rgb(104, 104, 104);
+}
+
+@media screen and (max-width: 768px) {
+    .text-wrap {
+      margin: 5px;
+      align-items: center;
+    }
+
+    .text-wrap p {
+      max-width: 90%;
+    }
+  }
+
+  .menu-text {
+    display: inline-block; /* Bën tekstin dhe ikonën të ndahen në një linjë */
+    margin-right: 5px; /* Vendos një hapësirë të djathtë të tekstit nga ikona */
+}
+
+.icon-right {
+    position: absolute; /* Vendos ikonën në anën e djathtë */
+    right: 10px; /* Vendos një hapësirë të djathtë fikse për ikonën */
+    top: 50%; /* Vendos ikonën në mes të lartësisë së elementit */
+    transform: translateY(-50%); /* Qendron ikonën në mes të lartësisë së elementit */
+}
