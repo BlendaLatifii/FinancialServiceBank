@@ -19,80 +19,91 @@ namespace Api.Controllers
             this.bankAccountService = bankAccountService;
             this.appDbContext = appDbContext;
         }
-		/*[HttpGet]
-         public async Task<ActionResult<List<BankAccount>>> GetAllAsync(CancellationToken cancellationToken)
+		[HttpGet]
+         public async Task<ActionResult<List<BankAccountModel>>> GetAllBankAccountsAsync(CancellationToken cancellationToken)
         {
-            var acc = await bankingAccService.GetAllAsync(cancellationToken);
+            var acc = await bankAccountService.GetAllBankAccountsAsync(cancellationToken);
             return Ok(acc);
         }
-        public async Task<IActionResult<BankAccount>> GetByIdAsync(int id , CancellationToken cancellationToken)
+        public async Task<IActionResult> GetBankAccountById(string AccountTypeID , CancellationToken cancellationToken)
         {
-           await bankingAccountService.GetByIdAsync(id , cancellationToken);
+           await bankAccountService.GetBankAccountById(AccountTypeID, cancellationToken);
             return Ok();
         }
-        */
+        
 		[HttpPost]
-		public async Task<ActionResult<BankAccountModel>> CreateBankAccount([FromBody] BankAccountModel model, CancellationToken cancellationToken)
-		{
-			var bankAcc = new BankAccount()
-            {
-                AccountType = model.AccountType,
-                AccountDescription = model.AccountDescription,
-                CurrentBalance = model.CurrentBalance,
-                Email = model.Email,
-                DateCreated = model.DateCreated
-			};
-
-			await appDbContext.BankAccounts.AddAsync(bankAcc, cancellationToken);
-			await appDbContext.SaveChangesAsync(cancellationToken);
-
-			return CreatedAtAction(nameof(GetByAccountNumber), new { bankAccountNumber = model.AccountNumberGenerated }, model);
-		}
-
-
-		[HttpGet("{bankAccountNumber}")]
-		public async Task<IActionResult> GetByAccountNumber(string bankAccountNumber, CancellationToken cancellationToken)
-		{
-			var account = await bankAccountService.GetByAccountNumber(bankAccountNumber, cancellationToken);
-
-			if (account == null)
-			{
-				return NotFound();
-			}
-
-			return Ok(account);
-		}
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateBankAccount([FromRoute] int id, [FromBody] BankAccountModel model, CancellationToken cancellationToken)
+        public async Task<ActionResult<BankAccountModel>> CreateBankAccount([FromBody] BankAccountModel model, CancellationToken cancellationToken)
         {
-			var acc = await appDbContext.BankAccounts
-               .Where(x => x.ID == id)
-               .FirstOrDefaultAsync(cancellationToken);
-
-            if (acc == null)
+            var acc = new BankAccount()
             {
-                return NotFound();
-            }
+                AccountDescription = model.AccountDescription
+            };
 
-            acc.AccountType= model.AccountType ;
-            acc.AccountDescription=model.AccountDescription;
-
+            await appDbContext.BankAccounts.AddAsync(acc);
             await appDbContext.SaveChangesAsync(cancellationToken);
 
-            var updatedAcc = new BankAccountModel
-            {
-                ID=acc.ID,
-                AccountType=acc.AccountType ,
-                AccountDescription=acc.AccountDescription
-            };
-            return Ok(updatedAcc);
+            return CreatedAtAction(nameof(GetBankAccountById), new { AccountTypeID = model.AccountTypeID });
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAccount(int id, CancellationToken cancellationToken)
+
+		//[HttpGet("{bankAccountNumber}")]
+		//public async Task<IActionResult> GetByAccountNumber(string bankAccountNumber, CancellationToken cancellationToken)
+		//{
+		//	var account = await bankAccountService.GetByAccountNumber(bankAccountNumber, cancellationToken);
+
+		//	if (account == null)
+		//	{
+		//		return NotFound();
+		//	}
+
+		//	return Ok(account);
+		//}
+
+        [HttpPut("{accountTypeID}")]
+        //     public async Task<IActionResult> UpdateBankAccount([FromRoute] int id, [FromBody] BankAccountModel model, CancellationToken cancellationToken)
+        //     {
+        //var acc = await appDbContext.BankAccounts
+        //            .Where(x => x.ID == id)
+        //            .FirstOrDefaultAsync(cancellationToken);
+
+        //         if (acc == null)
+        //         {
+        //             return NotFound();
+        //         }
+
+        //         acc.AccountType= model.AccountType ;
+        //         acc.AccountDescription=model.AccountDescription;
+
+        //         await appDbContext.SaveChangesAsync(cancellationToken);
+
+        //         var updatedAcc = new BankAccountModel
+        //         {
+        //             ID=acc.ID,
+        //             AccountType=acc.AccountType ,
+        //             AccountDescription=acc.AccountDescription
+        //         };
+        //         return Ok(updatedAcc);
+        //     }
+
+        public async Task<BankAccount> UpdateBankAccount(string accountTypeID, BankAccountModel model, CancellationToken cancellationToken)
         {
-            await bankAccountService.DeleteAccount(id, cancellationToken);
+            var acc = await appDbContext.BankAccounts.FindAsync(accountTypeID);
+            if (acc == null)
+            {
+                throw new ArgumentException("Bank account not found.");
+            }
+
+            acc.AccountDescription = model.AccountDescription;
+            acc.AccountTypeID = accountTypeID; // update the accountTypeID as well
+
+            await appDbContext.SaveChangesAsync();
+
+            return acc;
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAccount(string accountTypeID, CancellationToken cancellationToken)
+        {
+            await bankAccountService.DeleteAccount(accountTypeID, cancellationToken);
             return Ok();
         }
     }

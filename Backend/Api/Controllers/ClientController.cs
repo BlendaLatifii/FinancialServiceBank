@@ -21,19 +21,34 @@ namespace Api.Controllers
             this._context = _context;
         }
 
+		public async Task<ActionResult<List<ClientModel>>> GetAllClient(CancellationToken cancellationToken)
+		{
+			var users = await clientService.GetAllClientAsync(cancellationToken);
+
+			return Ok(users);
+		}
+		//[HttpGet]
+		//[Route("{personalNumber}")]
+		//public async Task<IActionResult> GetClientByPersonalNumber(int personalNumber, CancellationToken cancellationToken)
+  //      {
+		//	var client = clientService.GetClientByPersonalNumber(personalNumber, cancellationToken);
+		//	if (client == null)
+		//	{
+		//		return NotFound();
+		//	}
+		//	return Ok(client);
+		//}
+
+
 		[HttpGet]
-		[Route("{personalNumber}")]
-		public async Task<IActionResult> GetClientByPersonalNumber(int personalNumber, CancellationToken cancellationToken)
-        {
-			var client = clientService.GetClientByPersonalNumber(personalNumber, cancellationToken);
-			if (client == null)
-			{
-				return NotFound();
-			}
-			return Ok(client);
+		[Route("{id}")]
+		public async Task<IActionResult> GetClientById(int personalNumber, CancellationToken cancellationToken)
+		{
+			await clientService.GetByIdAsync(personalNumber, cancellationToken);
+			return Ok();
 		}
 
-        [HttpPost]
+		[HttpPost]
         public async Task<ActionResult<ClientModel>> AddClient([FromBody] ClientModel model, CancellationToken cancellationToken)
         {
 			var client = new Client()
@@ -42,7 +57,6 @@ namespace Api.Controllers
 				ClientFirstName = model.ClientFirstName,
 				ClientMiddleName = model.ClientMiddleName,
 				ClientLastName = model.ClientLastName,
-				PersonalNumber = model.PersonalNumber,
 				City = model.City,
 				State = model.State,
 				ZipCode = model.ZipCode,
@@ -53,14 +67,14 @@ namespace Api.Controllers
 			await _context.Clients.AddAsync(client);
 			await _context.SaveChangesAsync(cancellationToken);
 
-			return CreatedAtAction(nameof(GetClientByPersonalNumber), new { personalNumber = model.PersonalNumber }, model);
+			return CreatedAtAction(nameof(GetClientById), new { personalNumber = model.PersonalNumberID }, model);
 		}
 
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateClient([FromRoute] int personalNumber, [FromBody] ClientModel model, CancellationToken cancellationToken)
         {
 			var client = await _context.Clients
-			   .Where(x => x.PersonalNumber == personalNumber)
+			   .Where(x => x.PersonalNumberID == personalNumber)
 			   .FirstOrDefaultAsync(cancellationToken);
 
 			if (client == null)
@@ -72,6 +86,12 @@ namespace Api.Controllers
 			client.ClientMiddleName = model.ClientMiddleName;
 			client.ClientLastName = model.ClientLastName;
 			client.ClientAddress = model.ClientAddress;
+			client.City = model.City;
+			client.State = model.State;
+			client.ZipCode = model.ZipCode;
+			client.EmailAddress = model.EmailAddress;
+			client.PhoneNumber = model.PhoneNumber;
+		    
 
 			await _context.SaveChangesAsync(cancellationToken);
 
@@ -80,9 +100,14 @@ namespace Api.Controllers
 				ClientFirstName = client.ClientFirstName,
 				ClientMiddleName = client.ClientMiddleName,
 				ClientLastName = client.ClientLastName,
-                ClientAddress = client.ClientAddress
+                ClientAddress = client.ClientAddress,
+				City = client.City,
+				State=client.State,
+				ZipCode=client.ZipCode,
+				EmailAddress=client.EmailAddress,
+				PhoneNumber=client.PhoneNumber
 			};
-			return Ok(UpdateClient);
+			return Ok(updatedClient);
 		}
 
 		[HttpDelete("{id}")]

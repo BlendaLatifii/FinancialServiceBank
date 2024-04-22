@@ -5,6 +5,8 @@ import Services from './Components/Services';
 import AboutUs from './Components/AboutUs';
 import ContactUs from './Components/ContactUs';
 import Login from './Components/Login';
+import UserDashboard from './Components/UserDashboard';
+import Dashboard from './Components/Dashboard';
 import Register from './Components/Register';
 
 import { Routes, Route } from 'react-router-dom'; 
@@ -25,6 +27,8 @@ function App() {
         <Route path='/Register' element={<Register />} /> 
         <Route path='/Login' element={<Login />} /> 
         <Route path ='/RegisterTable' element={<RegisterTable />}/>
+        <Route path ='/UserDashboard' element={<UserDashboard />}/>
+        <Route path ='/Dashboard' element={<Dashboard />}/>
         <Route path ='/RegisterForClients' element={<RegisterForClients />}/>
       </Routes>
     </>

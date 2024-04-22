@@ -104,7 +104,9 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IBranchService, BranchService>();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<DbInitialization>();
-builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IBankAccountService, BankAccountService>();
+builder.Services.AddScoped<IClientService, ClientService>();
+builder.Services.AddScoped<IClientBankAccountService, ClientBankAccountService>();
 
 builder.Services.AddAutoMapper(typeof(UserMappings));
 

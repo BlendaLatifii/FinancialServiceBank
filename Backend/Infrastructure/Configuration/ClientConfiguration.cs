@@ -13,7 +13,7 @@ namespace Infrastructure.Configuration
     {
         public void Configure(EntityTypeBuilder<Client> builder)
         {
-            builder.HasKey(x => x.ClientID);
+            builder.HasKey(x => x.PersonalNumberID);
         }
     }
 }
