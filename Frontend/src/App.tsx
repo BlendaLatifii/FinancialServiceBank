@@ -11,6 +11,7 @@ import { Routes, Route } from 'react-router-dom';
 import RegisterTable from './Components/RegisterTable';
 import { User } from './interfaces/users';
 import HomePage from './Components/HomePage';
+import RegisterForClients from './Components/RegisterForClients';
 function App() {
   return (
     <>
@@ -24,6 +25,7 @@ function App() {
         <Route path='/Register' element={<Register />} /> 
         <Route path='/Login' element={<Login />} /> 
         <Route path ='/RegisterTable' element={<RegisterTable />}/>
+        <Route path ='/RegisterForClients' element={<RegisterForClients />}/>
       </Routes>
     </>
   );
