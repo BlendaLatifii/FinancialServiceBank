@@ -1,14 +1,10 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\hp\\OneDrive\\Desktop\\FinancialServiceBank\\",
+  "WorkspaceRootPath": "C:\\Users\\HP\\Desktop\\FinancialServiceBank\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\hp\\OneDrive\\Desktop\\FinancialServiceBank\\Backend\\Domain\\Entities\\BankAccount.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Backend\\Domain\\Entities\\BankAccount.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\hp\\OneDrive\\Desktop\\FinancialServiceBank\\Backend\\Application\\Services\\BankAccountService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Backend\\Application\\Services\\BankAccountService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\HP\\Desktop\\FinancialServiceBank\\Backend\\Domain\\Models\\LoanModel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Backend\\Domain\\Models\\LoanModel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,32 +14,24 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "BankAccountService.cs",
-              "DocumentMoniker": "C:\\Users\\hp\\OneDrive\\Desktop\\FinancialServiceBank\\Backend\\Application\\Services\\BankAccountService.cs",
-              "RelativeDocumentMoniker": "Backend\\Application\\Services\\BankAccountService.cs",
-              "ToolTip": "C:\\Users\\hp\\OneDrive\\Desktop\\FinancialServiceBank\\Backend\\Application\\Services\\BankAccountService.cs",
-              "RelativeToolTip": "Backend\\Application\\Services\\BankAccountService.cs",
+              "DocumentIndex": 0,
+              "Title": "LoanModel.cs",
+              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\FinancialServiceBank\\Backend\\Domain\\Models\\LoanModel.cs",
+              "RelativeDocumentMoniker": "Backend\\Domain\\Models\\LoanModel.cs",
+              "ToolTip": "C:\\Users\\HP\\Desktop\\FinancialServiceBank\\Backend\\Domain\\Models\\LoanModel.cs",
+              "RelativeToolTip": "Backend\\Domain\\Models\\LoanModel.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-20T11:03:00.529Z"
+              "WhenOpened": "2024-04-24T12:01:56.587Z",
+              "EditorCaption": ""
             },
             {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "BankAccount.cs",
-              "DocumentMoniker": "C:\\Users\\hp\\OneDrive\\Desktop\\FinancialServiceBank\\Backend\\Domain\\Entities\\BankAccount.cs",
-              "RelativeDocumentMoniker": "Backend\\Domain\\Entities\\BankAccount.cs",
-              "ToolTip": "C:\\Users\\hp\\OneDrive\\Desktop\\FinancialServiceBank\\Backend\\Domain\\Entities\\BankAccount.cs",
-              "RelativeToolTip": "Backend\\Domain\\Entities\\BankAccount.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABoAAAAQAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-20T11:02:42.803Z",
-              "EditorCaption": ""
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
             }
           ]
         }

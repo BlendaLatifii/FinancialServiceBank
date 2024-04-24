@@ -11,6 +11,6 @@
     "\\Backend\\Infrastructure",
     "\\Backend\\Infrastructure\\Migrations"
   ],
-  "SelectedNode": "\\Backend\\Domain\\Entities\\BankAccount.cs",
+  "SelectedNode": "\\Backend\\Domain\\Models\\LoanModel.cs",
   "PreviewInSolutionExplorer": false
 }

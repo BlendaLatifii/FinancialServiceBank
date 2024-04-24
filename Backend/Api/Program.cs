@@ -102,6 +102,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IBranchService, BranchService>();
+builder.Services.AddScoped<ILoanService, LoanService>();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<DbInitialization>();
 builder.Services.AddScoped<IBankAccountService, BankAccountService>();
