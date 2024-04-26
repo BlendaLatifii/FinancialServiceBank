@@ -50,7 +50,7 @@ namespace Api.Controllers
         }
 
         [Authorize]
-        [HttpGet]
+        [HttpGet ("id")]
         public async Task<ActionResult<UserModel>> GetCurrentUser()
         {
             var user = await userManager.FindByEmailAsync(User.FindFirstValue(ClaimTypes.Email));

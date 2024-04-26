@@ -21,24 +21,13 @@ namespace Api.Controllers
             this._context = _context;
         }
 
+		[HttpGet]
 		public async Task<ActionResult<List<ClientModel>>> GetAllClient(CancellationToken cancellationToken)
 		{
 			var users = await clientService.GetAllClientAsync(cancellationToken);
 
 			return Ok(users);
 		}
-		//[HttpGet]
-		//[Route("{personalNumber}")]
-		//public async Task<IActionResult> GetClientByPersonalNumber(int personalNumber, CancellationToken cancellationToken)
-  //      {
-		//	var client = clientService.GetClientByPersonalNumber(personalNumber, cancellationToken);
-		//	if (client == null)
-		//	{
-		//		return NotFound();
-		//	}
-		//	return Ok(client);
-		//}
-
 
 		[HttpGet]
 		[Route("{id}")]

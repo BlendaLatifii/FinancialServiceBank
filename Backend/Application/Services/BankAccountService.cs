@@ -36,29 +36,6 @@ namespace Application.Services
                 await _context.SaveChangesAsync(cancellationToken);
             }
         }
-        //      public async Task<BankAccount> GetByAccountNumber(string BankAccountNumber, CancellationToken cancellationToken)
-        //{
-        //	var account = await _context.BankAccounts.FirstOrDefaultAsync(x => x.AccountNumberGenerated == BankAccountNumber, cancellationToken);
-
-        //	return account;
-        //}
-
-        //      public async Task CreateBankAccount (BankAccount bankaccount)
-        //      {
-        //          if ( _context.BankAccounts.Any(x => x.Email == bankaccount.Email)) throw new ApplicationException("An account already exists with this email");
-        //          _context.BankAccounts.Add(bankaccount);
-        //          _context.SaveChanges();
-        //      }
-
-        //public async Task UpdateBankAccount(BankAccount bankAccount)
-        //      {
-        //          var accountToBeUpdated = _context.BankAccounts.Where(x => x.Email == bankAccount.Email).SingleOrDefault();
-        //          if (accountToBeUpdated == null) throw new ApplicationException("Account does not exist!");
-        //          if (_context.BankAccounts.Any(x => x.Email == bankAccount.Email)) throw new ApplicationException("This Email " + bankAccount.Email + " is already taken.");
-        //	accountToBeUpdated.Email = bankAccount.Email;
-        //	await _context.SaveChangesAsync();
-
-        //}
         public async Task DeleteAccount(string accountID, CancellationToken cancellationToken)
         {
             var account = await _context.BankAccounts

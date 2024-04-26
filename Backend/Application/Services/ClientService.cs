@@ -42,14 +42,6 @@ namespace Application.Services
 				await _context.SaveChangesAsync(cancellationToken);
 			}
 		}
-
-		//public async Task AddClient(Client client)
-		//{
-		//	if (_context.Clients.Any(x => x.EmailAddress == client.EmailAddress)) throw new ApplicationException("An account already exists with this email!");
-		//	_context.Clients.Add(client);
-		//	_context.SaveChanges();
-		//}
-
 		public async Task DeleteClient(int ClientID, CancellationToken cancellationToken)
 		{
 			var client = await _context.Clients
@@ -61,26 +53,6 @@ namespace Application.Services
 			_context.Clients.Remove(client);
 			await _context.SaveChangesAsync();
 		}
-
-        //public async Task GetClientByPersonalNumber(int personalNumber, CancellationToken cancellationToken)
-        //{
-        //	var client = await _context.Clients
-        //	   .Where(x => x.PersonalNumber == personalNumber)
-        //		.FirstOrDefaultAsync(cancellationToken);
-        //	if (client != null)
-        //	{
-        //		await _context.SaveChangesAsync(cancellationToken);
-        //	}
-        //}
-
-        //public async Task UpdateClient(ClientModel client)
-        //{
-        //	var clientToBeUpdated = _context.Clients.Where(x => x.PersonalNumber == client.PersonalNumber).SingleOrDefault();
-        //	if (clientToBeUpdated == null) throw new ApplicationException("Client does not exist!");
-        //	if (_context.Clients.Any(x => x.EmailAddress == client.EmailAddress)) throw new ApplicationException("This Email " + client.EmailAddress + " is already taken.");
-        //	clientToBeUpdated.EmailAddress = client.EmailAddress;
-        //	await _context.SaveChangesAsync();
-        //}
 
     }
 }

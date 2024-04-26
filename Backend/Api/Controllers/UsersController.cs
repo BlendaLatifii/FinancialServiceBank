@@ -68,7 +68,7 @@ namespace Api.Controllers
             {
                 return NotFound();
             }  
-
+                
             users.UserName = model.UserName;
             users.LastName = model.LastName;
             users.Email = model.Email;

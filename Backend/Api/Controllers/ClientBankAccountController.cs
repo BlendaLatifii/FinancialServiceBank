@@ -32,7 +32,7 @@ namespace Api.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<IActionResult> GetClientAccountById(string AccountNumberGeneratedID, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetClientAccountById([FromRoute]string AccountNumberGeneratedID, CancellationToken cancellationToken)
         {
             await clientBankAccService.GetClientAccountById(AccountNumberGeneratedID, cancellationToken);
             return Ok();
@@ -56,7 +56,8 @@ namespace Api.Controllers
 			return CreatedAtAction(nameof(GetClientAccountById), new { AccountNumberGeneratedID = model.AccountNumberGeneratedID }, model);
 		}
 
-		[HttpPut("{id}")]
+		[HttpPut]
+		[Route("{id}")]
 		public async Task<ActionResult> UpdateClientAcc([FromRoute] string AccountNumberGeneratedID, [FromBody] ClientBankAccountModel model, CancellationToken cancellationToken)
 		{
 			var clientAcc = await _context.ClientBankAccounts
