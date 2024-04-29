@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { AuthService } from '../services/AuthService';
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -32,18 +33,14 @@ export default function Register() {
         email:formData.email,
         password: formData.password
       }
-      const response = await axios.post('https://localhost:7254/api/Account/register',
-      body);
+      const response = await AuthService.Register(body);
        setRegistered(true);
-       navigate("/RegisterTable");
+       navigate("/login");
     } catch (error) {
       console.error('Error registering user:', error);
     }
   };
 
-  if (registered) {
-    return <Link to="/Login" />;
-  }
   return (
     <>
       <section className="text-center">
@@ -77,9 +74,9 @@ export default function Register() {
               </div>
               <div className="col-md-6 mb-4">
                 <div data-mdb-input-init className="form-outline">
-                  <input type="text" id="lastname" name="lastname" className="form-control" value={formData.lastName}
+                  <input type="text" id="lastName" name="lastName" className="form-control" value={formData.lastName}
                       onChange={handleChange} />
-                  <label className="form-label" htmlFor="lastname">Last name</label>
+                  <label className="form-label" htmlFor="lastName">Last name</label>
                 </div>
               </div>
             </div>
