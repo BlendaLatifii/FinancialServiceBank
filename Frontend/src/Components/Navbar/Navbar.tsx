@@ -2,21 +2,22 @@
 import React, { useState } from 'react';
 import * as FaIcons from 'react-icons/fa';
 import * as AiIcons from 'react-icons/ai';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {SidebarData} from './NavbarData'
 import './Navbar.css';
 import { IconContext } from 'react-icons';
 import { Button, Menu, Image ,Segment, Dropdown,Icon } from 'semantic-ui-react';
-import { AuthService } from '../services/AuthService';
+import { AuthService } from '../../services/AuthService';
 
 
 function Navbar()  {
-   
-    //const {loadUser,logout}=userStore;
         const [sidebar, setSidebar] = useState(false);
-      
         const showSidebar = () => setSidebar(!sidebar);
-        //const  {user, logout} = useStore({username:"berat"});
+        const navigate = useNavigate();
+        function LogOut(){
+          AuthService.LogOut();
+          navigate("/Login")
+        }
         return (
           <>
             <IconContext.Provider value={{ color: '#fff' }}>
@@ -31,8 +32,7 @@ function Navbar()  {
                   <Dropdown style={{color:"white",float:"left"}} pointing='top left' text={AuthService.GetUserRole() ?? ""}>
                     <Dropdown.Menu>
                     <Dropdown.Item as={Link} to={`/edit-profile`} text='My Profile' />
-                      <Dropdown.Item as={Link} to={`/saved`} text='Saved News' />
-                      <Dropdown.Item text='Logout' icon='power' />
+                      <Dropdown.Item onClick={()=> LogOut()} text='Logout' icon='power' />
                     </Dropdown.Menu>
                   </Dropdown>
                 </Menu.Item>

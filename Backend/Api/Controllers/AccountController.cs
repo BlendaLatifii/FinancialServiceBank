@@ -54,7 +54,6 @@ namespace Api.Controllers
             return new UserModel
             {
                 Email = user.Email,
-                Token = await tokenService.GenerateToken(user)
             };
 
         }

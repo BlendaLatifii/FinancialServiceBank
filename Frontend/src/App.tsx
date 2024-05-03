@@ -5,18 +5,21 @@ import Services from "./Components/Services";
 import AboutUs from "./Components/AboutUs";
 import ContactUs from "./Components/ContactUs";
 import Login from "./Components/Login";
-import UserDashboard from "./Components/UserDashboard";
-import Dashboard from "./Components/Dashboard";
+//import UserDashboard from "./Components/UserDashboard";
+//import Dashboard from "./Components/Dashboard";
 import Register from "./Components/Register";
 import { Routes, Route } from "react-router-dom";
-import RegisterTable from "./Components/RegisterTable";
+import RegisterTable from "./Components/UserComponents/RegisterTable";
 import HomePage from "./Components/HomePage";
 import RegisterForClients from "./Components/RegisterForClients";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { AuthService } from "./services/AuthService";
 import "react-toastify/dist/ReactToastify.css";
-import Navbar from "./Components/Navbar";
+import Navbar from "./Components/Navbar/Navbar";
+import EditUser from "./Components/UserComponents/EditUser";
+import ContactTable from "./Components/ContactTable";
+
 function App() {
   axios.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer ${AuthService.token}`;
@@ -30,13 +33,18 @@ function App() {
     (error) => {
       const { data, status, config } = error.response ?? null;
       switch (status) {
+        case 200:
+          toast.success("OK");
+          break;
+          case 201:
+            toast.success("OK");
+            break;
         case 400:
           if (data != null) {
             toast.error(data);
           } else {
             toast.error("something went wrong");
           }
-          console.log('worked');
           break;
         case 401:
           toast.error("unauthorised");
@@ -54,7 +62,7 @@ function App() {
   const isAdmin = AuthService.GetUserRole() == 'Admin';
   return (
     <>
-    {<Navbar/>}
+    { isAdmin && <Navbar/>}
       <Routes>
         <Route path="/Header" element={<Header />} />
         <Route path="/Footer" element={<Footer />} />
@@ -64,9 +72,10 @@ function App() {
         <Route path="/ContactUs" element={<ContactUs />} />
         <Route path="/Register" element={<Register />} />
         <Route path="/Login" element={<Login />} />
+        <Route path="/EditUser/:id" element={<EditUser />} />
+        <Route path="/AddUser" element={<EditUser />} />
         <Route path="/RegisterTable" element={<RegisterTable />} />
-         {isAdmin  &&  <Route path="/UserDashboard" element={<UserDashboard />} />}
-         {isAdmin  &&  <Route path="/Dashboard" element={<Dashboard />} />}
+        <Route path="/ContactTable" element={<ContactTable />} />
         <Route path="/RegisterForClients" element={<RegisterForClients />} />
       </Routes>
       <ToastContainer />

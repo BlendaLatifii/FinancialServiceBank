@@ -24,14 +24,13 @@ namespace Application.Services
     public class AccountService : IAccountService
     {
         private readonly UserManager<User> userManager;
-        private readonly TokenService tokenService;
+
         private readonly AppDbContext _dbContext;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
-        public AccountService(UserManager<User> userManager, TokenService tokenService, AppDbContext _dbContext, IConfiguration _configuration, IMapper mapper)
+        public AccountService(UserManager<User> userManager, AppDbContext _dbContext, IConfiguration _configuration, IMapper mapper)
         {
             this.userManager = userManager;
-            this.tokenService = tokenService;
             this._dbContext = _dbContext;
             this._configuration = _configuration;
             this._mapper = mapper;
@@ -46,7 +45,7 @@ namespace Application.Services
                 throw new AppBadDataException();
             }
 
-            if(!await userManager.CheckPasswordAsync(user, loginModel.Password))
+            if (!await userManager.CheckPasswordAsync(user, loginModel.Password))
             {
                 throw new AppBadDataException(ErrorMessage.BadPassword);
             }
