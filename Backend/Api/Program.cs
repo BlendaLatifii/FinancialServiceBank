@@ -3,7 +3,6 @@ using Application.Services;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
-using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using AppDbContext = Infrastructure.Data.AppDbContext;
@@ -11,8 +10,10 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Configuration;
 using API.Servicees;
+using Api.Middleware;
+using Infrastructure.Security;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -29,7 +30,7 @@ builder.Services.AddCors(options =>
         {
             builder.AllowAnyHeader()
                    .AllowAnyMethod()
-                   .AllowAnyOrigin(); // You may restrict origins if needed
+                   .AllowAnyOrigin();
         });
 });
 
@@ -73,6 +74,10 @@ builder.Services.AddIdentity<User, Role>(options =>
     options.User.RequireUniqueEmail = true;
     options.Password.RequiredUniqueChars = 0;
     options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireDigit = false;
+    options.SignIn.RequireConfirmedPhoneNumber = false;
+    options.SignIn.RequireConfirmedEmail = false;
+    options.SignIn.RequireConfirmedAccount = false;
 
 })
     .AddEntityFrameworkStores<AppDbContext>()
@@ -97,6 +102,12 @@ builder.Services.AddAuthentication(options =>
         };
     });
 
+builder.Services.AddHttpContextAccessor();
+
+
+var principal = new ClaimsPrincipal();
+
+builder.Services.AddTransient(s => s.GetService<IHttpContextAccessor>()?.HttpContext?.User ?? principal);
 
 // Add Dependencies here
 
@@ -108,7 +119,10 @@ builder.Services.AddScoped<DbInitialization>();
 builder.Services.AddScoped<IBankAccountService, BankAccountService>();
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IClientBankAccountService, ClientBankAccountService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IContactService, ContactUsService>();
 
+builder.Services.AddScoped<IAuthorizationManager, AuthorizationManager>();
 builder.Services.AddAutoMapper(typeof(UserMappings));
 
 
@@ -132,6 +146,8 @@ app.UseCors("AccessPolicy");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseAppExceptionHandler();
 
 app.MapControllers();
 

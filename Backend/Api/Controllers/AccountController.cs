@@ -27,18 +27,14 @@ namespace Api.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<UserModel>> Login(LoginModel loginModel, CancellationToken cancellationToken)
+        public async Task<ActionResult<AuthenticationModel>> Login([FromBody] LoginModel loginModel, CancellationToken cancellationToken)
         {
-            var userModel = await accountService.Login(loginModel, cancellationToken);
-            if (userModel == null)
-            {
-                return Unauthorized();
-            }
+            var userModel = await accountService.LoginAsync(loginModel, cancellationToken);
+   
             return Ok(userModel);
         }
 
         [HttpPost("register")]
-
         public async Task<ActionResult> Register([FromBody] RegisterModel registerModel, CancellationToken cancellationToken)
         {
             var result = await accountService.Register(registerModel, cancellationToken);
@@ -46,7 +42,7 @@ namespace Api.Controllers
             {
                 return BadRequest(result.Errors);
             }
-            return StatusCode(201);
+            return Ok();
         }
 
         [Authorize]
@@ -58,7 +54,6 @@ namespace Api.Controllers
             return new UserModel
             {
                 Email = user.Email,
-                Token = await tokenService.GenerateToken(user)
             };
 
         }

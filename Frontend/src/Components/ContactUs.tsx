@@ -2,7 +2,41 @@ import 'bootstrap/dist/css/bootstrap.css';
 import './ContactUs.css';
 import Footer from './Footer';
 import Header from './Header';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import axios from 'axios';
 function ContactUs(){
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+
+  const navigate = useNavigate();
+  const [contact, setContact] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData({...formData, [name]: value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      let body = {
+        name: formData.name,
+        email:formData.email,
+        subject:formData.subject,
+        message: formData.message
+      }
+      const response = await axios.post(`https://localhost:7254/api/ContactUs`,body);
+      setContact(true);
+      window.location.reload();
+    } catch (error) {
+      console.error('Error sending message ', error);
+    }
+  };
      
     return(
         <div>
@@ -48,20 +82,33 @@ function ContactUs(){
           </div>
 
           <div className="col-lg-8">
-            <form action="forms/contact.php" method="post" role="form" className="php-email-form">
+            <form action="forms/contact.php" method="post" role="form" className="php-email-form" onSubmit={handleSubmit}>
               <div className="row">
                 <div className="col-md-6 form-group">
-                  <input type="text" name="name" className="form-control" id="name" placeholder="Your Name" required/>
+                  <input type="text" name="name" className="form-control" 
+                  id="name" placeholder="Your Name"
+                  value={formData.name}
+                  onChange={handleChange} required/>
                 </div>
                 <div className="col-md-6 form-group mt-3 mt-md-0">
-                  <input type="email" className="form-control" name="email" id="email" placeholder="Your Email" required/>
+                  <input type="email" className="form-control" 
+                  name="email" id="email"
+                   placeholder="Your Email"
+                  value={formData.email}
+                  onChange={handleChange} required/>
                 </div>
               </div>
               <div className="form-group mt-3">
-                <input type="text" className="form-control" name="subject" id="subject" placeholder="Subject" required/>
+                <input type="text" className="form-control" name="subject" 
+                id="subject"
+                placeholder="Subject"
+                value={formData.subject}
+                      onChange={handleChange} required/>
               </div>
               <div className="form-group mt-3">
-                <textarea className="form-control" name="message"  placeholder="Message" required></textarea>
+                <textarea className="form-control" name="message" id="message" placeholder="Message" 
+                value={formData.message}
+                onChange={handleChange} required/>
               </div>
               <div className="my-3">
                 <div className="loading">Loading</div>

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.css';
 import './Header.css';
+import { AuthService } from "../services/AuthService";
 function Header(){
 
     return(
@@ -16,7 +17,7 @@ function Header(){
                 <li><Link to="/Services">Services</Link></li>
                 <li><Link to="/AboutUs">About Us</Link></li>
                 <li><Link to="/ContactUs">Contact Us</Link></li>
-                <li><Link to="/Dashboard">Dashboard</Link></li>
+                {AuthService.GetUserRole() == 'Admin' &&<li><Link to="/Dashboard">Dashboard</Link></li>}
                 <li><Link to="/Login">Login</Link></li>
                 </ul>
               </nav>
