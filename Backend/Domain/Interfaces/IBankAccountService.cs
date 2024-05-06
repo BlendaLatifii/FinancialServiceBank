@@ -6,7 +6,8 @@ namespace Domain.Interfaces
     public interface IBankAccountService
     {
        Task <List<BankAccountModel>> GetAllBankAccountsAsync(CancellationToken cancellationToken);
-       Task GetBankAccountById(string AccountTypeID, CancellationToken cancellationToken);
-        Task DeleteAccount(string BankAccountID, CancellationToken cancellationToken);
+       Task<BankAccountModel> GetBankAccountById(Guid id, CancellationToken cancellationToken);
+        Task<BankAccountModel> CreateOrUpdateBankAccount(BankAccountModel model, CancellationToken cancellationToken);
+        Task DeleteAccount(Guid id, CancellationToken cancellationToken);
     }
 }

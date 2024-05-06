@@ -44,7 +44,7 @@ namespace Api.Controllers
 			var clientAcc = new ClientBankAccount()
 			{
 				PersonalNumberID = model.PersonalNumberID,
-				AccountTypeID = model.AccountTypeID,
+			    Id = model.Id,
 				CurrentBalance = model.CurrentBalance,
 				DateCreated = model.DateCreated,
 				DateLastUpdated = model.DateLastUpdated
@@ -70,7 +70,7 @@ namespace Api.Controllers
 			}
 
 			clientAcc.PersonalNumberID = model.PersonalNumberID;
-			clientAcc.AccountTypeID = model.AccountTypeID;
+			clientAcc.Id = model.Id;
 			clientAcc.CurrentBalance = model.CurrentBalance;
 			clientAcc.DateCreated = model.DateCreated;
 			clientAcc.DateLastUpdated = model.DateLastUpdated;
@@ -81,7 +81,7 @@ namespace Api.Controllers
 			var updatedClient = new ClientBankAccountModel
 			{
 				PersonalNumberID = clientAcc.PersonalNumberID,
-				AccountTypeID = clientAcc.AccountTypeID,
+				Id = clientAcc.Id,
 				CurrentBalance = clientAcc.CurrentBalance,
 				DateCreated = clientAcc.DateCreated,
 				DateLastUpdated = clientAcc.DateLastUpdated

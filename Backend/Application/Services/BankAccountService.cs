@@ -1,6 +1,7 @@
 
 using AutoMapper;
 using Domain.Entities;
+using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
 using Infrastructure.Data;
@@ -26,20 +27,68 @@ namespace Application.Services
             var bankaccmodel = _mapper.Map<List<BankAccountModel>>(bankAcc);
             return bankaccmodel;
         }
-        public async Task GetBankAccountById(string AccountTypeID, CancellationToken cancellationToken)
+        public async Task<BankAccountModel> GetBankAccountById(Guid id, CancellationToken cancellationToken)
         {
             var bankAcc = await _context.BankAccounts
-                .Where(x => x.AccountTypeID == AccountTypeID)
+                .Where(x => x.Id == id)
                 .FirstOrDefaultAsync(cancellationToken);
-            if (bankAcc != null)
+            
+            if (bankAcc == null)
+            {
+                throw new AppBadDataException();
+            }
+            else
             {
                 await _context.SaveChangesAsync(cancellationToken);
+                var model = _mapper.Map<BankAccountModel>(bankAcc);
+                return model;
             }
         }
-        public async Task DeleteAccount(string accountID, CancellationToken cancellationToken)
+        public async Task<BankAccountModel> CreateOrUpdateBankAccount(BankAccountModel model, CancellationToken cancellationToken)
+        {
+            if (model.Id == null)
+            {
+                var newBankAcc = new BankAccount()
+                {
+                    AccountType = model.AccountType,
+                    AccountDescription = model.AccountDescription
+                };
+
+                await _context.BankAccounts.AddAsync(newBankAcc, cancellationToken);
+                await _context.SaveChangesAsync(cancellationToken);
+
+                // Kthe një përgjigje 201 Created dhe modelin e degës së krijuar
+                return new BankAccountModel
+                {
+                    AccountType = newBankAcc.AccountType,
+                    AccountDescription = newBankAcc.AccountDescription
+                };
+            }
+            else
+            {
+                var existingBankAcc = await _context.BankAccounts.FindAsync(model.Id);
+                if (existingBankAcc == null)
+                {
+                    throw new AppBadDataException();
+                }
+
+                existingBankAcc.AccountType = model.AccountType;
+                existingBankAcc.AccountDescription = model.AccountDescription;
+
+                await _context.SaveChangesAsync(cancellationToken);
+
+                return new BankAccountModel
+                {
+                    AccountType = existingBankAcc.AccountType,
+                    AccountDescription = existingBankAcc.AccountDescription
+                };
+            }
+        }
+
+        public async Task DeleteAccount(Guid id, CancellationToken cancellationToken)
         {
             var account = await _context.BankAccounts
-                 .Where(x => x.AccountTypeID == accountID)
+                 .Where(x => x.Id == id)
                  .FirstOrDefaultAsync(cancellationToken);
 
 			if (account == null)

@@ -9,10 +9,12 @@ namespace Application.Mappings
         public BankAccountMappings() 
         {
             CreateMap<BankAccount, BankAccountModel>()
-                 .ForMember(x => x.AccountTypeID, y => y.MapFrom(x => x.AccountTypeID))
+                .ForMember(x => x.Id, y => y.MapFrom(x => x.Id))
+                 .ForMember(x => x.AccountType, y => y.MapFrom(x => x.AccountType))
                   .ForMember(x => x.AccountDescription, y => y.MapFrom(x => x.AccountDescription));
             CreateMap<BankAccountModel, BankAccount>()
-                 .ForMember(x => x.AccountTypeID, y => y.MapFrom(x => x.AccountTypeID))
+                .ForMember(x => x.Id, y => y.MapFrom(x => x.Id))
+                 .ForMember(x => x.AccountType, y => y.MapFrom(x => x.AccountType))
                   .ForMember(x => x.AccountDescription, y => y.MapFrom(x => x.AccountDescription));
 
 		}

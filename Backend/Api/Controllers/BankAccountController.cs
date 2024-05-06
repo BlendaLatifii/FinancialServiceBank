@@ -25,50 +25,23 @@ namespace Api.Controllers
             var acc = await bankAccountService.GetAllBankAccountsAsync(cancellationToken);
             return Ok(acc);
         }
-		[HttpGet]
-		[Route("{id}")]
-		public async Task<IActionResult> GetBankAccountById(string AccountTypeID , CancellationToken cancellationToken)
+		[HttpGet("{id}")]
+		public async Task<IActionResult> GetBankAccountById(Guid id, CancellationToken cancellationToken)
         {
-				await bankAccountService.GetBankAccountById(AccountTypeID, cancellationToken);
-				return Ok();
+            var model=await bankAccountService.GetBankAccountById(id, cancellationToken);
+				return Ok(model);
 		}
-        
-		[HttpPost]
-        public async Task<ActionResult<BankAccountModel>> CreateBankAccount([FromBody] BankAccountModel model, CancellationToken cancellationToken)
+        [HttpPost]
+        public async Task<IActionResult> CreateOrUpdateBankAccountAsync(BankAccountModel model, CancellationToken cancellationToken)
         {
-            var acc = new BankAccount()
-            {
-                AccountDescription = model.AccountDescription
-            };
-
-            await appDbContext.BankAccounts.AddAsync(acc);
-            await appDbContext.SaveChangesAsync(cancellationToken);
-
-            return CreatedAtAction(nameof(GetBankAccountById), new { AccountTypeID = model.AccountTypeID });
+            var updateBankAcc = await bankAccountService.CreateOrUpdateBankAccount(model, cancellationToken);
+            return Ok(updateBankAcc);
         }
 
-        [HttpPut]
-		[Route("{id}")]
-
-		public async Task<BankAccount> UpdateBankAccount([FromRoute]string accountTypeID, BankAccountModel model, CancellationToken cancellationToken)
-        {
-            var acc = await appDbContext.BankAccounts.FindAsync(accountTypeID);
-            if (acc == null)
-            {
-                throw new ArgumentException("Bank account not found.");
-            }
-
-            acc.AccountDescription = model.AccountDescription;
-            acc.AccountTypeID = accountTypeID;
-
-            await appDbContext.SaveChangesAsync();
-
-            return acc;
-        }
         [HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteAccount(string accountTypeID, CancellationToken cancellationToken)
+		public async Task<IActionResult> DeleteAccount(Guid id, CancellationToken cancellationToken)
         {
-            await bankAccountService.DeleteAccount(accountTypeID, cancellationToken);
+            await bankAccountService.DeleteAccount(id, cancellationToken);
             return Ok();
         }
     }

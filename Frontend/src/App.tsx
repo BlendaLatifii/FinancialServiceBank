@@ -18,7 +18,11 @@ import { AuthService } from "./services/AuthService";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "./Components/Navbar/Navbar";
 import EditUser from "./Components/UserComponents/EditUser";
-import ContactTable from "./Components/ContactTable";
+import ContactTable from "./Components/ContactComponents/ContactTable";
+import BranchTable from "./Components/BranchComponents/BranchTable";
+import EditBranch from "./Components/BranchComponents/EditBranch";
+import EditBankAccount from "./Components/EditBankAccount";
+import AccountTable from "./Components/AccountTable";
 
 function App() {
   axios.interceptors.request.use((config) => {
@@ -62,7 +66,8 @@ function App() {
   const isAdmin = AuthService.GetUserRole() == 'Admin';
   return (
     <>
-    { isAdmin && <Navbar/>}
+    {/* isAdmin &&  */}
+    { <Navbar/>}
       <Routes>
         <Route path="/Header" element={<Header />} />
         <Route path="/Footer" element={<Footer />} />
@@ -75,7 +80,13 @@ function App() {
         <Route path="/EditUser/:id" element={<EditUser />} />
         <Route path="/AddUser" element={<EditUser />} />
         <Route path="/RegisterTable" element={<RegisterTable />} />
+        <Route path="/BranchTable" element={<BranchTable />} />
         <Route path="/ContactTable" element={<ContactTable />} />
+        <Route path="/AddBranches" element={<EditBranch />}/>
+        <Route path="/EditBranch/:id" element={<EditBranch />}/>
+        <Route path="/AddBankAccount" element={<EditBankAccount />}/>
+        <Route path="/EditBankAccount/:id" element={<EditBankAccount />}/>
+        <Route path="/AccountTable" element={<AccountTable />}/>
         <Route path="/RegisterForClients" element={<RegisterForClients />} />
       </Routes>
       <ToastContainer />

@@ -27,65 +27,23 @@ namespace Api.Controllers
             return Ok(branches);
         }
 
-        [HttpGet]
-        [Route("{id}")]
-        public async Task<IActionResult> GetBranchById(int branchId, CancellationToken cancellationToken)
+        [HttpGet("{branchId}")]
+        public async Task<IActionResult> GetBranchById([FromRoute] Guid branchId, CancellationToken cancellationToken)
         {
-            await branchService.GetBranchById(branchId, cancellationToken);
-            return Ok();
+            var model = await branchService.GetBranchById(branchId, cancellationToken);
+            return Ok(model);
         }
         [HttpPost]
-        public async Task<ActionResult<BranchModel>> CreateBranch([FromBody] BranchModel model, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateOrUpdateBranchAsync(BranchModel model, CancellationToken cancellationToken)
         {
-            var branch = new Branch()
-            {
-                BranchName = model.BranchName,
-                Adress = model.Adress,
-                PhoneNumber = model.PhoneNumber,
-                Opened = model.Opened
-            };
-
-            await appDbContext.Branches.AddAsync(branch);
-            await appDbContext.SaveChangesAsync(cancellationToken);
-
-            return CreatedAtAction(nameof(GetBranchById), new { Id = model.BranchId });
+            var updateBranch = await branchService.CreateOrUpdateBranchAsync(model, cancellationToken);
+            return Ok(updateBranch);
         }
 
-        [HttpPut]
-        [Route("{id}")]
-        public async Task<IActionResult> UpdateBranch([FromRoute] int id, [FromBody] BranchModel model, CancellationToken cancellationToken)
+        [HttpDelete("{branchId}")]
+        public async Task<IActionResult> DeleteBranch(Guid branchId, CancellationToken cancellationToken)
         {
-            var branches = await appDbContext.Branches
-               .Where(x => x.BranchId == id)
-               .FirstOrDefaultAsync(cancellationToken);
-
-            if (branches == null)
-            {
-                return NotFound();
-            }
-
-            branches.BranchName = model.BranchName;
-            branches.Adress = model.Adress;
-            branches.PhoneNumber = model.PhoneNumber;
-            branches.Opened = model.Opened;
-
-            await appDbContext.SaveChangesAsync(cancellationToken);
-
-            var updatedBranchModel = new BranchModel
-            {
-                BranchId = branches.BranchId,
-                BranchName = branches.BranchName,
-                Adress = branches.Adress,
-                PhoneNumber = branches.PhoneNumber,
-                Opened = branches.Opened
-            };
-            return Ok(updatedBranchModel);
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBranch(CancellationToken cancellationToken, int id)
-        {
-            await branchService.DeleteBranch(id, cancellationToken);
+            await branchService.DeleteBranch(branchId, cancellationToken);
             return Ok();
         }
     }

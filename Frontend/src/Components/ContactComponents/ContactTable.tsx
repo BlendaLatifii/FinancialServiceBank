@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { ContactUsModel } from "../interfaces/contactUs-model";
+import { ContactUsModel } from "../../interfaces/contactUs-model";
 import axios from "axios";
 import {
     Table,

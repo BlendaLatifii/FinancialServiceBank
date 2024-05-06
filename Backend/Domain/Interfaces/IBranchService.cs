@@ -9,8 +9,9 @@ namespace Domain.Interfaces
 {
     public interface IBranchService
     {
-        Task GetBranchById(int branchId, CancellationToken cancellationToken);
+        Task<BranchModel> GetBranchById(Guid branchId, CancellationToken cancellationToken);
         Task<List<BranchModel>> GetAllBranchesAsync(CancellationToken cancellationToken);
-        Task DeleteBranch(int branchId, CancellationToken cancellationToken);
+        Task<BranchModel> CreateOrUpdateBranchAsync(BranchModel model, CancellationToken cancellationToken);
+        Task DeleteBranch(Guid branchId, CancellationToken cancellationToken);
     }
 }

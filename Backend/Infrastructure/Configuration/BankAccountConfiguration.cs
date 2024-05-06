@@ -8,7 +8,7 @@ namespace Infrastructure.Configuration
     {
         public void Configure(EntityTypeBuilder<BankAccount> builder)
         {
-            builder.HasKey(x => x.AccountTypeID);
+            builder.HasKey(x => x.Id);
             
         }
     }

@@ -12,6 +12,18 @@ export const SidebarData : NavItem[] = [
     className: 'nav-text background:var(--color-primary)'
   },
   {
+    title:'Bank Account',
+    path:'/AccountTable',
+    icon:'',
+    className: 'nav-text background:var(--color-primary)'
+  },
+  {
+    title:'Branch',
+    path:'/BranchTable',
+    icon:'',
+    className: 'nav-text background:var(--color-primary)'
+  },
+  {
     title:'Contact Us',
     path:'/ContactTable',
     icon:'',

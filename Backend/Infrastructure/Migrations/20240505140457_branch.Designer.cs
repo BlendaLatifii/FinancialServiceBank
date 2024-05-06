@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240418214312_branchs")]
-    partial class branchs
+    [Migration("20240505140457_branch")]
+    partial class branch
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,15 +24,27 @@ namespace Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("Domain.Entities.BankAccount", b =>
+                {
+                    b.Property<string>("AccountTypeID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AccountDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("AccountTypeID");
+
+                    b.ToTable("BankAccounts");
+                });
+
             modelBuilder.Entity("Domain.Entities.Branch", b =>
                 {
-                    b.Property<int>("BranchId")
+                    b.Property<Guid>("BranchId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BranchId"), 1L, 1);
-
-                    b.Property<string>("Adress")
+                    b.Property<string>("Address")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -51,6 +63,157 @@ namespace Infrastructure.Migrations
                     b.HasKey("BranchId");
 
                     b.ToTable("Branches");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Client", b =>
+                {
+                    b.Property<int>("PersonalNumberID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PersonalNumberID"), 1L, 1);
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClientAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ClientDateOfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ClientFirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClientLastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClientMiddleName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EmailAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ZipCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PersonalNumberID");
+
+                    b.ToTable("Clients");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ClientBankAccount", b =>
+                {
+                    b.Property<string>("AccountNumberGeneratedID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AccountTypeID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal>("CurrentBalance")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateLastUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PersonalNumberID")
+                        .HasColumnType("int");
+
+                    b.HasKey("AccountNumberGeneratedID");
+
+                    b.HasIndex("AccountTypeID");
+
+                    b.HasIndex("PersonalNumberID");
+
+                    b.ToTable("ClientBankAccounts");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ContactUs", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Contacts");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Loan", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<decimal>("KestiIKredise")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("KohaEKredise")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("LlojiIKredise")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MetodaEKredise")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("NormaEInteresit")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Rroga6mujore")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("ShumaEKredise")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("StatusiIPunesise")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Loans");
                 });
 
             modelBuilder.Entity("Domain.Entities.Role", b =>
@@ -267,6 +430,25 @@ namespace Infrastructure.Migrations
                     b.HasDiscriminator().HasValue("UserRole");
                 });
 
+            modelBuilder.Entity("Domain.Entities.ClientBankAccount", b =>
+                {
+                    b.HasOne("Domain.Entities.BankAccount", "BankAccount")
+                        .WithMany("ClientBankAccounts")
+                        .HasForeignKey("AccountTypeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Client", "Client")
+                        .WithMany("ClientBankAccounts")
+                        .HasForeignKey("PersonalNumberID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BankAccount");
+
+                    b.Navigation("Client");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("Domain.Entities.Role", null)
@@ -320,6 +502,16 @@ namespace Infrastructure.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Entities.BankAccount", b =>
+                {
+                    b.Navigation("ClientBankAccounts");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Client", b =>
+                {
+                    b.Navigation("ClientBankAccounts");
                 });
 
             modelBuilder.Entity("Domain.Entities.Role", b =>

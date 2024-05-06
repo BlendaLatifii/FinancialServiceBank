@@ -24,13 +24,6 @@ export default function EditUser() {
    useEffect(() => {
     fetchData();
   }, []);
-
-  // const handleRoleChange = (event:any, data:any) => {
-  //   setValues(prevValues => ({
-  //     ...prevValues,
-  //     role: data.value
-  //   }));
-  // };
   const roleSelectList =  Object.keys(Role).map((key,i) => ({
     key: i,
     value: i,
@@ -91,6 +84,7 @@ export default function EditUser() {
            <MyTextInput fluid
              placeholder="Username"
              name="userName"
+             onChange={handleChange}
            />
            <MyTextInput
              placeholder="Lastname"
