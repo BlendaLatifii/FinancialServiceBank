@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
 using Infrastructure.Data;
@@ -25,22 +26,27 @@ namespace Application.Services
             var clientAccmodel = mapper.Map<List<ClientBankAccountModel>>(clientAcc);
             return clientAccmodel;
         }
-        public async Task GetClientAccountById(string AccountNumberGeneratedID, CancellationToken cancellationToken)
+        public async Task<ClientBankAccountModel> GetClientAccountById(Guid Id, CancellationToken cancellationToken)
         {
-            var clientAcc = await _context.ClientBankAccounts
-                .Where(x => x.AccountNumberGeneratedID == AccountNumberGeneratedID)
-                .FirstOrDefaultAsync(cancellationToken);
-            if (clientAcc != null)
+            var client = await _context.ClientBankAccounts
+              .Where(x => x.Id == Id)
+              .FirstOrDefaultAsync(cancellationToken);
+            if (client == null)
+            {
+                throw new AppBadDataException();
+            }
+            else
             {
                 await _context.SaveChangesAsync(cancellationToken);
+                var model = mapper.Map<ClientBankAccountModel>(client);
+                return model;
             }
 
-
         }
-        public async Task DeleteClientBankAccount(string AccountNumberGeneratedID, CancellationToken cancellationToken)
+        public async Task DeleteClientBankAccount(Guid Id, CancellationToken cancellationToken)
         {
             var clientAcc = await _context.ClientBankAccounts
-                 .Where(x => x.AccountNumberGeneratedID == AccountNumberGeneratedID)
+                 .Where(x => x.Id == Id)
                  .FirstOrDefaultAsync(cancellationToken);
 
             if (clientAcc != null)

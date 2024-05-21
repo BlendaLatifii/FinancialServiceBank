@@ -13,7 +13,9 @@ namespace Infrastructure.Configuration
     {
         public void Configure(EntityTypeBuilder<Client> builder)
         {
-            builder.HasKey(x => x.PersonalNumberID);
+            builder.HasKey(x => x.Id);
+
+            builder.HasIndex(x => x.PersonalNumberId).IsUnique();
         }
     }
 }

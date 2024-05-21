@@ -10,14 +10,9 @@ import {
     TableHeaderCell,
     TableBody,
     TableCell,
-    Modal,
-    ModalDescription,
-    ModalContent,
-    ModalActions,
-    ModalHeader,
-    Header,
     Confirm,
   } from "semantic-ui-react";
+import Header from "../Header";
 export default function ContactUsTable() {
   const [contact, setContacts] = useState<ContactUsModel[]>([]);
   const [openConfirm,setOpenConfirm] = useState<boolean>(false);
@@ -52,6 +47,7 @@ export default function ContactUsTable() {
 
       return (
         <Fragment>
+          <Header/>
           <h1 style={{ marginLeft: "30px" }}>Contacts</h1>
     
           <Table striped>

@@ -15,6 +15,7 @@ import axios from "axios";
 import { BranchService } from "../../services/BranchService";
 import { Link, useNavigate } from "react-router-dom";
 import { number } from "yup";
+import Header from "../Header";
 
 export default function BranchTable() {
   const [branches, setBranches] = useState<BranchModel[]>([]);
@@ -54,6 +55,7 @@ export default function BranchTable() {
 
   return (
     <Fragment>
+       <Header/>
       <div className="mt-5 d-flex align-items-center">
       <h1 style={{ marginLeft: "30px" }}>Branch</h1>
       <Button

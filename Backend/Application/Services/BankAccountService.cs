@@ -29,24 +29,24 @@ namespace Application.Services
         }
         public async Task<BankAccountModel> GetBankAccountById(Guid id, CancellationToken cancellationToken)
         {
-            var bankAcc = await _context.BankAccounts
+            var account = await _context.BankAccounts
                 .Where(x => x.Id == id)
                 .FirstOrDefaultAsync(cancellationToken);
-            
-            if (bankAcc == null)
+            if (account == null)
             {
                 throw new AppBadDataException();
             }
             else
             {
                 await _context.SaveChangesAsync(cancellationToken);
-                var model = _mapper.Map<BankAccountModel>(bankAcc);
+                var model = _mapper.Map<BankAccountModel>(account);
                 return model;
             }
+
         }
         public async Task<BankAccountModel> CreateOrUpdateBankAccount(BankAccountModel model, CancellationToken cancellationToken)
         {
-            if (model.Id == null)
+            if (model.Id == null || model.Id == Guid.Empty)
             {
                 var newBankAcc = new BankAccount()
                 {
@@ -57,9 +57,9 @@ namespace Application.Services
                 await _context.BankAccounts.AddAsync(newBankAcc, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
 
-                // Kthe një përgjigje 201 Created dhe modelin e degës së krijuar
                 return new BankAccountModel
                 {
+                    Id = newBankAcc.Id,
                     AccountType = newBankAcc.AccountType,
                     AccountDescription = newBankAcc.AccountDescription
                 };
@@ -79,6 +79,7 @@ namespace Application.Services
 
                 return new BankAccountModel
                 {
+                     Id = existingBankAcc.Id, 
                     AccountType = existingBankAcc.AccountType,
                     AccountDescription = existingBankAcc.AccountDescription
                 };

@@ -70,38 +70,32 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Client", b =>
                 {
-                    b.Property<int>("PersonalNumberID")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PersonalNumberID"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ClientAddress")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ClientDateOfBirth")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ClientFirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ClientLastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ClientMiddleName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EmailAddress")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MiddleName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PersonalNumberId")
+                        .HasColumnType("int");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
@@ -115,7 +109,10 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("PersonalNumberID");
+                    b.HasKey("Id");
+
+                    b.HasIndex("PersonalNumberId")
+                        .IsUnique();
 
                     b.ToTable("Clients");
                 });
@@ -124,6 +121,12 @@ namespace Infrastructure.Migrations
                 {
                     b.Property<string>("AccountNumberGeneratedID")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid>("AccountId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ClientId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("CurrentBalance")
                         .HasColumnType("decimal(18,2)");
@@ -137,14 +140,9 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("PersonalNumberID")
-                        .HasColumnType("int");
-
                     b.HasKey("AccountNumberGeneratedID");
 
                     b.HasIndex("Id");
-
-                    b.HasIndex("PersonalNumberID");
 
                     b.ToTable("ClientBankAccounts");
                 });
@@ -442,7 +440,7 @@ namespace Infrastructure.Migrations
 
                     b.HasOne("Domain.Entities.Client", "Client")
                         .WithMany("ClientBankAccounts")
-                        .HasForeignKey("PersonalNumberID")
+                        .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

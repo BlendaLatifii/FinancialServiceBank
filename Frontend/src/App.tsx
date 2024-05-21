@@ -21,8 +21,10 @@ import EditUser from "./Components/UserComponents/EditUser";
 import ContactTable from "./Components/ContactComponents/ContactTable";
 import BranchTable from "./Components/BranchComponents/BranchTable";
 import EditBranch from "./Components/BranchComponents/EditBranch";
-import EditBankAccount from "./Components/EditBankAccount";
-import AccountTable from "./Components/AccountTable";
+import EditBankAccount from "./Components/BankAccountComponents/EditBankAccount";
+import AccountTable from "./Components/BankAccountComponents/AccountTable";
+import ClientTable from "./Components/ClientComponents/ClientTable";
+import EditClient from "./Components/ClientComponents/EditClient";
 
 function App() {
   axios.interceptors.request.use((config) => {
@@ -84,10 +86,13 @@ function App() {
         <Route path="/ContactTable" element={<ContactTable />} />
         <Route path="/AddBranches" element={<EditBranch />}/>
         <Route path="/EditBranch/:id" element={<EditBranch />}/>
-        <Route path="/AddBankAccount" element={<EditBankAccount />}/>
-        <Route path="/EditBankAccount/:id" element={<EditBankAccount />}/>
+        <Route path="/AddBankAccount" element={<EditBankAccount/>}/>
+        <Route path="/EditBankAccount/:id" element={<EditBankAccount/>}/>
         <Route path="/AccountTable" element={<AccountTable />}/>
         <Route path="/RegisterForClients" element={<RegisterForClients />} />
+        <Route path="/AddClient" element={<EditClient/>}/>
+        <Route path="/EditClient/:id" element={<EditClient/>}/>
+        <Route path="/ClientTable" element={<ClientTable />}/>
       </Routes>
       <ToastContainer />
     </>

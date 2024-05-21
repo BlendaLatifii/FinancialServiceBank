@@ -6,7 +6,8 @@ namespace Domain.Interfaces
     public interface IClientService
     {
         Task<List<ClientModel>> GetAllClientAsync(CancellationToken cancellationToken);
-        Task GetByIdAsync (int ClientID, CancellationToken cancellationToken);
-        Task DeleteClient(int ClientID, CancellationToken cancellationToken);
+        Task<ClientModel> GetByIdAsync (Guid id, CancellationToken cancellationToken);
+        Task<ClientModel> CreateOrUpdateClientAsync(ClientModel model, CancellationToken cancellationToken);
+        Task DeleteClient(Guid Id, CancellationToken cancellationToken);
 	}
 }

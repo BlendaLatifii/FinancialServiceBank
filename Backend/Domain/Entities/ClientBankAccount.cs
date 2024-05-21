@@ -8,9 +8,10 @@ namespace Domain.Entities
 {
     public class ClientBankAccount
     {
-        public string AccountNumberGeneratedID { get; set; } = GenerateAccountNumber();
-        public int PersonalNumberID { get; set; } 
         public Guid Id { get; set; }
+        public string AccountNumberGeneratedID { get; set; } = GenerateAccountNumber();
+        public Guid ClientId { get; set; } 
+        public Guid AccountId { get; set; }
         public decimal CurrentBalance { get; set; } = default!;
 
         public DateTime DateCreated { get; set; } = default!;

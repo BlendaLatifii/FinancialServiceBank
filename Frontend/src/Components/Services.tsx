@@ -1,10 +1,33 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import './Services.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import Header from './Header';
 import Footer from './Footer';
-
+import { BranchService } from '../services/BranchService';
+import { BranchModel } from '../interfaces/branch-model';
+import { Link } from 'react-router-dom';
+import { BankAccountService } from '../services/BankAccountService';
+import { BankAccountModel } from '../interfaces/bankAcc-model';
 function Services() {
+  const [branches, setBranches] = useState<BranchModel[]>([]);
+  const [accounts, setAccounts] = useState<BankAccountModel[]>([]);
+
+  useEffect(() => {
+    async function fetchBranches() {
+      const result = await BranchService.GetAllBranches();
+      setBranches(result);
+    }
+    fetchBranches();
+  }, []);
+  
+  useEffect(() => {
+    async function fetchBankAccounts() {
+      const result = await BankAccountService.GetAllBankAcc();
+      setAccounts(result);
+    }
+    fetchBankAccounts();
+  }, []);
+
   return (
     <div>
     <Header/>
@@ -77,6 +100,26 @@ function Services() {
     </div>
   </div>
 </div>
+<div className="account-list">
+            {accounts.map(account => (
+                <div key={account.id} className="account-card">
+                    <h3>{account.accountType}</h3>
+                </div>
+            ))}
+        </div>
+
+        <div className="branch-list-container">
+            <h1>Deget e bankes</h1>
+            <ul className="branch-list">
+                {branches.map((branch, index) => (
+                    <li key={index} className="branch-item">
+                        <span className="branch-name">{branch.branchName}</span>
+                        <span className="branch-address">{branch.address}</span>
+                        <span className="branch-opened">{branch.opened}</span>
+                    </li>
+                ))}
+            </ul>
+        </div>
   </div>
 </main>
   <Footer/>

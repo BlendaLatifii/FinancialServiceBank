@@ -30,11 +30,10 @@ namespace Api.Controllers
         }
 
 
-        [HttpGet]
-        [Route("{id}")]
-        public async Task<IActionResult> GetClientAccountById([FromRoute]string AccountNumberGeneratedID, CancellationToken cancellationToken)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetClientAccountById([FromRoute]Guid id, CancellationToken cancellationToken)
         {
-            await clientBankAccService.GetClientAccountById(AccountNumberGeneratedID, cancellationToken);
+            await clientBankAccService.GetClientAccountById(id, cancellationToken);
             return Ok();
         }
 
@@ -43,8 +42,8 @@ namespace Api.Controllers
 		{
 			var clientAcc = new ClientBankAccount()
 			{
-				PersonalNumberID = model.PersonalNumberID,
-			    Id = model.Id,
+				ClientId = model.ClientId,
+			    AccountId = model.AccountId,
 				CurrentBalance = model.CurrentBalance,
 				DateCreated = model.DateCreated,
 				DateLastUpdated = model.DateLastUpdated
@@ -53,15 +52,14 @@ namespace Api.Controllers
 			await _context.ClientBankAccounts.AddAsync(clientAcc);
 			await _context.SaveChangesAsync(cancellationToken);
 
-			return CreatedAtAction(nameof(GetClientAccountById), new { AccountNumberGeneratedID = model.AccountNumberGeneratedID }, model);
+			return CreatedAtAction(nameof(GetClientAccountById), new { Id = model.Id }, model);
 		}
 
-		[HttpPut]
-		[Route("{id}")]
-		public async Task<ActionResult> UpdateClientAcc([FromRoute] string AccountNumberGeneratedID, [FromBody] ClientBankAccountModel model, CancellationToken cancellationToken)
+		[HttpPut("{id}")]
+		public async Task<ActionResult> UpdateClientAcc([FromRoute] Guid id, [FromBody] ClientBankAccountModel model, CancellationToken cancellationToken)
 		{
 			var clientAcc = await _context.ClientBankAccounts
-			   .Where(x => x.AccountNumberGeneratedID == AccountNumberGeneratedID)
+			   .Where(x => x.Id == id)
 			   .FirstOrDefaultAsync(cancellationToken);
 
 			if (clientAcc == null)
@@ -69,8 +67,8 @@ namespace Api.Controllers
 				return NotFound();
 			}
 
-			clientAcc.PersonalNumberID = model.PersonalNumberID;
-			clientAcc.Id = model.Id;
+			clientAcc.ClientId = model.ClientId;
+			clientAcc.AccountId = model.AccountId;
 			clientAcc.CurrentBalance = model.CurrentBalance;
 			clientAcc.DateCreated = model.DateCreated;
 			clientAcc.DateLastUpdated = model.DateLastUpdated;
@@ -80,8 +78,8 @@ namespace Api.Controllers
 
 			var updatedClient = new ClientBankAccountModel
 			{
-				PersonalNumberID = clientAcc.PersonalNumberID,
-				Id = clientAcc.Id,
+				ClientId = clientAcc.ClientId,
+				AccountId = clientAcc.AccountId,
 				CurrentBalance = clientAcc.CurrentBalance,
 				DateCreated = clientAcc.DateCreated,
 				DateLastUpdated = clientAcc.DateLastUpdated
@@ -90,9 +88,9 @@ namespace Api.Controllers
 		}
 
 		[HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteClientBankAccount(string AccountNumberGeneratedID, CancellationToken cancellationToken)
+        public async Task<ActionResult> DeleteClientBankAccount(Guid id, CancellationToken cancellationToken)
         {
-            await clientBankAccService.DeleteClientBankAccount(AccountNumberGeneratedID, cancellationToken);
+            await clientBankAccService.DeleteClientBankAccount(id, cancellationToken);
             return Ok();
         }
 

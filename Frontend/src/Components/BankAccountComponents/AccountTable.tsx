@@ -10,16 +10,19 @@ import {
   TableCell,
   Confirm,
 } from "semantic-ui-react";
-import { BankAccountModel } from "../interfaces/bankAcc-model";
 import axios from "axios";
-import { BankAccountService } from "../services/BankAccountService";
 import { Link, useNavigate } from "react-router-dom";
+import { number } from "yup";
+import { BankAccountModel } from "../../interfaces/bankAcc-model";
+import { BankAccountService } from "../../services/BankAccountService";
+import Header from "../Header";
 
 export default function AccountTable() {
-  const [bankAcc, setBankAcc] = useState<BankAccountModel[]>([]);
+  const [accounts, setAccounts] = useState<BankAccountModel[]>([]);
   const [openConfirm,setOpenConfirm] = useState<boolean>(false);
-  const [deleteBankAccId, setDeleteBankAccId] = useState<string>("");
+  const [deleteAccountId, setDeleteAccountId] = useState<string>("");
   const [errors, setErrors] = useState({});
+
   const navigate =  useNavigate();
   useEffect(() => {
     fetchData();
@@ -27,42 +30,40 @@ export default function AccountTable() {
 
   const fetchData = async () => {
       const result = await BankAccountService.GetAllBankAcc();
-      setBankAcc(result);
-  };
-
-  function DeleteAcc(id: string) {
-    setOpenConfirm(true);
-    setDeleteBankAccId(id);
+      setAccounts(result);
   }
 
-    async function confirmedDeleteBankAcc(id:string)
-    {
+  function deleteAccount(id:string) {
+    setOpenConfirm(true);
+    setDeleteAccountId(id);
+  }
+    async function confirmedDeleteAccount(id:string)
+     {
       var result = await BankAccountService.DeleteBankAcc(id);
-      setBankAcc(bankAcc.filter((bankAcc) => bankAcc.id !== id))
+      setAccounts(accounts.filter((account) => account.id !== id))
       setOpenConfirm(false);
-      setDeleteBankAccId("");
-    }
+      setDeleteAccountId("");
+     }
 
-  function sendToDetails(id:string| null){
+  function sendToDetails(id:string ){
     navigate(`/EditBankAccount/${id}`)
   }
 
-  function AddBankAccount(){
-    navigate(`/EditBankAccount`)
+  function AddAccounts(){
+    navigate(`/AddBankAccount`)
   }
-
-
 
   return (
     <Fragment>
+       <Header/>
       <div className="mt-5 d-flex align-items-center">
-      <h1 style={{ marginLeft: "30px" }}>BankAccount</h1>
+      <h1 style={{ marginLeft: "30px" }}>Bank Account</h1>
       <Button
                   type="button"
                   className="ui positive basic button ms-4"
-                  onClick={() => AddBankAccount()}
+                  onClick={() => AddAccounts()}
                 >
-                  Add New BankAccount
+                  Add New Account
                 </Button>
         </div>
       <Table striped>
@@ -75,7 +76,7 @@ export default function AccountTable() {
         </TableHeader>
 
         <TableBody>
-          {bankAcc.map((item) => (
+          {accounts.map((item) => (
             <TableRow key={item.id}>
               <TableCell>{item.accountType}</TableCell>
               <TableCell>{item.accountDescription}</TableCell>
@@ -85,7 +86,7 @@ export default function AccountTable() {
                   type="button"
                   className="btn btn-danger"
                   negative
-                  onClick={() => DeleteAcc(item.id!)}
+                  onClick={() => deleteAccount(item.id!)}
                 >
                   Delete
                 </Button>
@@ -95,7 +96,7 @@ export default function AccountTable() {
              <Confirm
           open={openConfirm}
           onCancel={()=> setOpenConfirm(false)}
-          onConfirm={()=> confirmedDeleteBankAcc(deleteBankAccId)}
+          onConfirm={()=> confirmedDeleteAccount(deleteAccountId)}
         />
         </TableBody>
       </Table>

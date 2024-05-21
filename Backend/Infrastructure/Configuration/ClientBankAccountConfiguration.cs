@@ -13,7 +13,7 @@ namespace Infrastructure.Configuration
 
             builder.HasOne(x => x.Client)
                 .WithMany(x => x.ClientBankAccounts)
-                .HasForeignKey(x => x.PersonalNumberID);
+               .HasForeignKey(x => x.Id);
 
             builder.HasOne(x => x.BankAccount)
               .WithMany(x => x.ClientBankAccounts)

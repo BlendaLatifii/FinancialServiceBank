@@ -1,5 +1,5 @@
 export interface BankAccountModel{
-  id: string | null | undefined;
-  accountType: string | null;
-  accountDescription:string| null;
+  id: string ,
+  accountType: string ,
+  accountDescription:string,
 }

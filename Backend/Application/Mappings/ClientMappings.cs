@@ -9,27 +9,28 @@ namespace Application.Mappings
         public ClientMappings()
         {
             CreateMap<Client, ClientModel>()
-                .ForMember(x => x.ClientAddress, y => y.MapFrom(x => x.ClientAddress))
-                 .ForMember(x => x.ClientFirstName, y => y.MapFrom(x => x.ClientFirstName))
-                  .ForMember(x => x.ClientMiddleName, y => y.MapFrom(x => x.ClientMiddleName))
-                   .ForMember(x => x.ClientLastName, y => y.MapFrom(x => x.ClientLastName))
-					 .ForMember(x => x.City, y => y.MapFrom(x => x.City))
+                .ForMember(x => x.Id, y => y.MapFrom(x => x.Id))
+                .ForMember(x => x.PersonalNumberId, y => y.MapFrom(x => x.PersonalNumberId))
+                 .ForMember(x => x.FirstName, y => y.MapFrom(x => x.FirstName))
+                  .ForMember(x => x.MiddleName, y => y.MapFrom(x => x.MiddleName))
+                   .ForMember(x => x.LastName, y => y.MapFrom(x => x.LastName))
+                   .ForMember(x => x.PhoneNumber, y => y.MapFrom(x => x.PhoneNumber))
+                   .ForMember(x => x.EmailAddress, y => y.MapFrom(x => x.EmailAddress))
+                     .ForMember(x => x.City, y => y.MapFrom(x => x.City))
                       .ForMember(x => x.State, y => y.MapFrom(x => x.State))
-                       .ForMember(x => x.ZipCode, y => y.MapFrom(x => x.ZipCode))
-                        .ForMember(x => x.EmailAddress, y => y.MapFrom(x => x.EmailAddress))
-                         .ForMember(x => x.PhoneNumber, y => y.MapFrom(x => x.PhoneNumber))
-                          .ForMember(x => x.ClientDateOfBirth, y => y.MapFrom(x => x.ClientDateOfBirth));
+                      .ForMember(x => x.City, y => y.MapFrom(x => x.City))
+                       .ForMember(x => x.ZipCode, y => y.MapFrom(x => x.ZipCode));
             CreateMap<ClientModel, Client>()
-                .ForMember(x => x.ClientAddress, y => y.MapFrom(x => x.ClientAddress))
-                 .ForMember(x => x.ClientFirstName, y => y.MapFrom(x => x.ClientFirstName))
-                  .ForMember(x => x.ClientMiddleName, y => y.MapFrom(x => x.ClientMiddleName))
-                   .ForMember(x => x.ClientLastName, y => y.MapFrom(x => x.ClientLastName))
-					 .ForMember(x => x.City, y => y.MapFrom(x => x.City))
-					  .ForMember(x => x.State, y => y.MapFrom(x => x.State))
-					   .ForMember(x => x.ZipCode, y => y.MapFrom(x => x.ZipCode))
-						.ForMember(x => x.EmailAddress, y => y.MapFrom(x => x.EmailAddress))
-						 .ForMember(x => x.PhoneNumber, y => y.MapFrom(x => x.PhoneNumber))
-						  .ForMember(x => x.ClientDateOfBirth, y => y.MapFrom(x => x.ClientDateOfBirth));
+                .ForMember(x => x.Id, y => y.MapFrom(x => x.Id))
+                .ForMember(x => x.PersonalNumberId, y => y.MapFrom(x => x.PersonalNumberId))
+                 .ForMember(x => x.FirstName, y => y.MapFrom(x => x.FirstName))
+                  .ForMember(x => x.MiddleName, y => y.MapFrom(x => x.MiddleName))
+                   .ForMember(x => x.LastName, y => y.MapFrom(x => x.LastName))
+                   .ForMember(x => x.PhoneNumber, y => y.MapFrom(x => x.PhoneNumber))
+                   .ForMember(x => x.EmailAddress, y => y.MapFrom(x => x.EmailAddress))
+                    .ForMember(x => x.State, y => y.MapFrom(x => x.State))
+                     .ForMember(x => x.City, y => y.MapFrom(x => x.City))
+					   .ForMember(x => x.ZipCode, y => y.MapFrom(x => x.ZipCode));
 
 		}
     }

@@ -14,6 +14,7 @@ import { UserModel } from "../../interfaces/users";
 import axios from "axios";
 import { UserService } from "../../services/UsersService";
 import { Link, useNavigate } from "react-router-dom";
+import Header from "../Header";
 
 export default function RegisterTable() {
   const [users, setUsers] = useState<UserModel[]>([]);
@@ -55,6 +56,7 @@ export default function RegisterTable() {
 
   return (
     <Fragment>
+       <Header/>
       <div className="mt-5 d-flex align-items-center">
       <h1 style={{ marginLeft: "30px" }}>Users</h1>
       <Button
