@@ -184,6 +184,25 @@ namespace Infrastructure.Migrations
                     b.ToTable("Contacts");
                 });
 
+            modelBuilder.Entity("Domain.Entities.CreditCards", b =>
+                {
+                    b.Property<Guid?>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("AccountNumber")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CVV")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("TypesOfCreditCardsID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CreditCards");
+                });
+
             modelBuilder.Entity("Domain.Entities.Loan", b =>
                 {
                     b.Property<int>("Id")
@@ -265,6 +284,25 @@ namespace Infrastructure.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.TypesOfCreditCards", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TypesOfCreditCards");
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>
@@ -472,6 +510,17 @@ namespace Infrastructure.Migrations
                     b.Navigation("Client");
                 });
 
+            modelBuilder.Entity("Domain.Entities.CreditCards", b =>
+                {
+                    b.HasOne("Domain.Entities.TypesOfCreditCards", "TypesOfCreditCards")
+                        .WithMany("CreditCards")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TypesOfCreditCards");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("Domain.Entities.Role", null)
@@ -540,6 +589,11 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Role", b =>
                 {
                     b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("Domain.Entities.TypesOfCreditCards", b =>
+                {
+                    b.Navigation("CreditCards");
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>

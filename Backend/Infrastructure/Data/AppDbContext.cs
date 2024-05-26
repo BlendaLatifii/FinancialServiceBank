@@ -21,7 +21,9 @@ namespace Infrastructure.Data
         public DbSet<LoansType> LoansType { get; set; } = default!;
         public DbSet<ContactUs> Contacts { get; set; } = default!;
         public DbSet<ClientBankAccount>ClientBankAccounts { get; set; } = default! ;
-        protected override void OnModelCreating(ModelBuilder builder)
+        public DbSet<TypesOfCreditCards> TypesOfCreditCards { get; set; } = default!;
+		public DbSet<CreditCards> CreditCards { get; set; } = default!;
+		protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 

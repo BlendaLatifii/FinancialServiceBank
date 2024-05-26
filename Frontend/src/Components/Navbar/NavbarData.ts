@@ -47,4 +47,10 @@ export const SidebarData : NavItem[] = [
     icon:'',
     className: 'nav-text background:var(--color-primary)'
   },
+  {
+    title:'Types Of Credit Cards',
+    path:'/TypesOfCreditCardsTable',
+    icon:'',
+    className: 'nav-text background:var(--color-primary)'
+  },
 ];

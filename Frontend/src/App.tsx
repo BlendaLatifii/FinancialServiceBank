@@ -28,6 +28,7 @@ import ClientAccountTable from "./Components/ClientBankAccountComponents/ClientA
 import EditClientAccount from "./Components/EditClientAccount";
 import EditLoansType from "./Components/LoansTypeComponents/EditLoansType";
 import LoansTypeTable from "./Components/LoansTypeComponents/LoansTypeTable";
+import TypesOfCreditCardsTable from "./Components/TypesOfBankAccountComponents/TypesOfCreditCardsTable";
 
 function App() {
   axios.interceptors.request.use((config) => {
@@ -103,6 +104,7 @@ function App() {
         <Route path="/EditClientAccount/:id" element={<EditClientAccount/>}/>
         <Route path="/ClientAccount" element={<ClientAccount />}/>
         <Route path="/ClientAccountTable" element={<ClientAccountTable />}/>
+        <Route path="/TypesOfCreditCardsTable" element ={<TypesOfCreditCardsTable/>}/>
       </Routes>
       <ToastContainer />
     </>
