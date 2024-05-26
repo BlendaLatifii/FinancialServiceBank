@@ -18,7 +18,7 @@ namespace Infrastructure.Data
         public DbSet<Loan> Loans { get; set; } = default!;
         public DbSet<BankAccount> BankAccounts { get; set; } = default! ;
         public DbSet<Client> Clients { get; set; } = default! ;
-
+        public DbSet<LoansType> LoansType { get; set; } = default!;
         public DbSet<ContactUs> Contacts { get; set; } = default!;
         public DbSet<ClientBankAccount>ClientBankAccounts { get; set; } = default! ;
         protected override void OnModelCreating(ModelBuilder builder)

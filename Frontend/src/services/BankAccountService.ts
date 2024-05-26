@@ -1,5 +1,6 @@
 import axios from "axios";
 import { BankAccountModel } from "../interfaces/bankAcc-model";
+import { ListItemModel } from "../interfaces/list-item-model";
 
 export class BankAccountService {
     private static baseUrl = "https://localhost:7254/api/BankAccount";
@@ -18,6 +19,10 @@ export class BankAccountService {
 
    public static async EditOrAddBankAcc(model: BankAccountModel): Promise<void> {
     const result = await axios.post(`${BankAccountService.baseUrl}`, model);
+  }
+  public static async GetSelectList(): Promise<ListItemModel[]>{
+    const result = await axios.get<ListItemModel[]>(`${BankAccountService.baseUrl}/GetBankAccountSelectList`);
+    return result.data;
   }
 }
   

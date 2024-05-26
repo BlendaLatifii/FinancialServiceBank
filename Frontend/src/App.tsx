@@ -5,8 +5,6 @@ import Services from "./Components/Services";
 import AboutUs from "./Components/AboutUs";
 import ContactUs from "./Components/ContactUs";
 import Login from "./Components/Login";
-//import UserDashboard from "./Components/UserDashboard";
-//import Dashboard from "./Components/Dashboard";
 import Register from "./Components/Register";
 import { Routes, Route } from "react-router-dom";
 import RegisterTable from "./Components/UserComponents/RegisterTable";
@@ -25,6 +23,11 @@ import EditBankAccount from "./Components/BankAccountComponents/EditBankAccount"
 import AccountTable from "./Components/BankAccountComponents/AccountTable";
 import ClientTable from "./Components/ClientComponents/ClientTable";
 import EditClient from "./Components/ClientComponents/EditClient";
+import ClientAccount from "./Components/ClientBankAccountComponents/ClientAccount";
+import ClientAccountTable from "./Components/ClientBankAccountComponents/ClientAccountTable";
+import EditClientAccount from "./Components/EditClientAccount";
+import EditLoansType from "./Components/LoansTypeComponents/EditLoansType";
+import LoansTypeTable from "./Components/LoansTypeComponents/LoansTypeTable";
 
 function App() {
   axios.interceptors.request.use((config) => {
@@ -89,10 +92,17 @@ function App() {
         <Route path="/AddBankAccount" element={<EditBankAccount/>}/>
         <Route path="/EditBankAccount/:id" element={<EditBankAccount/>}/>
         <Route path="/AccountTable" element={<AccountTable />}/>
+        <Route path="/AddLoanType" element={<EditLoansType/>}/>
+        <Route path="/EditLoansType/:id" element={<EditLoansType/>}/>
+        <Route path="/LoansTypeTable" element={<LoansTypeTable />}/>
         <Route path="/RegisterForClients" element={<RegisterForClients />} />
         <Route path="/AddClient" element={<EditClient/>}/>
         <Route path="/EditClient/:id" element={<EditClient/>}/>
         <Route path="/ClientTable" element={<ClientTable />}/>
+        <Route path="/AddClientAccount" element={<EditClientAccount/>}/>
+        <Route path="/EditClientAccount/:id" element={<EditClientAccount/>}/>
+        <Route path="/ClientAccount" element={<ClientAccount />}/>
+        <Route path="/ClientAccountTable" element={<ClientAccountTable />}/>
       </Routes>
       <ToastContainer />
     </>

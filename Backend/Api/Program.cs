@@ -121,6 +121,7 @@ builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IClientBankAccountService, ClientBankAccountService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IContactService, ContactUsService>();
+builder.Services.AddScoped<ILoansTypeService, LoansTypeService>();
 
 builder.Services.AddScoped<IAuthorizationManager, AuthorizationManager>();
 builder.Services.AddAutoMapper(typeof(UserMappings));

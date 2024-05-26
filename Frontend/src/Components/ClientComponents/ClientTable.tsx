@@ -10,9 +10,6 @@ import {
   TableCell,
   Confirm,
 } from "semantic-ui-react";
-import { UserModel } from "../../interfaces/users";
-import axios from "axios";
-import { UserService } from "../../services/UsersService";
 import { Link, useNavigate } from "react-router-dom";
 import { ClientModel } from "../../interfaces/client-model";
 import { ClientService } from "../../services/ClientService";
@@ -51,16 +48,13 @@ export default function ClientTable() {
       setDeleteClientId("");
     }
 
-  function sendToDetails(id:string | null){
+  function sendToDetails(id:string){
     navigate(`/EditClient/${id}`)
   }
 
   function AddClient(){
     navigate(`/AddClient`)
   }
-
-
-
   return (
     <Fragment>
        <Header/>

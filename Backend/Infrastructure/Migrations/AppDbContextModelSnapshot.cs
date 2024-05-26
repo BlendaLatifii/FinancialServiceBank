@@ -94,8 +94,9 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PersonalNumberId")
-                        .HasColumnType("int");
+                    b.Property<string>("PersonalNumberId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
@@ -119,10 +120,15 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.ClientBankAccount", b =>
                 {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("AccountNumberGeneratedID")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid>("AccountId")
+                    b.Property<Guid>("BankAccountId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ClientId")
@@ -137,12 +143,14 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("DateLastUpdated")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                    b.HasKey("Id");
 
-                    b.HasKey("AccountNumberGeneratedID");
+                    b.HasIndex("AccountNumberGeneratedID")
+                        .IsUnique();
 
-                    b.HasIndex("Id");
+                    b.HasIndex("BankAccountId");
+
+                    b.HasIndex("ClientId");
 
                     b.ToTable("ClientBankAccounts");
                 });
@@ -214,6 +222,21 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Loans");
+                });
+
+            modelBuilder.Entity("Domain.Entities.LoansType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("LoanType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LoansType");
                 });
 
             modelBuilder.Entity("Domain.Entities.Role", b =>
@@ -434,13 +457,13 @@ namespace Infrastructure.Migrations
                 {
                     b.HasOne("Domain.Entities.BankAccount", "BankAccount")
                         .WithMany("ClientBankAccounts")
-                        .HasForeignKey("Id")
+                        .HasForeignKey("BankAccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Client", "Client")
                         .WithMany("ClientBankAccounts")
-                        .HasForeignKey("Id")
+                        .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

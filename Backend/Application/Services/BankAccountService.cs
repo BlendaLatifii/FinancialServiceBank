@@ -44,6 +44,19 @@ namespace Application.Services
             }
 
         }
+
+        public async Task<List<ListItemModel>> GetBankAccountsSelectListAsync(CancellationToken cancellationToken)
+        {
+            var model = await _context.BankAccounts
+                .Select(x => new ListItemModel()
+                { 
+                    Id = x.Id,
+                    Name = x.AccountType
+                }).ToListAsync(cancellationToken);
+
+            return model;
+
+        }
         public async Task<BankAccountModel> CreateOrUpdateBankAccount(BankAccountModel model, CancellationToken cancellationToken)
         {
             if (model.Id == null || model.Id == Guid.Empty)

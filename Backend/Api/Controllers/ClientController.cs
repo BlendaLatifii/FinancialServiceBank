@@ -32,8 +32,8 @@ namespace Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetClientById([FromRoute]Guid id, CancellationToken cancellationToken)
 		{
-			await clientService.GetByIdAsync(id, cancellationToken);
-			return Ok();
+            var model = await clientService.GetByIdAsync(id, cancellationToken);
+			return Ok(model);
 		}
 
 		[HttpPost]

@@ -9,5 +9,6 @@ namespace Domain.Interfaces
         Task<BankAccountModel> CreateOrUpdateBankAccount(BankAccountModel model, CancellationToken cancellationToken);
         Task<BankAccountModel> GetBankAccountById(Guid id, CancellationToken cancellationToken);
         Task DeleteAccount(Guid id, CancellationToken cancellationToken);
+        Task<List<ListItemModel>> GetBankAccountsSelectListAsync(CancellationToken cancellationToken);
     }
 }

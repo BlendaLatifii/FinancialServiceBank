@@ -37,6 +37,12 @@ namespace Api.Controllers
             var updateBankAcc = await bankAccountService.CreateOrUpdateBankAccount(model, cancellationToken);
             return Ok(updateBankAcc);
         }
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetBankAccountSelectListAsync(CancellationToken cancellationToken)
+        {
+            var model = await bankAccountService.GetBankAccountsSelectListAsync(cancellationToken);
+            return Ok(model);
+        }
 
         [HttpDelete("{id}")]
 		public async Task<IActionResult> DeleteAccount(Guid id, CancellationToken cancellationToken)

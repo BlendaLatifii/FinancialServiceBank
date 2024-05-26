@@ -9,15 +9,18 @@ namespace Infrastructure.Configuration
     {
         public void Configure(EntityTypeBuilder<ClientBankAccount> builder)
         {
-            builder.HasKey(x => x.AccountNumberGeneratedID);
+            builder.HasKey(x => x.Id);
+            builder.HasIndex(x => x.AccountNumberGeneratedID).IsUnique();
 
             builder.HasOne(x => x.Client)
                 .WithMany(x => x.ClientBankAccounts)
-               .HasForeignKey(x => x.Id);
+                .HasForeignKey(x => x.ClientId)
+                .IsRequired(true);
 
             builder.HasOne(x => x.BankAccount)
               .WithMany(x => x.ClientBankAccounts)
-              .HasForeignKey(x => x.Id);
+              .HasForeignKey(x => x.BankAccountId)
+              .IsRequired(true);
         }
     }
 }

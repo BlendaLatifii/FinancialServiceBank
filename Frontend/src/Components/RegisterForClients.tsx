@@ -1,12 +1,14 @@
-import 'bootstrap/dist/css/bootstrap.css';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { ListItemModel } from '../interfaces/list-item-model';
+import { BankAccountService } from '../services/BankAccountService';
+import { SelectListItem } from '../interfaces/select-list-item';
+import { ClientBankAccountModel } from '../interfaces/clientaccount-model';
 import axios from 'axios';
 
-
-function RegisterForClients() {
+export default function RegisterForClients() {
   const [formData, setFormData] = useState({
     personalNumberId:'',
     firstName: '',
@@ -43,12 +45,11 @@ function RegisterForClients() {
       }
       const response = await axios.post(`https://localhost:7254/api/Client`,body);
        setRegistered(true);
-       
+      navigate("/ClientAccount");
     } catch (error) {
-      console.error('Error registering user:', error);
+      console.error('Error creating account :', error);
     }
   };
-
   return (
     <>
     <Header/>
@@ -68,46 +69,42 @@ function RegisterForClients() {
                       <div className="row">
                         <div className="col-md-6 mb-3">
                           <label htmlFor="validationTooltip01">Personal Number</label>
-                          <input type="text" className="form-control" onChange={handleChange} name="personalNumberId" id="validationTooltip01" placeholder="Client's PersonalNumber"required />
+                          <input type="text" className="form-control" onChange={handleChange} name="personalNumberId"
+                           id="personalNumberId" placeholder="Client's PersonalNumber" value={formData.personalNumberId} required />
                           <div className="valid-tooltip">
                             Looks good!
                           </div>
                         </div>
                         <div className="col-md-6 mb-3">
                           <label htmlFor="validationTooltip01">FirstName</label>
-                          <input type="text" className="form-control" onChange={handleChange} name="firstName" id="validationTooltip01" placeholder="Client's MiddleName" required />
+                          <input type="text" className="form-control" onChange={handleChange} name="firstName" value={formData.firstName}
+                           id="firstName" placeholder="FirstName" required />
                           <div className="valid-tooltip">
                             Looks good!
                           </div>
                         </div>
                         <div className="col-md-6 mb-3">
                           <label htmlFor="validationTooltip01">Middlename</label>
-                          <input type="text" className="form-control" onChange={handleChange} name="middleName" id="validationTooltip02" placeholder="Client's Surname" required />
+                          <input type="text" className="form-control" onChange={handleChange} name="middleName" value={formData.middleName}
+                           id="middleName" placeholder="MiddleName" required />
                           <div className="valid-tooltip">
                             Looks good!
                           </div>
                         </div>
                         <div className="col-md-6 mb-3">
                           <label htmlFor="validationTooltip02">LastName</label>
-                          <input type="text" className="form-control" onChange={handleChange} name="lastName" id="validationTooltip02" placeholder="Client's Personal Number" required />
+                          <input type="text" className="form-control" onChange={handleChange} name="lastName" value={formData.lastName} 
+                          id="lastName" placeholder="LastName" required />
                           <div className="valid-tooltip">
                             Looks good!
                           </div>
                         </div>
                       </div>
                       <div className="row">
-                        {/* <div className="col-md-6 mb-3">
-                          <label htmlFor="validationTooltipUsername">BirthDate</label>
-                          <div className="input-group">
-                            <input type="date" className="form-control" onChange={handleChange} name="birthdate" id="validationTooltipUsername" placeholder="birthdate" aria-describedby="validationTooltipUsernamePrepend" required />
-                            <div className="invalid-tooltip">
-                              Please choose a unique and valid username.
-                            </div>
-                          </div>
-                        </div> */}
                         <div className="col-md-6 mb-3">
                           <label htmlFor="validationTooltip02">PhoneNumber</label>
-                          <input type="tel" className="form-control" onChange={handleChange} name="phoneNumber" id="validationTooltip02" placeholder="Client's PhoneNumber" required />
+                          <input type="tel" className="form-control" onChange={handleChange} name="phoneNumber" 
+                          value={formData.phoneNumber} id="phoneNumber" placeholder="PhoneNumber" required />
                           <div className="valid-tooltip">
                             Looks good!
                           </div>
@@ -115,47 +112,48 @@ function RegisterForClients() {
                       </div>
                       <div className="col-md-12 mb-3">
                         <label htmlFor="validationTooltipUsername">Email-Address</label>
-                        <input type="text" className="form-control" onChange={handleChange} name="emailAddress" id="validationTooltipUsername" placeholder="Email-Address" aria-describedby="validationTooltipUsernamePrepend" required />
+                        <input type="text" className="form-control" onChange={handleChange} name="emailAddress"
+                        value={formData.emailAddress} id="emailAddress" placeholder="Email-Address" aria-describedby="validationTooltipUsernamePrepend" required />
                         <div className="invalid-tooltip">
                           Please choose a unique and valid username.
                         </div>
                       </div>
-
                       <div className="row">
                       <div className="col-md-3 mb-3">
                           <label htmlFor="validationTooltip04">State</label>
-                          <input type="text" className="form-control" onChange={handleChange} name="state" id="validationTooltip04" placeholder="State" required />
+                          <input type="text" className="form-control" onChange={handleChange} name="state" 
+                          value={formData.state} id="state" placeholder="State" required />
                           <div className="invalid-tooltip">
                             Please provide a valid state.
                           </div>
                         </div>
                         <div className="col-md-6 mb-3">
                           <label htmlFor="validationTooltip03">City</label>
-                          <input type="text" className="form-control" onChange={handleChange} name="city" id="validationTooltip03" placeholder="City" required />
+                          <input type="text" className="form-control" onChange={handleChange} name="city"
+                          value={formData.city} id="city" placeholder="City" required />
                           <div className="invalid-tooltip">
                             Please provide a valid city.
                           </div>
                         </div>
                         <div className="col-md-3 mb-3">
                           <label htmlFor="validationTooltip05">ZipCode</label>
-                          <input type="text" className="form-control" onChange={handleChange} name="zipCode" id="validationTooltip05" placeholder="ZipCode" required />
+                          <input type="text" className="form-control" onChange={handleChange} name="zipCode"
+                          value={formData.zipCode} id="zipCode" placeholder="ZipCode" required />
                           <div className="invalid-tooltip">
                             Please provide a valid zip.
                           </div>
                         </div>
                       </div>
-                      <button className="btn btn-primary hapitjeter float-right" type="button" data-id="1">Register</button>
+                      <button className="btn btn-primary hapitjeter float-right" type="submit" data-id="1">Register</button>
                     </div>
-                  </div>
+                    </div>
                 </div>
               </div>
             </div>
           </form>
-        </div>
+          </div>
       </div >
-     <Footer/>
+     <Footer/>           
     </>
   );
 }
-
-export default RegisterForClients;
