@@ -14,7 +14,7 @@ export default function EditTypesOfCreditCards() {
       id:id!,
       name:'',
       description: '',
-  } as TypesOfCreditCardsModel)
+  } as TypesOfCreditCardsModel);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,7 +36,8 @@ export default function EditTypesOfCreditCards() {
   }, [id]);
 
  const validation = yup.object<TypesOfCreditCardsModel>({
-   loanType:yup.string().required(),
+   name:yup.string().required(),
+   description:yup.string().required(),
 })
  const navigate = useNavigate();
 

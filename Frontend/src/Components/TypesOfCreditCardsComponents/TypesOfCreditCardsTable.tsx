@@ -29,7 +29,8 @@ export default function TypesOfCreditCardsTable() {
   const fetchData = async () => {
     const result = await TypesOfCreditCardsService.GetAllTypes();
     setType(result);
-  };
+  }
+  
   function deleteType(id: string) {
     setOpenConfirm(true);
     setDeleteTypeId(id);
@@ -72,7 +73,7 @@ export default function TypesOfCreditCardsTable() {
         </TableHeader>
         <TableBody>
           {type.map((item) => (
-            <TableRow key={item.id}>
+            <TableRow key={item.id!}>
               <TableCell>{item.name}</TableCell>
               <TableCell>{item.description}</TableCell>
               <TableCell>
