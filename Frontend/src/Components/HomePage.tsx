@@ -16,7 +16,7 @@ function HomePage({}: Props) {
           <div className="container position-relative">
             <div className="row gy-5" data-aos="fade-in">
               <div className="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center text-center text-lg-start">
-                <h2>Welcome to <span>Financal Service Bank</span></h2>
+                <h2>Welcome to <span>Financial Service Bank</span></h2>
                 <p>where your financial journey begins with personalized service and innovative solutions tailored just for you.</p>
                <div className="d-flex justify-content-center justify-content-lg-start">
                    <a href="#about" className="btn-get-started">Get Started</a>
@@ -35,19 +35,19 @@ function HomePage({}: Props) {
                 <div className="col-xl-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
                   <div className="icon-box">
                     <div className="icon"><i className="bi bi-easel"></i></div>
-                    <h4 className="title"><a href="" className="stretched-link">Account</a></h4>
+                       <h4 className="title"><Link to="/ClientBankAccount" className="link-info">Account</Link></h4>
                   </div>
                 </div>
                 <div className="col-xl-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
                   <div className="icon-box">
                     <div className="icon"><i className="bi bi-gem"></i></div>
-                    <h4 className="title"><a href="" className="stretched-link">Online Services</a></h4>
+                    <h4 className="title"><Link to="/Transaction" className="link-info">Transaction</Link></h4>
                   </div>
                 </div>
                 <div className="col-xl-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
                   <div className="icon-box">
                     <div className="icon"><i className="bi bi-geo-alt"></i></div>
-                    <h4 className="title"><Link to="AddLoanPage" className='stretched-link'>Loans</Link></h4>
+                    <h4 className="title"><Link to="/LoanForm" className='stretched-link'>Loans</Link></h4>
                   </div>
                 </div>
                 <div className="col-xl-3 col-md-6" data-aos="fade-up" data-aos-delay="500">

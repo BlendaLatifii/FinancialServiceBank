@@ -4,10 +4,10 @@ import {ClientModel} from "./client-model";
 export interface ClientBankAccountModel {
     id:string | null;
     accountNumberGeneratedID: string | null;
-    personalNumber: string ;
+    personalNumber: string |null ;
     currentBalance: number | null ;
     dateCreated: Date | null;
     dateLastUpdated : Date | null;
-    clientId : string,
+    clientId : string | null,
     bankAccountId: string | null,
 }

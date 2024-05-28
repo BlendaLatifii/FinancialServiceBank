@@ -49,7 +49,7 @@ export default function ClientTable() {
     }
 
   function sendToDetails(id:string){
-    navigate(`/EditClient/${id}`)
+    navigate(`/RegisterForClients/${id}`)
   }
 
   function AddClient(){

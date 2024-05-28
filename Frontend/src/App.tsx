@@ -22,14 +22,15 @@ import EditBranch from "./Components/BranchComponents/EditBranch";
 import EditBankAccount from "./Components/BankAccountComponents/EditBankAccount";
 import AccountTable from "./Components/BankAccountComponents/AccountTable";
 import ClientTable from "./Components/ClientComponents/ClientTable";
-import EditClient from "./Components/ClientComponents/EditClient";
-import ClientAccount from "./Components/ClientBankAccountComponents/ClientAccount";
 import ClientAccountTable from "./Components/ClientBankAccountComponents/ClientAccountTable";
 import EditClientAccount from "./Components/EditClientAccount";
 import EditLoansType from "./Components/LoansTypeComponents/EditLoansType";
 import LoansTypeTable from "./Components/LoansTypeComponents/LoansTypeTable";
 import TypesOfCreditCardsTable from "./Components/TypesOfCreditCardsComponents/TypesOfCreditCardsTable";
 import EditTypesOfCreditCards from "./Components/TypesOfCreditCardsComponents/EditTypesOfCreditCards";
+import Transaction from "./Components/TransactionComponents/Transaction";
+import TransactionTable from "./Components/TransactionComponents/TransactionTable";
+import LoanForm from "./Components/LoanForm";
 
 function App() {
   axios.interceptors.request.use((config) => {
@@ -98,16 +99,21 @@ function App() {
         <Route path="/EditLoansType/:id" element={<EditLoansType/>}/>
         <Route path="/LoansTypeTable" element={<LoansTypeTable />}/>
         <Route path="/RegisterForClients" element={<RegisterForClients />} />
-        <Route path="/AddClient" element={<EditClient/>}/>
-        <Route path="/EditClient/:id" element={<EditClient/>}/>
+        <Route path="/AddClient" element={<RegisterForClients/>}/>
+        <Route path="/RegisterForClients/:id" element={<RegisterForClients/>}/>
         <Route path="/ClientTable" element={<ClientTable />}/>
         <Route path="/AddClientAccount" element={<EditClientAccount/>}/>
         <Route path="/EditClientAccount/:id" element={<EditClientAccount/>}/>
-        <Route path="/ClientAccount" element={<ClientAccount />}/>
+        <Route path="/EditClientAccount" element={<EditClientAccount />}/>
         <Route path="/ClientAccountTable" element={<ClientAccountTable />}/>
         <Route path="/EditTypesOfCreditCards/:id" element ={<EditTypesOfCreditCards/>}/>
         <Route path="/AddTypesOfCreditCards" element ={<EditTypesOfCreditCards/>}/>
         <Route path="/TypesOfCreditCardsTable" element ={<TypesOfCreditCardsTable/>}/>
+        <Route path="/Transaction" element={<Transaction/>}/>
+        <Route path="/AddTransaction" element={<Transaction/>}/>
+        <Route path="/EditTransaction/:id" element={<Transaction/>}/>
+        <Route path="TransactionTable" element={<TransactionTable />} />
+        <Route path="LoanForm" element={<LoanForm />} />
       </Routes>
       <ToastContainer />
     </>

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240526223021_db-editTable")]
-    partial class dbeditTable
+    [Migration("20240528160903_db-table")]
+    partial class dbtable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -269,6 +269,42 @@ namespace Infrastructure.Migrations
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entities.Transaction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("DestinationClientBankAccountId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("SourceClientBankAccountId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("TransactionAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("TransactionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("TransactionDateUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TransactionStatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TransactionType")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DestinationClientBankAccountId");
+
+                    b.HasIndex("SourceClientBankAccountId");
+
+                    b.ToTable("Transactions");
+                });
+
             modelBuilder.Entity("Domain.Entities.TypesOfCreditCards", b =>
                 {
                     b.Property<Guid>("Id")
@@ -493,6 +529,23 @@ namespace Infrastructure.Migrations
                     b.Navigation("Client");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Transaction", b =>
+                {
+                    b.HasOne("Domain.Entities.ClientBankAccount", "DestinationClientBankAccount")
+                        .WithMany("RecivedTransations")
+                        .HasForeignKey("DestinationClientBankAccountId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("Domain.Entities.ClientBankAccount", "SourceClientBankAccount")
+                        .WithMany("SendTransations")
+                        .HasForeignKey("SourceClientBankAccountId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("DestinationClientBankAccount");
+
+                    b.Navigation("SourceClientBankAccount");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("Domain.Entities.Role", null)
@@ -556,6 +609,13 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Client", b =>
                 {
                     b.Navigation("ClientBankAccounts");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ClientBankAccount", b =>
+                {
+                    b.Navigation("RecivedTransations");
+
+                    b.Navigation("SendTransations");
                 });
 
             modelBuilder.Entity("Domain.Entities.Role", b =>

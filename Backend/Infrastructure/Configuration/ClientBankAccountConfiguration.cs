@@ -21,6 +21,8 @@ namespace Infrastructure.Configuration
               .WithMany(x => x.ClientBankAccounts)
               .HasForeignKey(x => x.BankAccountId)
               .IsRequired(true);
+
+
         }
     }
 }

@@ -38,7 +38,9 @@ namespace Application.Services
 
         public async Task<AuthenticationModel> LoginAsync(LoginModel loginModel, CancellationToken cancellationToken)
         {
-            var user = await _dbContext.Users.Where(x => x.Email == loginModel.Email).FirstOrDefaultAsync(cancellationToken);
+            var user = await _dbContext.Users
+                .Where(x => x.Email == loginModel.Email)
+                .FirstOrDefaultAsync(cancellationToken);
 
             if (user is null)
             {

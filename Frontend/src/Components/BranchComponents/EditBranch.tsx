@@ -67,7 +67,7 @@ export default function EditBranch() {
   return (
     <>
     
-      <h1 style={{ marginLeft: "15px" }}>Edit Branch</h1>
+      <h1 style={{ marginLeft: "15px" }}>{ values.branchId != null ?'Edit': 'Add'} Branch</h1>
       <Segment clearing style={{ marginRight: "30px", marginTop: "30px", marginLeft: "10px" }}>
       <Formik validationSchema={validation}
            enableReinitialize 

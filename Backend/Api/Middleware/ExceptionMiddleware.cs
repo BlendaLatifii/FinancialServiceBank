@@ -12,6 +12,7 @@ namespace Api.Middleware
             public static IApplicationBuilder UseAppExceptionHandler(this IApplicationBuilder builder)
             {
                 builder.UseExceptionHandler(conf =>
+                
                 {
                     conf.Run(async context =>
                     {

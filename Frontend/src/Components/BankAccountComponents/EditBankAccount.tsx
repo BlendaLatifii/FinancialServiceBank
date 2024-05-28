@@ -58,7 +58,7 @@ export default function EditBankAccount() {
   return (
     <>
     
-      <h1 style={{ marginLeft: "15px" }}>Bank Account</h1>
+      <h1 style={{ marginLeft: "15px" }}>{ values.id != null ?'Edit': 'Add'}Bank Account</h1>
       <Segment clearing style={{ marginRight: "30px", marginTop: "30px", marginLeft: "10px" }}>
       <Formik validationSchema={validation}
            enableReinitialize 

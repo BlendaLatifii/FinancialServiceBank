@@ -10,7 +10,7 @@ function Footer(){
                   <a href="index.html" className="logo d-flex align-items-center">
                     <span>Bank</span>
                   </a>
-                  <p>Cras fermentum odio eu feugiat lide par naso tierra. Justo eget nada terra videa magna derita valies darta donna mare fermentum iaculis eu non diam phasellus.</p>
+                  <p>"Your trusted partner in financial growth and security."</p>
                   <div className="social-links d-flex mt-4">
                     <a href="#" className="twitter"><i className="bi bi-twitter"></i></a>
                     <a href="#" className="facebook"><i className="bi bi-facebook"></i></a>
@@ -25,19 +25,16 @@ function Footer(){
                   <li><Link to="/">Home</Link></li>
                     <li><Link to="/about">About us</Link></li>
                     <li><Link to="/services">Services</Link></li>
-                    <li><Link to="#">Terms of service</Link></li>
-                    <li><Link to="#">Privacy policy</Link></li>
+
                   </ul>
                 </div>
     
                 <div className="col-lg-2 col-6 footer-links">
                   <h4>Our Services</h4>
                   <ul>
-                    <li><a href="#">Web Design</a></li>
-                    <li><a href="#">Web Development</a></li>
-                    <li><a href="#">Product Management</a></li>
-                    <li><a href="#">Marketing</a></li>
-                    <li><a href="#">Graphic Design</a></li>
+                    <li><a href="#">Loans</a></li>
+                    <li><a href="#">Transaction</a></li>
+                    <li><a href="#">Bank Accountt</a></li>
                   </ul>
                 </div>
     
@@ -56,7 +53,7 @@ function Footer(){
     
             <div className="container mt-4">
               <div className="copyright">
-                &copy; Copyright <strong><span>Impact</span></strong>. All Rights Reserved
+                &copy; Copyright <strong><span>Financial Service Bank</span></strong>. All Rights Reserved
               </div>
             </div>
           </footer></>

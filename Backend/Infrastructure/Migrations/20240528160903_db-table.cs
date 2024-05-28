@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Infrastructure.Migrations
 {
-    public partial class dbeditTable : Migration
+    public partial class dbtable : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -294,6 +294,34 @@ namespace Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Transactions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TransactionAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    TransactionStatus = table.Column<int>(type: "int", nullable: false),
+                    SourceClientBankAccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DestinationClientBankAccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    TransactionType = table.Column<int>(type: "int", nullable: false),
+                    TransactionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TransactionDateUpdated = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Transactions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Transactions_ClientBankAccounts_DestinationClientBankAccountId",
+                        column: x => x.DestinationClientBankAccountId,
+                        principalTable: "ClientBankAccounts",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Transactions_ClientBankAccounts_SourceClientBankAccountId",
+                        column: x => x.SourceClientBankAccountId,
+                        principalTable: "ClientBankAccounts",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -354,6 +382,16 @@ namespace Infrastructure.Migrations
                 table: "Clients",
                 column: "PersonalNumberId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Transactions_DestinationClientBankAccountId",
+                table: "Transactions",
+                column: "DestinationClientBankAccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Transactions_SourceClientBankAccountId",
+                table: "Transactions",
+                column: "SourceClientBankAccountId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -377,9 +415,6 @@ namespace Infrastructure.Migrations
                 name: "Branches");
 
             migrationBuilder.DropTable(
-                name: "ClientBankAccounts");
-
-            migrationBuilder.DropTable(
                 name: "Contacts");
 
             migrationBuilder.DropTable(
@@ -389,6 +424,9 @@ namespace Infrastructure.Migrations
                 name: "LoansType");
 
             migrationBuilder.DropTable(
+                name: "Transactions");
+
+            migrationBuilder.DropTable(
                 name: "TypesOfCreditCards");
 
             migrationBuilder.DropTable(
@@ -396,6 +434,9 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "ClientBankAccounts");
 
             migrationBuilder.DropTable(
                 name: "BankAccounts");
