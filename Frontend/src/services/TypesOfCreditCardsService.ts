@@ -1,5 +1,6 @@
 import axios from "axios";
 import { TypesOfCreditCardsModel } from "../interfaces/TypesOfCreditCards-model";
+import { ListItemModel } from "../interfaces/list-item-model";
 
 export class TypesOfCreditCardsService {
     private static baseUrl = "https://localhost:7254/api/TypesOfCreditCards";
@@ -18,6 +19,10 @@ export class TypesOfCreditCardsService {
 
    public static async EditOrAddType(model: TypesOfCreditCardsModel): Promise<void> {
     const result = await axios.post(`${TypesOfCreditCardsService.baseUrl}`, model);
+  }
+  public static async GetSelectList(): Promise<ListItemModel[]>{
+    const result = await axios.get<ListItemModel[]>(`${TypesOfCreditCardsService.baseUrl}/GetTypesOfCreditCardsSelectList`);
+    return result.data;
   }
 }
   

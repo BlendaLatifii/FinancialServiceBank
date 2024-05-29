@@ -39,6 +39,13 @@ namespace Api.Controllers
 			return Ok(updateType);
 		}
 
+		[HttpGet("[action]")]
+		public async Task<IActionResult> GetTypesOfCreditCardsSelectListAsync(CancellationToken cancellationToken)
+		{
+			var model = await creditCardsService.GetTypesOfCreditCardsSelectListAsync(cancellationToken);
+			return Ok(model);
+		}
+
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> DeleteTypesOfCreditCards(Guid id, CancellationToken cancellationToken)
 		{

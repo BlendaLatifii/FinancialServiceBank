@@ -31,6 +31,8 @@ import EditTypesOfCreditCards from "./Components/TypesOfCreditCardsComponents/Ed
 import Transaction from "./Components/TransactionComponents/Transaction";
 import TransactionTable from "./Components/TransactionComponents/TransactionTable";
 import LoanForm from "./Components/LoanForm";
+import CreditCardsTable from "./Components/CreditCardsComponents/CreditCardsTable";
+import EditCreditCards from "./Components/CreditCardsComponents/EditCreditCards";
 
 function App() {
   axios.interceptors.request.use((config) => {
@@ -109,6 +111,9 @@ function App() {
         <Route path="/EditTypesOfCreditCards/:id" element ={<EditTypesOfCreditCards/>}/>
         <Route path="/AddTypesOfCreditCards" element ={<EditTypesOfCreditCards/>}/>
         <Route path="/TypesOfCreditCardsTable" element ={<TypesOfCreditCardsTable/>}/>
+        <Route path ="/CreditCardsTable" element = {<CreditCardsTable/>}/>
+        <Route path="/EditCreditCards/:id" element = {<EditCreditCards/>}/>
+        <Route path="/AddCreditCards" element = {<EditCreditCards/>}/>
         <Route path="/Transaction" element={<Transaction/>}/>
         <Route path="/AddTransaction" element={<Transaction/>}/>
         <Route path="/EditTransaction/:id" element={<Transaction/>}/>

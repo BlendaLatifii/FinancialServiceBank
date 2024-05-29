@@ -27,7 +27,7 @@ export default function EditTypesOfCreditCards() {
             description:typeData.description,
         })
       } catch (error) {
-        console.error("Error fetching loans type details:", error);
+        console.error("Error fetching types of credit cards details:", error);
       }
     };
 

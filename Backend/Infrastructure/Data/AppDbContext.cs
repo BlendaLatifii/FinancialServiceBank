@@ -23,7 +23,8 @@ namespace Infrastructure.Data
         public DbSet<ClientBankAccount>ClientBankAccounts { get; set; } = default! ;
         public DbSet<TypesOfCreditCards> TypesOfCreditCards { get; set; } = default!;
         public DbSet<Transaction> Transactions{ get; set; } = default!;
-        protected override void OnModelCreating(ModelBuilder builder)
+		public DbSet<CreditCards> CreditCards { get; set; } = default!;
+		protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 

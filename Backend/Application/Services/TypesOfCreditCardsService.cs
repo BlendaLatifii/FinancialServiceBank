@@ -67,6 +67,19 @@ namespace Application.Services
 				};
 			}
 		}
+
+		public async Task<List<ListItemModel>> GetTypesOfCreditCardsSelectListAsync(CancellationToken cancellationToken)
+		{
+			var model = await appDbContext.TypesOfCreditCards
+				.Select(x => new ListItemModel()
+				{
+					Id = x.Id,
+					Name = x.Name
+				}).ToListAsync(cancellationToken);
+
+			return model;
+
+		}
 		public async Task<TypesOfCreditCardsModel> GetTypesOfCreditCardsById(Guid id, CancellationToken cancellationToken)
 		{
 			var card = await appDbContext.TypesOfCreditCards
