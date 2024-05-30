@@ -70,19 +70,19 @@ export default function CreditCardsTable() {
             <TableHeaderCell>Account Number</TableHeaderCell>
             <TableHeaderCell>Types Of Credit Card</TableHeaderCell>
             <TableHeaderCell>validThru</TableHeaderCell>
-            <TableHeaderCell>Types Of Credit Cards ID</TableHeaderCell>
+            <TableHeaderCell>Actions</TableHeaderCell>
           </TableRow>
         </TableHeader>
 
         <TableBody>
           {creditCards.map((item) => (
             <TableRow key={item.id}>
-              <TableCell>{item.cvv}</TableCell>
+              <TableCell>{item.cVV}</TableCell>
               <TableCell>{item.clientAccountNumber}</TableCell>
-              <TableCell>{item.validThru}</TableCell>
               <TableCell>
                 {item.typesOfCreditCardsID}
               </TableCell>
+              <TableCell>{item.validThru}</TableCell>
               <TableCell>
                 <Button
                   type="button"

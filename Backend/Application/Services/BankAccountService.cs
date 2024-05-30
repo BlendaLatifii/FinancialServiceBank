@@ -38,7 +38,6 @@ namespace Application.Services
             }
             else
             {
-                await _context.SaveChangesAsync(cancellationToken);
                 var model = _mapper.Map<BankAccountModel>(account);
                 return model;
             }
@@ -92,7 +91,7 @@ namespace Application.Services
 
                 return new BankAccountModel
                 {
-                     Id = existingBankAcc.Id, 
+                    Id = existingBankAcc.Id, 
                     AccountType = existingBankAcc.AccountType,
                     AccountDescription = existingBankAcc.AccountDescription
                 };

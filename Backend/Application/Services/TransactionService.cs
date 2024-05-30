@@ -63,20 +63,20 @@ namespace Application.Services
             {
                 sourceAccount = await _context.ClientBankAccounts
                     .FirstOrDefaultAsync(a => a.AccountNumberGeneratedID == model.SourceClientBankAccount, cancellationToken);
-                if (sourceAccount == null)
-                {
-                    throw new Exception("Source account not found.");
-                }
+               // if (sourceAccount == null)
+                //{
+                  //  throw new Exception("Source account not found.");
+               // }
             }
 
             if (!string.IsNullOrEmpty(model.DestinationClientBankAccount))
             {
                 destinationAccount = await _context.ClientBankAccounts
                     .FirstOrDefaultAsync(a => a.AccountNumberGeneratedID == model.DestinationClientBankAccount, cancellationToken);
-                if (destinationAccount == null)
-                {
-                    throw new Exception("Destination account not found.");
-                }
+              //  if (destinationAccount == null)
+                //{
+               //     throw new Exception("Destination account not found.");
+               // }
             }
 
             var existingTransaction = await _context.Transactions
@@ -119,6 +119,7 @@ namespace Application.Services
                     break;
 
                 case TranType.WithDrawal:
+                    
                     if (sourceAccount == null)
                         throw new Exception("Source account is required for a withdrawal.");
 

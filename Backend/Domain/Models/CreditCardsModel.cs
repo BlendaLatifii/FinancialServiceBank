@@ -11,8 +11,8 @@ namespace Domain.Models
 	{
 		public Guid? Id { get; set; }
 		public string? CVV { get; set; }
-		public Guid ClientBankAccountId { get; set; }
-		public string? ClientAccountNumber { get; set; }
+		public Guid? ClientBankAccountId { get; set; }
+		public string ClientAccountNumber { get; set; }
 		public Guid TypesOfCreditCardsID { get; set; }
 		public DateTime? ValidThru { get; set; }
 	}

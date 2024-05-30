@@ -38,11 +38,9 @@ namespace Application.Services
             }
             else
             {
-                await _context.SaveChangesAsync(cancellationToken);
                 var model = mapper.Map<ClientBankAccountModel>(client);
                 return model;
             }
-
         }
         public async Task<ClientBankAccountModel> CreateOrUpdateClientBankAccount(ClientBankAccountModel model, CancellationToken cancellationToken)
         {

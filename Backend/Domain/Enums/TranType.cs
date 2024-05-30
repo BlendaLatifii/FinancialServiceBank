@@ -2,8 +2,8 @@
 {
         public enum TranType
         {
+            Transfer,
             Deposit,
-            WithDrawal,
-            Transfer
+            WithDrawal
         }
 }

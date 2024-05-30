@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Infrastructure.Migrations
 {
-    public partial class bankTable : Migration
+    public partial class dbtable : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -300,7 +300,7 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CVV = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AccountNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ClientBankAccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TypesOfCreditCardsID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ValidThru = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -308,8 +308,14 @@ namespace Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_CreditCards", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CreditCards_TypesOfCreditCards_Id",
-                        column: x => x.Id,
+                        name: "FK_CreditCards_ClientBankAccounts_ClientBankAccountId",
+                        column: x => x.ClientBankAccountId,
+                        principalTable: "ClientBankAccounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CreditCards_TypesOfCreditCards_TypesOfCreditCardsID",
+                        column: x => x.TypesOfCreditCardsID,
                         principalTable: "TypesOfCreditCards",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -403,6 +409,17 @@ namespace Infrastructure.Migrations
                 table: "Clients",
                 column: "PersonalNumberId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CreditCards_ClientBankAccountId",
+                table: "CreditCards",
+                column: "ClientBankAccountId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CreditCards_TypesOfCreditCardsID",
+                table: "CreditCards",
+                column: "TypesOfCreditCardsID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Transactions_DestinationClientBankAccountId",

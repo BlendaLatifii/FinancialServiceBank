@@ -4,14 +4,13 @@ namespace Domain.Entities
 {
 	public class CreditCards
 	{
-		public Guid? Id { get; set; }
+		public Guid Id { get; set; }
 		public string CVV { get; set; } = generateCVV();
 		public Guid ClientBankAccountId { get; set; }
 		public Guid TypesOfCreditCardsID { get; set; }
-	//	public string ClientAccountNumber { get; set; }
 		public DateTime ValidThru { get; set; } = generateValidThru();
-		public TypesOfCreditCards TypesOfCreditCards { get; set; }
-		public ClientBankAccount ClientBankAccount { get; set; }
+		public TypesOfCreditCards TypesOfCreditCards { get; set; } = default!;
+		public ClientBankAccount ClientBankAccount { get; set; } = default!;
 
 		private static string generateCVV()
 		{

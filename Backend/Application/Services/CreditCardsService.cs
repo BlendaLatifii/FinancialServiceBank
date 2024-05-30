@@ -23,7 +23,7 @@ namespace Application.Services
 
 		public async Task<List<CreditCardsModel>> GetAllCreditCards(CancellationToken cancellationToken)
 		{
-			var card = await appDbContext.CreditCards.ToListAsync(cancellationToken);
+			var card = await appDbContext.CreditCards.Include(x => x.ClientBankAccount).ToListAsync(cancellationToken);
 			var cardModel = _mapper.Map<List<CreditCardsModel>>(card);
 			return cardModel;
 
@@ -35,11 +35,12 @@ namespace Application.Services
 			{
 				throw new Exception("Client not found with the provided Account Number.");
 			}
-			if (model.Id == null || model.Id == Guid.Empty)
+			if (!model.Id.HasValue)
 			{
 				var newCard = new CreditCards()
 				{
-					ClientBankAccountId = model.ClientBankAccountId
+					ClientBankAccountId = clientAccount.Id,
+					TypesOfCreditCardsID= model.TypesOfCreditCardsID
 				};
 				await appDbContext.CreditCards.AddAsync(newCard, cancellationToken);
 				await appDbContext.SaveChangesAsync(cancellationToken);
@@ -47,7 +48,8 @@ namespace Application.Services
 				return new CreditCardsModel
 				{
 					Id = newCard.Id,
-					ClientBankAccountId = newCard.ClientBankAccountId
+					ClientBankAccountId = newCard.ClientBankAccountId,
+					TypesOfCreditCardsID=newCard.TypesOfCreditCardsID
 				};
 			}
 			else
@@ -57,15 +59,16 @@ namespace Application.Services
 				{
 					throw new AppBadDataException();
 				}
-				existingCard.ClientBankAccountId = model.ClientBankAccountId;
+				existingCard.ClientBankAccountId = clientAccount.Id;
+				existingCard.TypesOfCreditCardsID = model.TypesOfCreditCardsID;
 
 				await appDbContext.SaveChangesAsync(cancellationToken);
 
 				return new CreditCardsModel
 				{
 					Id = model.Id,
-					CVV = model.CVV,
-					ClientBankAccountId = model.ClientBankAccountId
+					ClientBankAccountId = model.ClientBankAccountId,
+					TypesOfCreditCardsID=model.TypesOfCreditCardsID
 				};
 			}
 		}
@@ -73,6 +76,7 @@ namespace Application.Services
 		{
 			var card = await appDbContext.CreditCards
 				.Where(x => x.Id == id)
+				.Include(x => x.ClientBankAccount)
 				.FirstOrDefaultAsync(cancellationToken);
 			if (card == null)
 			{

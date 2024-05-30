@@ -20,11 +20,11 @@ function HomePage({}: Props) {
                 <p>where your financial journey begins with personalized service and innovative solutions tailored just for you.</p>
                <div className="d-flex justify-content-center justify-content-lg-start">
                    <a href="#about" className="btn-get-started">Get Started</a>
-                  <a href="https://www.youtube.com/watch?v=LXb3EKWsInQ" className="glightbox btn-watch-video d-flex align-items-center"><i className="bi bi-play-circle"></i><span>Watch Video</span></a>
+                  {/* <a href="https://www.youtube.com/watch?v=LXb3EKWsInQ" className="glightbox btn-watch-video d-flex align-items-center"><i className="bi bi-play-circle"></i><span>Watch Video</span></a> */}
                 </div>
               </div>
               <div className="col-lg-6 order-1 order-lg-2">
-                <img src="/img/hero-img.svg" className="img-fluid" alt="" data-aos="zoom-out" data-aos-delay="100" />
+              <img src="../src/Components/395700.png" className="img-fluid" alt="photo1" data-aos="zoom-out" data-aos-delay="100" />
               </div>
             </div>
           </div>
@@ -65,7 +65,7 @@ function HomePage({}: Props) {
           <div className="container" data-aos="fade-up">
             <div className="row gy-4 align-items-center">
               <div className="col-lg-6">
-                <img src="/img/bank-img.svg" alt="" className="img-fluid" />
+                <img src="../src/Components/395700.png" alt="" className="img-fluid" />
               </div>
               <div className="col-lg-6">
                 <div className="stats-item d-flex align-items-center">

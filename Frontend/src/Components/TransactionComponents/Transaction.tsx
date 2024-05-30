@@ -9,13 +9,14 @@ import { TransactionService } from "../../services/TransactionService";
 
 export default function Transaction() {
   const { id } = useParams<{ id: string}>();
+  const [isValid, setIsValid] = useState(false);
   const [formData, setFormData] = useState<TransactionModel>({
     id: null,
     transactionAmount: 23,
     sourceClientBankAccountId: null,
     destinationClientBankAccountId: null,
-    sourceClientBankAccount: "418314174",
-    destinationClientBankAccount: "417813787",
+    sourceClientBankAccount: "",
+    destinationClientBankAccount: "",
     transactionType: 0, 
     transactionDate: null,
     transactionDateUpdated: null,
@@ -78,37 +79,37 @@ export default function Transaction() {
       console.error("Error creating transaction:", error);
     }
   };
-
   return (
     <>
       <Header />
       <form onSubmit={handleSubmit} style={{ padding: "20px", margin: "20px" }}>
+        <h2 style={{ padding: "5px", margin: "5px" }}>Transactions</h2>
         <div className="form-group">
           <label htmlFor="sourceClientBankAccount">Source Account:</label>
           <input
             style={{ padding: "5px", margin: "5px" }}
-            type="number"
+            type="text"
+            placeholder="Not needed for Deposit transactions"
             className="form-control"
             id="sourceClientBankAccount"
             name="sourceClientBankAccount"
             value={formData.sourceClientBankAccount || ""}
             onChange={handleChange}
-            required
           />
         </div>
-        <div className="form-group">
-          <label htmlFor="destinationClientBankAccount">Receive Account:</label>
-          <input
-            style={{ padding: "5px", margin: "5px" }}
-            type="text"
-            className="form-control"
-            id="destinationClientBankAccount"
-            name="destinationClientBankAccount"
-            value={formData.destinationClientBankAccount || ""}
-            onChange={handleChange}
-            required
-          />
-        </div>
+          <div className="form-group">
+            <label htmlFor="destinationClientBankAccount">Receive Account:</label>
+            <input
+              style={{ padding: "5px", margin: "5px" }}
+              type="text"
+              placeholder="Not needed for WithDrawal transactions"
+              className="form-control"
+              id="destinationClientBankAccount"
+              name="destinationClientBankAccount"
+              value={formData.destinationClientBankAccount || ""}
+              onChange={handleChange}
+            />
+          </div>
         <div className="form-group">
           <label htmlFor="transactionAmount">Transaction Amount:</label>
           <input

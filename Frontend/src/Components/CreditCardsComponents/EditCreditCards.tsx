@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Header from '../Header';
 import Footer from '../Footer';
 import * as yup from 'yup';
@@ -16,38 +16,46 @@ import { TypesOfCreditCardsModel } from '../../interfaces/TypesOfCreditCards-mod
 import { CreditCardsService } from '../../services/CreditCardsService';
 
 export default function EditCreditCards() {
+  const { id } = useParams<{ id: string}>();
   const [typesOfCreditCards, setTypesOfCreditCards] = useState<SelectListItem[]>([]);
-  const [formData, setFormData] = useState<CreditCardsModel>({
-    clientAccountNumber: null,
+  const [values, setValues] = useState<CreditCardsModel>({
+    id:id!,
+    clientAccountNumber: '',
     typesOfCreditCardsID: null,
   } as CreditCardsModel);
 
   const navigate = useNavigate();
+  useEffect(() => {
+    const fetchData = async () => {
+      if(id!=null){
+     const response = await CreditCardsService.GetCreditCardsDetails(id!);
+     const userData = response;
+     setValues({
+       id: userData.id!,
+       clientAccountNumber: userData.clientAccountNumber,
+       typesOfCreditCardsID: userData.typesOfCreditCardsID
+     }as CreditCardsModel);
+    }
+  };
+  
+  fetchData();
+
+}, [id!]);
+
+
+const validation = yup.object<CreditCardsModel>({
+  clientAccountNumber:yup.string().required(),
+});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData({...formData, [name]: value });
+    setValues({...values, [name]: value });
   };
 
- /* const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      const body = {
-        accountNumber: formData.accountNumber,
-        typesOfCreditCardsID: formData.typesOfCreditCardsID,
-      };
-      const response = await axios.post(`https://localhost:7254/api/CreditCards`, body);
-      setRegistered(true);
-      navigate("/EditCreditCards");
-    } catch (error) {
-      console.error('Error creating credit card:', error);
-    }
-  };*/
-
-  const handleSubmit = async (model:CreditCardsModel) => {
-    // e.preventDefault();
-    await CreditCardsService.EditOrAddCreditCards(model);
-   };
+const handleSubmit = async (model:CreditCardsModel) => {
+  await CreditCardsService.EditOrAddCreditCards(model);
+  navigate('/CreditCardsTable');
+ };
   const fetchCreditCardsTypes = async () => {
     try {
       const response = await TypesOfCreditCardsService.GetSelectList(); 
@@ -67,17 +75,14 @@ export default function EditCreditCards() {
     fetchCreditCardsTypes();
   }, []);
 
-  const validation = yup.object<CreditCardsModel>({
-    clientAccountNumber:yup.string().required()
- })
-
   return (
     <>  
-      <h1 style={{ marginLeft: "15px" }}>{ formData.id != null ?'Edit': 'Add'} CreditCards</h1>
+    <Header/>
+      <h1 style={{ marginLeft: "15px" }}>{ values.id != null ?'Edit': 'Add'} CreditCards</h1>
       <Segment clearing style={{ marginRight: "30px", marginTop: "30px", marginLeft: "10px" }}>
       <Formik validationSchema={validation}
            enableReinitialize 
-           initialValues={formData} 
+           initialValues={values} 
            onSubmit={values => handleSubmit(values)}>
            {({handleSubmit,isSubmitting,dirty,isValid})=>(
         <Form  className='ui form'style={{backgroundColor:"#f5f6f7"}}  onSubmit={handleSubmit} autoComplete="off">
@@ -93,6 +98,7 @@ export default function EditCreditCards() {
          )}
          </Formik>
       </Segment>
+      <Footer/>
     </>
   );
 }
