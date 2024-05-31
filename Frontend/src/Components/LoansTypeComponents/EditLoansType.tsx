@@ -18,12 +18,14 @@ export default function EditLoansType() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await LoansTypeService.GetLoansTypeDetails(id!);
+        if(id){
+          const response = await LoansTypeService.GetLoansTypeDetails(id!);
         const bankData = response;
         setValues({
             id:bankData.id!,
             loanType:bankData.loanType,
         })
+        }
       } catch (error) {
         console.error("Error fetching loans type details:", error);
       }

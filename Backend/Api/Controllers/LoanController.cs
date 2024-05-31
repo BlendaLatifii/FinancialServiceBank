@@ -1,9 +1,8 @@
 ﻿using Infrastructure.Data;
-using Domain.Entities;
 using Domain.Interfaces;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Api.Controllers
 {
@@ -19,6 +18,8 @@ namespace Api.Controllers
             this.appDbContext = appDbContext;
             this._loanService = _loanService;
         }
+
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult<List<LoanModel>>> GetAllLoansAsync(CancellationToken cancellationToken)
         {
@@ -26,76 +27,24 @@ namespace Api.Controllers
 
             return Ok(loans);
         }
-
-        [HttpGet]
-        [Route("{id}")]
-        public async Task<IActionResult> GetLoanById(int Id, CancellationToken cancellationToken)
+       
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetLoanById([FromRoute]Guid id, CancellationToken cancellationToken)
         {
-            await _loanService.GetLoanById(Id, cancellationToken);
-            return Ok();
+            var model = await _loanService.GetLoanByIdAsync(id, cancellationToken);
+            return Ok(model);
         }
         [HttpPost]
-        public async Task<ActionResult<LoanModel>> CreateLoan(LoanModel model)
+        public async Task<IActionResult> CreateOrUpdateLoanAsync(LoanModel model, CancellationToken cancellationToken)
         {
-            var loan = new Loan
-            {
-                LlojiIKredise = model.LlojiIKredise,
-                ShumaEKredise = model.ShumaEKredise,
-                NormaEInteresit = model.NormaEInteresit,
-                KohaEKredise = model.KohaEKredise,
-                MetodaEKredise = model.MetodaEKredise,
-                KestiIKredise = model.KestiIKredise,
-                StatusiIPunesise = model.StatusiIPunesise,
-
-            };
-
-            appDbContext.Loans.Add(loan);
-            await appDbContext.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetLoanById), new { id = loan.Id }, loan);
+            var updateLoan = await _loanService.CreateOrUpdateLoanAsync(model, cancellationToken);
+            return Ok(updateLoan);
         }
-
-        [HttpPut]
-        [Route("{id}")]
-        public async Task<IActionResult> UpdateLoan([FromRoute] int id, LoanModel model, CancellationToken cancellationToken)
-        {
-            var loans = await appDbContext.Loans
-               .Where(x => x.Id == id)
-               .FirstOrDefaultAsync(cancellationToken);
-
-            if (loans == null)
-            {
-                return NotFound();
-            }
-
-            loans.LlojiIKredise = model.LlojiIKredise;
-            loans.ShumaEKredise = model.ShumaEKredise;
-            loans.NormaEInteresit = model.NormaEInteresit;
-            loans.MetodaEKredise = model.MetodaEKredise;
-            loans.KohaEKredise = model.KohaEKredise;
-            loans.KestiIKredise = model.KestiIKredise;
-            loans.StatusiIPunesise = model.StatusiIPunesise;
-
-            await appDbContext.SaveChangesAsync(cancellationToken);
-
-            var updatedLoanModel = new LoanModel
-            {
-                LlojiIKredise = loans.LlojiIKredise,
-                ShumaEKredise = loans.ShumaEKredise,
-                NormaEInteresit = loans.NormaEInteresit,
-                MetodaEKredise = loans.MetodaEKredise,
-                KohaEKredise = loans.KohaEKredise,
-                KestiIKredise = loans.KestiIKredise,
-                StatusiIPunesise = loans.StatusiIPunesise
-            };
-
-            return Ok(updatedLoanModel);
-        }
-
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteLoan(int loanId, CancellationToken cancellationToken)
+        public async Task<IActionResult> DeleteLoan(Guid id, CancellationToken cancellationToken)
         {
-            await _loanService.DeleteLoan(loanId, cancellationToken);
+            await _loanService.DeleteLoan(id, cancellationToken);
             return Ok();
         }
     }

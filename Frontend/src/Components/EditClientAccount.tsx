@@ -25,14 +25,16 @@ export default function EditClientAccount() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await ClientBankAccountService.GetBankAccDetails(id!);
-        const userData=response;
-        setValues({
-        id: userData.id!,
-       personalNumber: userData.personalNumber,
-       currentBalance: userData.currentBalance,
-       bankAccountId:userData.bankAccountId
-        }as ClientBankAccountModel);
+        if(id){
+          const response = await ClientBankAccountService.GetBankAccDetails(id!);
+          const userData=response;
+          setValues({
+          id: userData.id!,
+         personalNumber: userData.personalNumber,
+         currentBalance: userData.currentBalance,
+         bankAccountId:userData.bankAccountId
+          }as ClientBankAccountModel)
+        }
       } catch (error) {
         console.error("Error fetching client details:", error);
       }

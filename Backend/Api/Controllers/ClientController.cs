@@ -3,6 +3,7 @@ using Domain.Entities;
 using Domain.Interfaces;
 using Domain.Models;
 using Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,36 +14,37 @@ namespace Api.Controllers
     public class ClientController : ControllerBase
     {
         private readonly IClientService clientService;
-        private readonly AppDbContext _context;
 
-        public ClientController(IClientService clientService, AppDbContext _context)
+        public ClientController(IClientService clientService)
         {
             this.clientService = clientService;
-            this._context = _context;
         }
 
-		[HttpGet]
-		public async Task<ActionResult<List<ClientModel>>> GetAllClientAsync(CancellationToken cancellationToken)
-		{
-			var users = await clientService.GetAllClientAsync(cancellationToken);
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public async Task<ActionResult<List<ClientModel>>> GetAllClientAsync(CancellationToken cancellationToken)
+        {
+            var users = await clientService.GetAllClientAsync(cancellationToken);
 
-			return Ok(users);
-		}
+            return Ok(users);
+        }
+
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetClientById([FromRoute]Guid id, CancellationToken cancellationToken)
-		{
+        public async Task<IActionResult> GetClientById([FromRoute] Guid id, CancellationToken cancellationToken)
+        {
             var model = await clientService.GetByIdAsync(id, cancellationToken);
-			return Ok(model);
-		}
+            return Ok(model);
+        }
 
-		[HttpPost]
+        [HttpPost]
         public async Task<IActionResult> CreateOrUpdateClientAsync(ClientModel model, CancellationToken cancellationToken)
         {
             var client = await clientService.CreateOrUpdateClientAsync(model, cancellationToken);
             return Ok(client);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteClient(Guid id, CancellationToken cancellationToken)
         {

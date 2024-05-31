@@ -18,6 +18,7 @@ namespace Domain.Entities
         public Client Client { get; set; } = default!;
         public BankAccount BankAccount { get; set; } = default!;
         public CreditCards CreditCards { get; set; } = default!;
+        public Loan Loans { get; set; } = default!;
         public List<Transaction> SendTransations { get; set; } = new List<Transaction>();
         public List<Transaction> RecivedTransations { get; set; } = new List<Transaction>();
 

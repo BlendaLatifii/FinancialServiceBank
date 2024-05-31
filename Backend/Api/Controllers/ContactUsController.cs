@@ -2,6 +2,7 @@
 using Domain.Interfaces;
 using Domain.Models;
 using Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,6 +20,8 @@ namespace Api.Controllers
             this.appDbContext = appDbContext;
             this._contactService = _contactService;
         }
+
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult<List<ContactUsModel>>> GetAllContacts(CancellationToken cancellationToken)
         {
@@ -50,6 +53,7 @@ namespace Api.Controllers
             return CreatedAtAction(nameof(GetContactById), new { Id = contact.Id } , contact);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteContact(int id ,CancellationToken cancellationToken)
         {

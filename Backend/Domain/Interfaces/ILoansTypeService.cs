@@ -8,6 +8,7 @@ namespace Domain.Interfaces
         Task<List<LoansTypeModel>> GetAllLoansTypesAsync(CancellationToken cancellationToken);
         Task<LoansTypeModel> CreateOrUpdateLoansType(LoansTypeModel model, CancellationToken cancellationToken);
         Task<LoansTypeModel> GetLoansTypeById(Guid id, CancellationToken cancellationToken);
+        Task<List<ListItemModel>> GetTypesOfLoansSelectListAsync(CancellationToken cancellationToken);
         Task DeleteLoansType(Guid id, CancellationToken cancellationToken);
     }
 }

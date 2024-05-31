@@ -27,7 +27,7 @@ namespace Api.Middleware
                         if (exceptionHandlerPathFeature?.Error is AppBadDataException badDataException)
                         {
                             context.Response.StatusCode = 400;
-                            exceptionObject = new { message = badDataException.Message, errors = badDataException.Errors };
+                            exceptionObject = new { message = ErrorMessage.BadData , errors = badDataException.Errors };
                         }
 
                         if (exceptionHandlerPathFeature?.Error is DbUpdateConcurrencyException)

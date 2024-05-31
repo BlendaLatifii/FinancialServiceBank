@@ -11,6 +11,7 @@ namespace Domain.Constant
         public const string NotFounded = "Not Founded";
         public const string ConcurrentExceptions = " Concurrent Exception";
         public const string DataInUse = "Data in Use";
+        public const string BadData = "Bad Data";
         public const string BadPassword = "Your Password is incorrect";
     }
 }

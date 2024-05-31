@@ -33,6 +33,7 @@ import TransactionTable from "./Components/TransactionComponents/TransactionTabl
 import LoanForm from "./Components/LoanForm";
 import CreditCardsTable from "./Components/CreditCardsComponents/CreditCardsTable";
 import EditCreditCards from "./Components/CreditCardsComponents/EditCreditCards";
+import LoanTable from "./Components/LoanTable";
 
 function App() {
   axios.interceptors.request.use((config) => {
@@ -50,13 +51,13 @@ function App() {
         case 200:
           toast.success("OK");
           break;
-          case 201:
-            toast.success("OK");
-            break;
+        case 201:
+         toast.success("OK");
+         break;
         case 400:
           if (data != null) {
-            toast.error(data);
-          } else {
+            toast.error(data.message);
+          } else { 
             toast.error("something went wrong");
           }
           break;
@@ -76,7 +77,6 @@ function App() {
   const isAdmin = AuthService.GetUserRole() == 'Admin';
   return (
     <>
-    {/* isAdmin &&  */}
     { <Navbar/>}
       <Routes>
         <Route path="/Header" element={<Header />} />
@@ -117,8 +117,11 @@ function App() {
         <Route path="/Transaction" element={<Transaction/>}/>
         <Route path="/AddTransaction" element={<Transaction/>}/>
         <Route path="/EditTransaction/:id" element={<Transaction/>}/>
-        <Route path="TransactionTable" element={<TransactionTable />} />
+        <Route path="/TransactionTable" element={<TransactionTable />} />
         <Route path="LoanForm" element={<LoanForm />} />
+        <Route path="/AddLoan" element={<LoanForm/>}/>
+        <Route path="/EditLoan/:id" element={<LoanForm/>}/>
+        <Route path="/LoanTable" element={<LoanTable />} />
       </Routes>
       <ToastContainer />
     </>

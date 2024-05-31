@@ -1,6 +1,7 @@
 ﻿using Domain.Interfaces;
 using Domain.Models;
 using Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,8 @@ namespace Api.Controllers
             this.transactionService = transactionService;
 
         }
+
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult<List<TransactionModel>>> GetAllTransactionsAsync(CancellationToken cancellationToken)
         {
@@ -23,6 +26,8 @@ namespace Api.Controllers
 
             return Ok(transactions);
         }
+
+        [Authorize(Roles = "Member,Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateOrEditTransaction([FromBody] TransactionModel model, CancellationToken cancellationToken)
         {
@@ -30,13 +35,14 @@ namespace Api.Controllers
             return Ok(transaction);
         }
 
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTransactionById([FromRoute] Guid id, CancellationToken cancellationToken)
         {
             var model = await transactionService.GetTransactionById(id, cancellationToken);
             return Ok(model);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTransaction(Guid id, CancellationToken cancellationToken)
         {

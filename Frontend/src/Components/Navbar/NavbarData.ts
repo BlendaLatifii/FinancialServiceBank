@@ -36,6 +36,12 @@ export const SidebarData : NavItem[] = [
     className: 'nav-text background:var(--color-primary)'
   },
   {
+    title:'Loan',
+    path:'/LoanTable',
+    icon:'',
+    className: 'nav-text background:var(--color-primary)'
+  },
+  {
     title:'Loans Type',
     path:'/LoansTypeTable',
     icon:'',

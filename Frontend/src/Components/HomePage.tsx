@@ -20,11 +20,10 @@ function HomePage({}: Props) {
                 <p>where your financial journey begins with personalized service and innovative solutions tailored just for you.</p>
                <div className="d-flex justify-content-center justify-content-lg-start">
                    <a href="#about" className="btn-get-started">Get Started</a>
-                  {/* <a href="https://www.youtube.com/watch?v=LXb3EKWsInQ" className="glightbox btn-watch-video d-flex align-items-center"><i className="bi bi-play-circle"></i><span>Watch Video</span></a> */}
                 </div>
               </div>
               <div className="col-lg-6 order-1 order-lg-2">
-              <img src="../src/Components/395700.png" className="img-fluid" alt="photo1" data-aos="zoom-out" data-aos-delay="100" />
+              <img src={process.env.PUBLIC_URL + './395700.png'} className="img-fluid" alt="photo1" data-aos="zoom-out" data-aos-delay="90" />
               </div>
             </div>
           </div>
@@ -65,20 +64,20 @@ function HomePage({}: Props) {
           <div className="container" data-aos="fade-up">
             <div className="row gy-4 align-items-center">
               <div className="col-lg-6">
-                <img src="../src/Components/395700.png" alt="" className="img-fluid" />
+                <img src={process.env.PUBLIC_URL + './image_6329179.png'} className="img-fluid" alt="photo1" data-aos="zoom-out" data-aos-delay="90" />
               </div>
               <div className="col-lg-6">
                 <div className="stats-item d-flex align-items-center">
                   <span data-purecounter-start="0" data-purecounter-end="232" data-purecounter-duration="1" className="purecounter"></span>
-                  <p><strong>Happy Clients</strong> consequuntur quae diredo para mesta</p>
+                  <p><strong>Happy Clients</strong> We are dedicated to providing excellent services that meet your needs and expectations</p>
                 </div>
                 <div className="stats-item d-flex align-items-center">
                   <span data-purecounter-start="0" data-purecounter-end="521" data-purecounter-duration="1" className="purecounter"></span>
-                  <p><strong>Projects</strong> adipisci atque cum quia aut</p>
+                  <p><strong>Projects</strong> We achieve great success through collaboration and innovation</p>
                 </div>
                 <div className="stats-item d-flex align-items-center">
                   <span data-purecounter-start="0" data-purecounter-end="453" data-purecounter-duration="1" className="purecounter"></span>
-                  <p><strong>Hours Of Support</strong> aut commodi quaerat</p>
+                  <p><strong>Hours Of Support</strong> We are here to help you anytime you need</p>
                 </div>
               </div>
             </div>

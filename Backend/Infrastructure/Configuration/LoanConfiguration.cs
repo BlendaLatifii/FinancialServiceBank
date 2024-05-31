@@ -11,6 +11,14 @@ namespace Infrastructure.Configuration
         public void Configure(EntityTypeBuilder<Loan> builder)
         {
             builder.HasKey(x => x.Id);
+
+            builder.HasOne(x => x.LoansTypes)
+            .WithMany(x => x.Loans)
+           .HasForeignKey(x => x.LoansTypesId);
+
+            builder.HasOne(x => x.ClientBankAccount)
+                .WithOne(x => x.Loans)
+                .HasForeignKey<Loan>(x => x.ClientBankAccountId);
         }
     }
 

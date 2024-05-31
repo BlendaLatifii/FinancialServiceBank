@@ -26,6 +26,7 @@ namespace Api.Controllers
             this.accountService = accountService;
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<ActionResult<AuthenticationModel>> Login([FromBody] LoginModel loginModel, CancellationToken cancellationToken)
         {
@@ -34,6 +35,7 @@ namespace Api.Controllers
             return Ok(userModel);
         }
 
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<ActionResult> Register([FromBody] RegisterModel registerModel, CancellationToken cancellationToken)
         {

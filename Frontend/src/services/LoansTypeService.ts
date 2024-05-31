@@ -1,5 +1,6 @@
 import axios from "axios";
 import { LoansTypeModel } from "../interfaces/loanstype-model";
+import { ListItemModel } from "../interfaces/list-item-model";
 
 
 export class LoansTypeService {
@@ -19,6 +20,10 @@ export class LoansTypeService {
 
    public static async EditOrAddLoansType(model: LoansTypeModel): Promise<void> {
     const result = await axios.post(`${LoansTypeService.baseUrl}`, model);
+  } 
+  public static async GetSelectList(): Promise<ListItemModel[]>{
+    const result = await axios.get<ListItemModel[]>(`${LoansTypeService.baseUrl}/GetTypesOfLoansSelectListAsync`);
+    return result.data;
   }
 }
   

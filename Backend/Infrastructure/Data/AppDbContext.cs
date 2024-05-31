@@ -16,11 +16,11 @@ namespace Infrastructure.Data
         public  DbSet<UserRole> UserRoles { get; set; } = default!;
         public DbSet<Branch> Branches { get; set; } = default!;
         public DbSet<Loan> Loans { get; set; } = default!;
-        public DbSet<BankAccount> BankAccounts { get; set; } = default! ;
-        public DbSet<Client> Clients { get; set; } = default! ;
+        public DbSet<BankAccount> BankAccounts { get; set; } = default!;
+        public DbSet<Client> Clients { get; set; } = default!;
         public DbSet<LoansType> LoansType { get; set; } = default!;
         public DbSet<ContactUs> Contacts { get; set; } = default!;
-        public DbSet<ClientBankAccount>ClientBankAccounts { get; set; } = default! ;
+        public DbSet<ClientBankAccount>ClientBankAccounts { get; set; } = default!;
         public DbSet<TypesOfCreditCards> TypesOfCreditCards { get; set; } = default!;
         public DbSet<Transaction> Transactions{ get; set; } = default!;
 		public DbSet<CreditCards> CreditCards { get; set; } = default!;

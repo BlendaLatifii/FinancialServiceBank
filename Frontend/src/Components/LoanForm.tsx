@@ -1,76 +1,132 @@
 import React, { useState, useEffect } from 'react';
 import $ from 'jquery'; // Import jQuery
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.css';
+import * as yup from 'yup';
 import Header from './Header';
 import Footer from './Footer';
+import { LoansTypeService } from '../services/LoansTypeService';
+import { SelectListItem } from '../interfaces/select-list-item';
+import { Form, Formik } from 'formik';
+import { Button, Segment } from 'semantic-ui-react';
+import MySelectInput from '../FormElements/DropDown';
+import MyTextInput from '../FormElements/MyTextInput';
+import { LoanModel } from '../interfaces/loan-model';
+import { LoanService } from '../services/LoanService';
 
 
 type Props = {}
 
 export default function LoanForm({ }: Props) {
+  const { id } = useParams<{ id: string}>();
+  const [typesOfLoans, setTypesOfLoans] = useState<SelectListItem[]>([]);
+  const [values, setValues] = useState<LoanModel>({
+    id:id!,
+    clientAccountNumber: '',
+    loansTypeId: '',
+    monthlyPayment:'',
+    income:'',
+    employmentStatus:''
+  } as LoanModel);
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    const fetchData = async () => {
+      if(id!=null){
+     const response = await LoanService.GetLoanDetails(id!);
+     const userData = response;
+     setValues({
+       id: userData.id!,
+       clientAccountNumber: userData.clientAccountNumber,
+       loansTypeId:userData.loansTypeId,
+       monthlyPayment:userData.monthlyPayment,
+       income:userData.income,
+       employmentStatus:userData.employmentStatus
+     }as LoanModel);
+    }
+  };
+  
+  fetchData();
+
+}, [id!]);
+
+const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setValues({...values, [name]: value });
+  };
+
+const handleSubmit = async (model:LoanModel) => {
+  await LoanService.EditOrAddLoan(model);
+  navigate('/LoanTable');
+ };
+
+ const fetchLoansTypes = async () => {
+  try {
+    const response = await LoansTypeService.GetSelectList(); 
+
+    setTypesOfLoans(response.map((item,i) => ({
+      key: i,
+      value: item.id,
+      text: item.name
+    } as SelectListItem)).filter(x=> x.text != '' && x.text != null));
+
+  } catch (error) {
+    console.error('Error fetching account types:', error);
+  }
+};
+
+  useEffect(() => {
+    fetchLoansTypes();
+  }, []);
+
+  const validation = yup.object<LoanModel>({
+    clientAccountNumber:yup.string().required(),
+    loansTypeId:yup.string().required(),
+    monthlyPayment:yup.string().required(),
+    income:yup.string().required(),
+    employmentStatus: yup.string().required()
+  });
 
   return (
     <>
-    <Header/>
-        <form style={{ padding: '20px', margin: '20px' }}> 
-        <h2>Apliko per Kredi</h2>
-                   <div className="tab-pane" data-id="2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                      <div className="row">
-                        <div className="col-md-6 mb-3">
-                          <div className="form-group">
-                            <label htmlFor="exampleFormControlSelect1">Lloji i kredisë</label>
-                            <select name="lloji_kredise" className="form-control" id="exampleFormControlSelect1">
-                              <option value="">Lloji i kredisë</option>
-                              <option value="personal" >Kredi personale</option>
-                              <option value="hipoteka">Kredi hipotekore</option>
-                              <option value="makine">Kredi makine</option>
-                              <option value="home">Kredi renovim shtepie</option>
-                              <option value="biznesi">Kredi biznesi</option>
-                              <option value="education">Kredi edukimi</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div className="col-md-6 mb-3">
-                          <div className="form-group">
-                            <label htmlFor="exampleFormControlSelect1">Shuma e kredisë</label>
-                            <select name="shuma_kredise" className="form-control" id="exampleFormControlSelect1">
-                              <option value="">Shuma e kredisë</option>
-                              <option value="1000">$1,000</option>
-                              <option value="5000">$5,000</option>
-                              <option value="10000">$10,000</option>
-                              <option value="20000">$20,000</option>
-                            </select>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div className="col-md-6 mb-3">
-                          <div className="form-group">
-                            <label htmlFor="exampleFormControlSelect1">Metoda e pagesës</label>
-                            <select name="metoda_pageses" className="form-control" id="exampleFormControlSelect1">
-                              <option value="">Metoda e pagesës</option>
-                              <option value="monthly">Mujore</option>
-                              <option value="biweekly">Dy-javore</option>
-                              <option value="weekly">Javore</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div className="col-md-6 mb-3">
-                          <div className="form-group">
-                            <label htmlFor="exampleFormControlSelect1">Statusi i punësisë</label>
-                            <select name="statusi_punesise" className="form-control" id="exampleFormControlSelect1">
-                              <option value="">Statusi i punësisë</option>
-                              <option value="monthly">I punësuar</option>
-                              <option value="biweekly">I pa-punë</option>
-                              <option value="weekly">I vetë-punësuar</option>
-                            </select>
-                          </div>
-                        </div>
-                      </div>
-                      </div>
-                     </form>
-          <Footer/>           
+      <Header/>
+      <h1 style={{ marginLeft: "15px" }}>{ values.id != null ?'Edit': 'Add'} Loan</h1>
+      <Segment clearing style={{ marginRight: "30px", marginTop: "30px", marginLeft: "10px" }}>
+      <Formik validationSchema={validation}
+           enableReinitialize 
+           initialValues={values} 
+           onSubmit={values => handleSubmit(values)}>
+           {({handleSubmit,isSubmitting,dirty,isValid})=>(
+        <Form  className='ui form'style={{backgroundColor:"#f5f6f7"}}  onSubmit={handleSubmit} autoComplete="off">
+         <MySelectInput name="loansTypeId" onChange={handleChange} placeholder='Select Loan Type' options={typesOfLoans} />
+         <MyTextInput fluid
+            placeholder="Account Number"
+            name="clientAccountNumber"
+            onChange={handleChange}
+          />
+          <MyTextInput 
+            placeholder="Monthly Payment"
+            name="monthlyPayment"
+            onChange={handleChange}
+          />
+           <MyTextInput 
+            placeholder="Income"
+            name="income"
+            onChange={handleChange}
+          />
+          <MySelectInput 
+              name="employmentStatus" 
+              onChange={handleChange} 
+              placeholder='Select Employment Status' 
+              options={["i pa pune", "i punesuar", "i vete punesuar"]} 
+          />
+
+           <Button floated="right" disabled={!isValid}  positive type="submit" content="Submit" />
+        </Form>
+         )}
+         </Formik>
+      </Segment>
+      <Footer/>
     </>
   );
 }

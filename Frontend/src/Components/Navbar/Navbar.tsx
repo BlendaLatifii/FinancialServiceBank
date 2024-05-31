@@ -14,6 +14,7 @@ function Navbar()  {
         const [sidebar, setSidebar] = useState(false);
         const showSidebar = () => setSidebar(!sidebar);
         const navigate = useNavigate();
+
         function LogOut(){
           AuthService.LogOut();
           navigate("/Login")
@@ -21,10 +22,9 @@ function Navbar()  {
         return (
           <>
             <IconContext.Provider value={{ color: '#fff' }}>
-              
-              <div className='navbar'>
+            { AuthService.LoggedInUser() != null && <div className='navbar'>
                 <Link to='#' className='menu-bars'>
-                  <FaIcons.FaBars className="ngjyra-sidebarhover" onClick={showSidebar} />
+                  <FaIcons.FaBars className="ngjyra-sidebarhover" onClick={() => AuthService.GetUserRole() == "Admin" ? showSidebar() : null} />
                 </Link>
                 
                 <Menu.Item position='right'>
@@ -38,7 +38,7 @@ function Navbar()  {
                 </Menu.Item>
                 
              
-              </div>
+              </div>}
               <nav className={sidebar ? 'nav-menu active' : 'nav-menu'}>
                 <ul className='nav-menu-items' onClick={showSidebar}>
                   <li className='navbar-toggle'>

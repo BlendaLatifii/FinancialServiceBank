@@ -82,6 +82,18 @@ namespace Application.Services
             }
         }
 
+        public async Task<List<ListItemModel>> GetTypesOfLoansSelectListAsync(CancellationToken cancellationToken)
+        {
+            var model = await _context.LoansType
+                .Select(x => new ListItemModel()
+                {
+                    Id = x.Id,
+                    Name = x.LoanType
+                }).ToListAsync(cancellationToken);
+
+            return model;
+
+        }
         public async Task DeleteLoansType(Guid id, CancellationToken cancellationToken)
         {
             var loans = await _context.LoansType

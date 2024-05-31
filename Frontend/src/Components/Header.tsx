@@ -18,7 +18,7 @@ function Header(){
                 <li><Link to="/AboutUs">About Us</Link></li>
                 <li><Link to="/ContactUs">Contact Us</Link></li>
                 {AuthService.GetUserRole() == 'Admin' &&<li><Link to="/Navbar">Dashboard</Link></li>}
-                <li><Link to="/Login">Login</Link></li>
+                {AuthService.LoggedInUser() == null && <li><Link to="/Login">Login</Link></li>}
                 </ul>
               </nav>
               <i className="mobile-nav-toggle mobile-nav-show bi bi-list"></i>

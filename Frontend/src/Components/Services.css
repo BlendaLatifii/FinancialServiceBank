@@ -112,3 +112,34 @@
     top: 50%; 
     transform: translateY(-50%); 
 }
+.account-card {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.account-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Stilizimi për kartat e kredive */
+.credit-card {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.credit-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Stilizimi për kartat e degëve */
+.branch-card {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.branch-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}

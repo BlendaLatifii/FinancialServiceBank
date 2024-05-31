@@ -10,11 +10,21 @@ import { BankAccountService } from '../services/BankAccountService';
 import { BankAccountModel } from '../interfaces/bankAcc-model';
 import { LoansTypeService } from '../services/LoansTypeService';
 import { LoansTypeModel } from '../interfaces/loanstype-model';
+import { TypesOfCreditCardsService } from '../services/TypesOfCreditCardsService';
+import { TypesOfCreditCardsModel } from '../interfaces/TypesOfCreditCards-model';
 function Services() {
   const [branches, setBranches] = useState<BranchModel[]>([]);
   const [accounts, setAccounts] = useState<BankAccountModel[]>([]);
+  const [creditCards, setCreditCards] = useState<TypesOfCreditCardsModel[]>([]);
   const [loans, setLoans] = useState<LoansTypeModel[]>([]);
-
+  useEffect(() => {
+    async function fetchCreditCards() {
+      const result = await TypesOfCreditCardsService.GetAllTypes();
+      setCreditCards(result);
+    }
+    fetchCreditCards();
+  }, []);
+  
   useEffect(() => {
     async function fetchBranches() {
       const result = await BranchService.GetAllBranches();
@@ -38,6 +48,7 @@ function Services() {
     }
     fetchBankAccounts();
   }, []);
+  
 
   return (
     <div>
@@ -82,34 +93,17 @@ function Services() {
       </div>
     </div>
     <br/>
-    <div className="d-flex justify-content-center">
-  <div className="card mb-3 bg-info bg-opacity-25 text-center" style={{width: '20rem', marginRight: '20px', borderWidth: '0'}}>
-    <br/>
-    <h5 className="card-title">BrightCard</h5>
-    <img src={process.env.PUBLIC_URL + './10022-removebg-preview.png'} className="card-img-top" alt="..."/>
-    <div className="card-body">
-      <p className="card-text text-position">With BrightCard in your pocket every shopping experience is unique. BrightCard offers you a wide range of benefits when using it for purchases, where you can benefit up to 20% bonus.</p>
-      <a href="#" className="btn btn-success">Apply</a>
-    </div>
-  </div>
-  <div className="card mb-3 bg-info bg-opacity-25 text-center" style={{width: '20rem', marginRight: '20px', borderWidth: '0'}}>
-    <br/>
-    <h5 className="card-title">GoldCard</h5>
-    <img src={process.env.PUBLIC_URL + './240_F_485729140_8XpCyC133tSGSioMzVikHd5wItfJcfLD-removebg-preview.png'} className="card-img-top" alt="..."/>
-    <div className="card-body">
-      <p className="card-text bg- text-position">GoldCard is a major innovation in the field of financial services around the world, bringing a new and advanced experience for its users.</p>
-      <a href="#" className="btn btn-success">Apply</a>
-    </div>
-  </div>
-  <div className="card mb-3 bg-info bg-opacity-25 text-center" style={{width: '20rem', borderWidth: '0'}}>
-    <br/>
-    <h5 className="card-title">BrightBlueCard</h5>
-    <img src={process.env.PUBLIC_URL + './1000_F_221854470_esEmWMFah72WiKbYM0Kedpay5XjyjJkE-removebg-preview.png'} className="card-img-top" alt="..."/>
-    <div className="card-body">
-      <p className="card-text text-position">BrightBlueCard is the product that has truly revolutionized consumer spending around the whole world. This credit card offers a package of financial options for purchases.</p>
-      <a href="#" className="btn btn-success">Apply</a>
-    </div>
-  </div>
+  <div className="account-list">
+    <Link to="/RegisterForClients" className="link-info">
+        <div className="accounts-container">
+            {creditCards.map(creditCard => (
+                <div key={creditCard.id} className="account-card">
+                    <h3>{creditCard.name}</h3>
+                    <p>{creditCard.description}</p>
+                </div>
+            ))}
+        </div>
+    </Link>
 </div>
 <div className="account-list">
     <Link to="/RegisterForClients" className="link-info">

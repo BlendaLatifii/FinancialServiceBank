@@ -25,15 +25,17 @@ export default function EditBranch() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await BranchService.GetBranchDetails(id!);
-        const userData = response;
-        setValues({
-          branchId: userData.branchId,
-          branchName: userData.branchName,
-          address: userData.address,
-          phoneNumber: userData.phoneNumber,
-          opened: userData.opened,
-        });
+        if(id){
+          const response = await BranchService.GetBranchDetails(id!);
+          const userData = response;
+          setValues({
+            branchId: userData.branchId,
+            branchName: userData.branchName,
+            address: userData.address,
+            phoneNumber: userData.phoneNumber,
+            opened: userData.opened,
+          })
+        }
       } catch (error) {
         console.error("Error fetching branch details:", error);
       }

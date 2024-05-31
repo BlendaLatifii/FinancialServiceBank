@@ -2,6 +2,7 @@
 using Domain.Interfaces;
 using Domain.Models;
 using Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,14 +14,12 @@ namespace Api.Controllers
     public class ClientBankAccountController : ControllerBase
     {
         private readonly IClientBankAccountService clientBankAccService;
-        private readonly AppDbContext _context;
-
-        public ClientBankAccountController(IClientBankAccountService clientBankAccService, AppDbContext _context)
+        public ClientBankAccountController(IClientBankAccountService clientBankAccService)
         {
             this.clientBankAccService = clientBankAccService;
-            this._context = _context;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult<List<ClientBankAccountModel>>> GetAllClientBankAccountAsync(CancellationToken cancellationToken)
         {
@@ -29,7 +28,7 @@ namespace Api.Controllers
             return Ok(clientAcc);
         }
 
-
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetClientAccountById([FromRoute]Guid id, CancellationToken cancellationToken)
         {
@@ -37,13 +36,14 @@ namespace Api.Controllers
             return Ok(model);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateOrUpdateClientBankAccount(ClientBankAccountModel model, CancellationToken cancellationToken)
         {
             var updateBankAcc = await clientBankAccService.CreateOrUpdateClientBankAccount(model, cancellationToken);
             return Ok(updateBankAcc);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteClientBankAccount(Guid id, CancellationToken cancellationToken)
         {

@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Domain.Entities;
+using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
 using Infrastructure.Data;
@@ -24,28 +26,96 @@ namespace Application.Services
             var loanmodel = mapper.Map<List<LoanModel>>(loans);
             return loanmodel;
         }
-        public async Task GetLoanById(int Id, CancellationToken cancellationToken)
+        public async Task<LoanModel> GetLoanByIdAsync(Guid id, CancellationToken cancellationToken)
         {
             var loan = await _context.Loans
-                .Where(x => x.Id == Id)
+                .Where(x => x.Id == id)
+                .Include(x => x.ClientBankAccount)
                 .FirstOrDefaultAsync(cancellationToken);
-            if (loan != null)
+            if (loan == null)
             {
-                await _context.SaveChangesAsync(cancellationToken);
+                throw new AppBadDataException();
+            }
+            else
+            {
+                var model = mapper.Map<LoanModel>(loan);
+                return model;
             }
         }
 
-        public async Task DeleteLoan(int id, CancellationToken cancellationToken)
+        public async Task<LoanModel> CreateOrUpdateLoanAsync(LoanModel model, CancellationToken cancellationToken)
+        {
+            var clientAccount = await _context.ClientBankAccounts.FirstOrDefaultAsync(x => x.AccountNumberGeneratedID == model.ClientAccountNumber, cancellationToken);
+            if (clientAccount == null)
+            {
+                throw new Exception("Client not found with the provided Account Number.");
+            }
+            if (model.Id == null || model.Id == Guid.Empty)
+            {
+                var newLoan = new Loan()
+                {
+                    ClientBankAccountId = clientAccount.Id,
+                    LoansTypesId=model.LoansTypesId,
+                    LoanAmount=model.LoanAmount,
+                    MonthlyPayment=model.MonthlyPayment,
+                    Income=model.Income,
+                    EmploymentStatus=model.EmploymentStatus
+                };
+                await _context.Loans.AddAsync(newLoan, cancellationToken);
+                await _context.SaveChangesAsync(cancellationToken);
+
+                return new LoanModel
+                {
+                    Id = newLoan.Id,
+                    ClientBankAccountId = newLoan.ClientBankAccountId,
+                    LoansTypesId = newLoan.LoansTypesId,
+                    LoanAmount=newLoan.LoanAmount,
+                    MonthlyPayment=newLoan.MonthlyPayment,
+                    Income=newLoan.Income,
+                    EmploymentStatus=newLoan.EmploymentStatus
+                };
+            }
+            else
+            {
+                var existingLoan = await _context.Loans.FindAsync(model.Id);
+                if (existingLoan == null)
+                {
+                    throw new AppBadDataException();
+                }
+                existingLoan.ClientBankAccountId = clientAccount.Id;
+                existingLoan.LoansTypesId = model.LoansTypesId;
+                existingLoan.LoanAmount = model.LoanAmount;
+                existingLoan.MonthlyPayment = model.MonthlyPayment;
+                existingLoan.Income = model.Income;
+                existingLoan.EmploymentStatus = model.EmploymentStatus;
+
+                await _context.SaveChangesAsync(cancellationToken);
+
+                return new LoanModel
+                {
+                    Id = model.Id,
+                    ClientBankAccountId = model.ClientBankAccountId,
+                    LoansTypesId = model.LoansTypesId,
+                    LoanAmount = model.LoanAmount,
+                    MonthlyPayment = model.MonthlyPayment,
+                    Income = model.Income,
+                    EmploymentStatus = model.EmploymentStatus,
+                };
+            }
+        }
+
+        public async Task DeleteLoan(Guid id, CancellationToken cancellationToken)
         {
             var loan = await _context.Loans
-                 .Where(x => x.Id== id)
+                 .Where(x => x.Id == id)
                  .FirstOrDefaultAsync(cancellationToken);
 
-            if (loan != null)
+            if (loan == null)
             {
-                _context.Loans.Remove(loan);
-                await _context.SaveChangesAsync(cancellationToken);
+                throw new ApplicationException("This Loan does not exist.");
             }
+            _context.Loans.Remove(loan);
+            await _context.SaveChangesAsync();
         }
     }
 }

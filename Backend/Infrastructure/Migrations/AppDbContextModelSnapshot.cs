@@ -186,7 +186,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.CreditCards", b =>
                 {
-                    b.Property<Guid?>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -215,40 +215,47 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Loan", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ClientBankAccountId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("EmploymentStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Income")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("InterestRate")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("LoanAmount")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("LoanInstallment")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("LoanPeriod")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    b.Property<Guid>("LoansTypesId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("KestiIKredise")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("KohaEKredise")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("LlojiIKredise")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MetodaEKredise")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("NormaEInteresit")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("Rroga6mujore")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("ShumaEKredise")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("StatusiIPunesise")
+                    b.Property<string>("MonthlyPayment")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClientBankAccountId")
+                        .IsUnique();
+
+                    b.HasIndex("LoansTypesId");
 
                     b.ToTable("Loans");
                 });
@@ -575,6 +582,25 @@ namespace Infrastructure.Migrations
                     b.Navigation("TypesOfCreditCards");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Loan", b =>
+                {
+                    b.HasOne("Domain.Entities.ClientBankAccount", "ClientBankAccount")
+                        .WithOne("Loans")
+                        .HasForeignKey("Domain.Entities.Loan", "ClientBankAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.LoansType", "LoansTypes")
+                        .WithMany("Loans")
+                        .HasForeignKey("LoansTypesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ClientBankAccount");
+
+                    b.Navigation("LoansTypes");
+                });
+
             modelBuilder.Entity("Domain.Entities.Transaction", b =>
                 {
                     b.HasOne("Domain.Entities.ClientBankAccount", "DestinationClientBankAccount")
@@ -662,9 +688,17 @@ namespace Infrastructure.Migrations
                     b.Navigation("CreditCards")
                         .IsRequired();
 
+                    b.Navigation("Loans")
+                        .IsRequired();
+
                     b.Navigation("RecivedTransations");
 
                     b.Navigation("SendTransations");
+                });
+
+            modelBuilder.Entity("Domain.Entities.LoansType", b =>
+                {
+                    b.Navigation("Loans");
                 });
 
             modelBuilder.Entity("Domain.Entities.Role", b =>

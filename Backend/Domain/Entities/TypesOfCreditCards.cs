@@ -6,6 +6,6 @@ namespace Domain.Entities
 		public Guid Id { get; set; }
 		public string Name { get; set; }
 		public string Description { get; set; }
-		public List<CreditCards> CreditCards { get; set; }
+		public List<CreditCards> CreditCards { get; set; } = new List<CreditCards>();
 	}
 }

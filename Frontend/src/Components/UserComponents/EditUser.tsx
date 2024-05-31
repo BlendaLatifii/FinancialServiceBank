@@ -33,7 +33,6 @@ export default function EditUser() {
     if(!id){
       return;
     }
-   
       const response = await UserService.GetUserDetails(id!);
       const userData = response;
       setValues({

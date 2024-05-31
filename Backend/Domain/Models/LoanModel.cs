@@ -4,16 +4,17 @@ namespace Domain.Models
 {
     public class LoanModel
     {
-        
-        public int Id { get; set; }
-        public string LlojiIKredise { get; set; } = string.Empty;
-        public decimal ShumaEKredise { get; set; }
-        public decimal NormaEInteresit { get; set; }
-        public decimal KohaEKredise { get; set; }
-        public string MetodaEKredise { get; set; } = string.Empty;
-        public decimal Rroga6mujore { get; set; }
-        public decimal KestiIKredise { get; set; }
-        public string StatusiIPunesise { get; set; } = string.Empty;
+        public Guid Id { get; set; }
+        public Guid? ClientBankAccountId { get; set; }
+        public Guid LoansTypesId { get; set; }
+        public string ClientAccountNumber { get; set; } = default!;
+        public string LoanAmount { get; set; } = default!;
+        public decimal? InterestRate { get; set; }
+        public string MonthlyPayment { get; set; } = default!;
+        public int? LoanPeriod { get; set; }
+        public string Income { get; set; } = default!;
+        public decimal? LoanInstallment { get; set; }
+        public string EmploymentStatus { get; set; } = default!;
 
     }
 }

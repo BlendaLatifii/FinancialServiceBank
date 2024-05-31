@@ -19,13 +19,15 @@ export default function EditTypesOfCreditCards() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await TypesOfCreditCardsService.GetTypesOfCreditCardsDetails(id!);
-        const typeData = response;
-        setValues({
-            id:typeData.id!,
-            name:typeData.name,
-            description:typeData.description,
-        })
+        if(id){
+          const response = await TypesOfCreditCardsService.GetTypesOfCreditCardsDetails(id!);
+          const typeData = response;
+          setValues({
+              id:typeData.id!,
+              name:typeData.name,
+              description:typeData.description,
+          })
+        }
       } catch (error) {
         console.error("Error fetching types of credit cards details:", error);
       }

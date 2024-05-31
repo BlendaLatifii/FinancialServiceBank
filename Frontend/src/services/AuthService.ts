@@ -7,7 +7,6 @@ import { ToastContainer, toast } from "react-toastify";
 
 export class AuthService {
   private static BaseUrl = "https://localhost:7254/api/Account/";
-  public static LoggedInUser: UserModel | null = null;
   public static token: string | null = null;
   public static role: string | null = null;
 
@@ -17,14 +16,12 @@ export class AuthService {
         `${AuthService.BaseUrl}login`,
         user
       );
-      console.log(response);
       if(!response.data){
         return null!;
       }
       localStorage.setItem("jwt", response.data.token);
       AuthService.token = response.data?.token;
       localStorage.setItem("userModel", JSON.stringify(response.data.userData));
-      AuthService.LoggedInUser = response.data?.userData;
       localStorage.setItem("role", response.data.userRole);
       AuthService.role = response.data?.userRole;
       toast.success("Logged in successfuly");
@@ -37,8 +34,10 @@ export class AuthService {
 
   public static LogOut(): void {
     localStorage.removeItem("jwt");
+    AuthService.token = null;
     localStorage.removeItem("userModel");
     localStorage.removeItem("role");
+    AuthService.role = null;
   }
 
   public static async Register(model: RegisterModel): Promise<void> {
@@ -51,6 +50,14 @@ export class AuthService {
       pauseOnHover: true,
       draggable: true,
     });
+  }
+
+  public static LoggedInUser(): UserModel | null{
+    let model = localStorage.getItem("userModel");
+    if(model == null){
+      return null;
+    }
+    return JSON.parse(localStorage.getItem("userModel")!);
   }
 
   public static GetUserRole(): string | null {

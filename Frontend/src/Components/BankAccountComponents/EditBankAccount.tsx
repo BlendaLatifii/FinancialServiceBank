@@ -19,13 +19,15 @@ export default function EditBankAccount() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await BankAccountService.GetBankAccDetails(id!);
-        const bankData = response;
-        setValues({
-            id:bankData.id,
-            accountType:bankData.accountType,
-            accountDescription:bankData.accountDescription,
-        })
+        if(id){
+          const response = await BankAccountService.GetBankAccDetails(id!);
+          const bankData = response;
+          setValues({
+              id:bankData.id,
+              accountType:bankData.accountType,
+              accountDescription:bankData.accountDescription,
+          })
+        }
       } catch (error) {
         console.error("Error fetching bank details:", error);
       }
