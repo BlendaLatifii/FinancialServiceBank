@@ -1,5 +1,6 @@
 import axios from "axios";
 import { ClientBankAccountModel } from "../interfaces/clientaccount-model";
+import { toast } from "react-toastify";
 
 export class ClientBankAccountService {
     private static baseUrl = "https://localhost:7254/api/ClientBankAccount";
@@ -18,5 +19,13 @@ export class ClientBankAccountService {
 
    public static async EditOrAddBankAcc(model: ClientBankAccountModel): Promise<void> {
     const result = await axios.post(`${ClientBankAccountService.baseUrl}`, model);
+    toast.success("The application was completed successfully", {
+      position: "bottom-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
   }
 }

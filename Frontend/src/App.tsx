@@ -23,17 +23,20 @@ import EditBankAccount from "./Components/BankAccountComponents/EditBankAccount"
 import AccountTable from "./Components/BankAccountComponents/AccountTable";
 import ClientTable from "./Components/ClientComponents/ClientTable";
 import ClientAccountTable from "./Components/ClientBankAccountComponents/ClientAccountTable";
-import EditClientAccount from "./Components/EditClientAccount";
+import EditClientAccount from "./Components/ClientBankAccountComponents/EditClientAccount";
 import EditLoansType from "./Components/LoansTypeComponents/EditLoansType";
 import LoansTypeTable from "./Components/LoansTypeComponents/LoansTypeTable";
 import TypesOfCreditCardsTable from "./Components/TypesOfCreditCardsComponents/TypesOfCreditCardsTable";
 import EditTypesOfCreditCards from "./Components/TypesOfCreditCardsComponents/EditTypesOfCreditCards";
 import Transaction from "./Components/TransactionComponents/Transaction";
 import TransactionTable from "./Components/TransactionComponents/TransactionTable";
-import LoanForm from "./Components/LoanForm";
+import LoanForm from "./Components/LoanComponents/LoanForm";
 import CreditCardsTable from "./Components/CreditCardsComponents/CreditCardsTable";
 import EditCreditCards from "./Components/CreditCardsComponents/EditCreditCards";
-import LoanTable from "./Components/LoanTable";
+import LoanTable from "./Components/LoanComponents/LoanTable";
+import ForgotPassword from "./Components/ForgotPassword";
+import ResetPassword from "./Components/ResetPassword";
+import MyProfile from "./Components/MyProfile";
 
 function App() {
   axios.interceptors.request.use((config) => {
@@ -83,6 +86,7 @@ function App() {
         <Route path="/Footer" element={<Footer />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/Services" element={<Services />} />
+        <Route path="/MyProfile" element={<MyProfile />} />
         <Route path="/AboutUs" element={<AboutUs />} />
         <Route path="/ContactUs" element={<ContactUs />} />
         <Route path="/Register" element={<Register />} />
@@ -122,6 +126,8 @@ function App() {
         <Route path="/AddLoan" element={<LoanForm/>}/>
         <Route path="/EditLoan/:id" element={<LoanForm/>}/>
         <Route path="/LoanTable" element={<LoanTable />} />
+        <Route path="/ForgotPassword" element={<ForgotPassword/>} />
+        <Route path="/ResetPassword" element={<ResetPassword/>} />
       </Routes>
       <ToastContainer />
     </>

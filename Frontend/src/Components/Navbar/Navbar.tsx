@@ -31,7 +31,7 @@ function Navbar()  {
                 <Icon name="user"/>
                   <Dropdown style={{color:"white",float:"left"}} pointing='top left' text={AuthService.GetUserRole() ?? ""}>
                     <Dropdown.Menu>
-                    <Dropdown.Item as={Link} to={`/edit-profile`} text='My Profile' />
+                    <Dropdown.Item as={Link} to={`/MyProfile`} text='My Profile' />
                       <Dropdown.Item onClick={()=> LogOut()} text='Logout' icon='power' />
                     </Dropdown.Menu>
                   </Dropdown>

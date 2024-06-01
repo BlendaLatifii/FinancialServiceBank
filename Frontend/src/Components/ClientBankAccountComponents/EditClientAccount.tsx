@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Button,  Segment, Select } from "semantic-ui-react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
 import { Formik,Form } from 'formik';
 import * as yup from 'yup';
-import { ClientBankAccountService } from "../services/ClientBankAccountService";
-import MyTextInput from "../FormElements/MyTextInput";
-import MySelectInput from "../FormElements/DropDown";
-import { ClientBankAccountModel } from "../interfaces/clientaccount-model";
-import { SelectListItem } from "../interfaces/select-list-item";
-import { BankAccountService } from "../services/BankAccountService";
-import { ListItemModel } from "../interfaces/list-item-model";
+import { ClientBankAccountService } from "../../services/ClientBankAccountService";
+import MyTextInput from "../../FormElements/MyTextInput";
+import MySelectInput from "../../FormElements/DropDown";
+import { ClientBankAccountModel } from "../../interfaces/clientaccount-model";
+import { SelectListItem } from "../../interfaces/select-list-item";
+import { BankAccountService } from "../../services/BankAccountService";
 
 export default function EditClientAccount() {
  const { id } = useParams<{ id: string}>();
@@ -56,7 +54,7 @@ export default function EditClientAccount() {
   };
 
   function sendToOverview(){
-   navigate('/ClientAccountTable')
+   navigate('/')
   }
 
   const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {

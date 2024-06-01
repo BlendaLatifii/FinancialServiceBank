@@ -125,6 +125,7 @@ builder.Services.AddScoped<ILoansTypeService, LoansTypeService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<ITypesOfCreditCardsService, TypesOfCreditCardsService>();
 builder.Services.AddScoped<ICreditCardsService, CreditCardsService>();
+builder.Services.AddScoped<IEmailSenderService, EmailSenderService>();
 
 builder.Services.AddScoped<IAuthorizationManager, AuthorizationManager>();
 builder.Services.AddAutoMapper(typeof(UserMappings));

@@ -49,6 +49,23 @@ namespace Application.Services
                 return model;
             }
         }
+
+        public async Task<ClientModel> GetByPersonalNumberAsync(string personalNumber, CancellationToken cancellationToken)
+        {
+            var client = await _context.Clients
+               .Where(x => x.PersonalNumberId == personalNumber)
+                .FirstOrDefaultAsync(cancellationToken);
+            if (client == null)
+            {
+                throw new AppBadDataException();
+            }
+            else
+            {
+                await _context.SaveChangesAsync(cancellationToken);
+                var model = _mapper.Map<ClientModel>(client);
+                return model;
+            }
+        }
         public async Task<ClientModel> CreateOrUpdateClientAsync(ClientModel model, CancellationToken cancellationToken)
         {
             if (model.Id == null)

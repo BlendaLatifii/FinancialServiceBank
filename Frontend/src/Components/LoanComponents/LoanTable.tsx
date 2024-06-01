@@ -11,12 +11,9 @@ import {
 } from "semantic-ui-react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import Header from "./Header";
-import { TransactionModel } from "../interfaces/transaction-model";
-import { TransactionService } from "../services/TransactionService";
-import { TranType } from "../interfaces/TranType";
-import { LoanModel } from "../interfaces/loan-model";
-import { LoanService } from "../services/LoanService";
+import Header from "../Header";
+import { LoanModel } from "../../interfaces/loan-model";
+import { LoanService } from "../../services/LoanService";
 
 export default function TransactionTable() {
   const [loans, setLoans] = useState<LoanModel[]>([]);

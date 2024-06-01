@@ -88,7 +88,7 @@ export default function RegisterForClients() {
                 <div className="card-body">
                   <ul className="nav nav-tabs mb-3" id="myTab" role="tablist">
                     <li className="nav-item text-center" role="presentation">
-                      <button data-id="1" className="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true"><span>Client's Information</span></button>
+                      <button data-id="1" className="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true"><span><h3>Client's Information</h3></span></button>
                     </li>
                   </ul>
                   <div className="tab-content" id="myTabContent">
@@ -171,7 +171,7 @@ export default function RegisterForClients() {
                           </div>
                         </div>
                       </div>
-                      <button className="btn btn-primary hapitjeter float-right" type="submit" data-id="1">Register</button>
+                      <button className="btn btn-primary hapitjeter float-right " type="submit" data-id="1" style={{backgroundColor:'green' , borderColor:'green'}}>Register</button>
                     </div>
                     </div>
                 </div>

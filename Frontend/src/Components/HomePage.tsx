@@ -34,25 +34,25 @@ function HomePage({}: Props) {
                 <div className="col-xl-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
                   <div className="icon-box">
                     <div className="icon"><i className="bi bi-easel"></i></div>
-                       <h4 className="title"><Link to="/ClientBankAccount" className="link-info">Account</Link></h4>
+                       <h4 className="title">Apply here →</h4>
                   </div>
                 </div>
                 <div className="col-xl-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
                   <div className="icon-box">
                     <div className="icon"><i className="bi bi-gem"></i></div>
-                    <h4 className="title"><Link to="/Transaction" className="link-info">Transaction</Link></h4>
+                    <h4 className="title"><Link to="/RegisterForClients" className="link-info">Account</Link></h4>
                   </div>
                 </div>
                 <div className="col-xl-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
                   <div className="icon-box">
                     <div className="icon"><i className="bi bi-geo-alt"></i></div>
-                    <h4 className="title"><Link to="/LoanForm" className='stretched-link'>Loans</Link></h4>
+                    <h4 className="title"><Link to="/Transaction" className="link-info">Transaction</Link></h4>
                   </div>
                 </div>
                 <div className="col-xl-3 col-md-6" data-aos="fade-up" data-aos-delay="500">
                   <div className="icon-box">
                     <div className="icon"><i className="bi bi-command"></i></div>
-                    <h4 className="title"><a href="" className="stretched-link">Debit & Credit Cards</a></h4>
+                    <h4 className="title"><Link to="/LoanForm" className='stretched-link'>Loans</Link></h4>
                   </div>
                 </div>
               </div>

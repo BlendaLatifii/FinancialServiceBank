@@ -1,5 +1,6 @@
 import axios from "axios";
 import { TransactionModel } from "../interfaces/transaction-model";
+import { toast } from "react-toastify";
 
 export class TransactionService {
   private static baseUrl = "https://localhost:7254/api/Transaction";
@@ -17,5 +18,13 @@ export class TransactionService {
   }
   public static async EditOrAddTransaction(model: TransactionModel): Promise<void> {
     const result = await axios.post(`${this.baseUrl}`, model);
+    toast.success("The transaction was completed successfully", {
+      position: "bottom-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
   }
 }

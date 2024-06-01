@@ -24,7 +24,7 @@ export class AuthService {
       localStorage.setItem("userModel", JSON.stringify(response.data.userData));
       localStorage.setItem("role", response.data.userRole);
       AuthService.role = response.data?.userRole;
-      toast.success("Logged in successfuly");
+      toast.success("Logged in Successfully");
       return response.data;
     }
     catch(e){
@@ -42,7 +42,7 @@ export class AuthService {
 
   public static async Register(model: RegisterModel): Promise<void> {
     const result = await axios.post(`${AuthService.BaseUrl}register`, model);
-    toast.success("Registered Successfuly", {
+    toast.success("Registered Successfully", {
       position: "bottom-right",
       autoClose: 3000,
       hideProgressBar: false,

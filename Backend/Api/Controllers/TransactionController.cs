@@ -27,7 +27,7 @@ namespace Api.Controllers
             return Ok(transactions);
         }
 
-        [Authorize(Roles = "Member,Admin")]
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> CreateOrEditTransaction([FromBody] TransactionModel model, CancellationToken cancellationToken)
         {

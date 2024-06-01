@@ -98,9 +98,9 @@ function Login() {
                     {isSubmitting ? "Logging in..." : "Login"}
                   </button>
                   <p className="small mb-5 pb-lg-2">
-                    <a className="text-muted" href="#!">
+                  <Link to="/ForgotPassword" className="link-info">
                       Forgot password?
-                    </a>
+                      </Link>
                   </p>
                   <p>
                     Don't have an account?

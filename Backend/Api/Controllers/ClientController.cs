@@ -37,6 +37,15 @@ namespace Api.Controllers
             return Ok(model);
         }
 
+        [HttpGet("personalNumber/{personalNumber}")]
+        public async Task<IActionResult> GetClientByPersonalNumber([FromRoute] string personalNumber, CancellationToken cancellationToken)
+        {
+            var model = await clientService.GetByPersonalNumberAsync(personalNumber, cancellationToken);
+            return Ok(model);
+        }
+
+
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> CreateOrUpdateClientAsync(ClientModel model, CancellationToken cancellationToken)
         {

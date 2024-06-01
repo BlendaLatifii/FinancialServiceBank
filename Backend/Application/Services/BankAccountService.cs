@@ -48,7 +48,7 @@ namespace Application.Services
         {
             var model = await _context.BankAccounts
                 .Select(x => new ListItemModel()
-                { 
+                {
                     Id = x.Id,
                     Name = x.AccountType
                 }).ToListAsync(cancellationToken);
@@ -91,7 +91,7 @@ namespace Application.Services
 
                 return new BankAccountModel
                 {
-                    Id = existingBankAcc.Id, 
+                    Id = existingBankAcc.Id,
                     AccountType = existingBankAcc.AccountType,
                     AccountDescription = existingBankAcc.AccountDescription
                 };
@@ -104,14 +104,13 @@ namespace Application.Services
                  .Where(x => x.Id == id)
                  .FirstOrDefaultAsync(cancellationToken);
 
-			if (account == null)
-			{
-				throw new ApplicationException("Account does not exist.");
-			}
-			_context.BankAccounts.Remove(account);
-			await _context.SaveChangesAsync();
-		}
-
+            if (account == null)
+            {
+                throw new ApplicationException("Account does not exist.");
+            }
+            _context.BankAccounts.Remove(account);
+            await _context.SaveChangesAsync();
+        }
 
     }
 }

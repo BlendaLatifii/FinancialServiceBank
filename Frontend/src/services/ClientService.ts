@@ -19,7 +19,7 @@ export class ClientService {
 
    public static async EditOrAddClient(model: ClientModel): Promise<void> {
     const result = await axios.post(`${ClientService.baseUrl}`, model);
-    toast.success("Registered Successfuly", {
+    toast.success("Registered Successfully", {
       position: "bottom-right",
       autoClose: 3000,
       hideProgressBar: false,

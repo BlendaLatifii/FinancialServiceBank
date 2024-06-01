@@ -3,16 +3,16 @@ import $ from 'jquery'; // Import jQuery
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.css';
 import * as yup from 'yup';
-import Header from './Header';
-import Footer from './Footer';
-import { LoansTypeService } from '../services/LoansTypeService';
-import { SelectListItem } from '../interfaces/select-list-item';
+import Header from '../Header';
+import Footer from '../Footer';
+import { LoansTypeService } from '../../services/LoansTypeService';
+import { SelectListItem } from '../../interfaces/select-list-item';
 import { Form, Formik } from 'formik';
 import { Button, Segment } from 'semantic-ui-react';
-import MySelectInput from '../FormElements/DropDown';
-import MyTextInput from '../FormElements/MyTextInput';
-import { LoanModel } from '../interfaces/loan-model';
-import { LoanService } from '../services/LoanService';
+import MySelectInput from '../../FormElements/DropDown';
+import MyTextInput from '../../FormElements/MyTextInput';
+import { LoanModel } from '../../interfaces/loan-model';
+import { LoanService } from '../../services/LoanService';
 
 
 type Props = {}
