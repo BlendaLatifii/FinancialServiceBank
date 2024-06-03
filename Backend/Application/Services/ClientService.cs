@@ -5,39 +5,33 @@ using Domain.Interfaces;
 using Domain.Models;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Application.Services
 {
-	public class ClientService : IClientService
-	{
-		public readonly AppDbContext _context;
-		private readonly IMapper _mapper;
+    public class ClientService : IClientService
+    {
+        public readonly AppDbContext _context;
+        private readonly IMapper _mapper;
 
-		public ClientService(AppDbContext _context, IMapper _mapper)
-		{
-			this._context = _context;
-			this._mapper = _mapper;
-		}
+        public ClientService(AppDbContext _context, IMapper _mapper)
+        {
+            this._context = _context;
+            this._mapper = _mapper;
+        }
 
-		public async Task<List<ClientModel>> GetAllClientAsync(CancellationToken cancellationToken)
-		{
-			var clients = await _context.Clients.ToListAsync(cancellationToken);
+        public async Task<List<ClientModel>> GetAllClientAsync(CancellationToken cancellationToken)
+        {
+            var clients = await _context.Clients.ToListAsync(cancellationToken);
 
-			var clientModel = _mapper.Map<List<ClientModel>>(clients);
-			return clientModel;
+            var clientModel = _mapper.Map<List<ClientModel>>(clients);
+            return clientModel;
 
 
-		}
-		public async Task<ClientModel> GetByIdAsync(Guid id, CancellationToken cancellationToken)
-		{
-			var client = await _context.Clients
-			   .Where(x => x.Id == id)
-				.FirstOrDefaultAsync(cancellationToken);
+        }
+        public async Task<ClientModel> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+        {
+            var client = await _context.Clients
+               .Where(x => x.Id == id)
+                .FirstOrDefaultAsync(cancellationToken);
             if (client == null)
             {
                 throw new AppBadDataException();
@@ -136,16 +130,16 @@ namespace Application.Services
             }
         }
         public async Task DeleteClient(Guid id, CancellationToken cancellationToken)
-		{
-			var client = await _context.Clients
-				 .Where(x => x.Id == id)
-				 .FirstOrDefaultAsync(cancellationToken);
+        {
+            var client = await _context.Clients
+                 .Where(x => x.Id == id)
+                 .FirstOrDefaultAsync(cancellationToken);
 
-			if (client == null)	throw new ApplicationException("Client does not exist!");
+            if (client == null) throw new ApplicationException("Client does not exist!");
 
-			_context.Clients.Remove(client);
-			await _context.SaveChangesAsync();
-		}
+            _context.Clients.Remove(client);
+            await _context.SaveChangesAsync();
+        }
 
     }
 }

@@ -8,5 +8,6 @@ namespace Domain.Models
 		public Guid? Id { get; set; }
 		public string AccountType { get; set; } = default!; 
 		public string AccountDescription { get; set; } = default!;
+		public string TarifaMirembajtese { get; set; } = default!;
 	}
 }

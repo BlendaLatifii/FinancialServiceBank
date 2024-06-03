@@ -1,4 +1,6 @@
 
+using Domain.Enums;
+
 namespace Domain.Entities
 {
     public class Client
@@ -10,8 +12,8 @@ namespace Domain.Entities
         public string LastName { get; set; } = default! ;
         public string PhoneNumber { get; set; } = default!;
         public string EmailAddress { get; set; } = default!;
-        public string State { get; set; } = default!;
-        public string City { get; set; } = default!;
+        public StateOfClient State { get; set; }
+        public CityOfClient City { get; set; }
         public string ZipCode { get; set; } = default! ;
        public List<ClientBankAccount> ClientBankAccounts { get; set; }
     }

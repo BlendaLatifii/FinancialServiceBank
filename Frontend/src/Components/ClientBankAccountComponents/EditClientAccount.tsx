@@ -39,7 +39,9 @@ export default function EditClientAccount() {
     };
 
     fetchData();
-
+    if (id) {
+      ClientBankAccountService.DeductMaintenanceFeesAfterAMonth();
+    }
   }, [id!]);
  const validation = yup.object<ClientBankAccountModel>({
    personalNumber:yup.string().required(),
@@ -80,6 +82,7 @@ export default function EditClientAccount() {
   useEffect(()=>{
     fetchAccountTypes()
   },[])
+
   return (
     <>
     

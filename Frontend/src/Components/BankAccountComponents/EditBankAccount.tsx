@@ -14,6 +14,7 @@ export default function EditBankAccount() {
       id:id!,
       accountType:'',
       accountDescription:'',
+      tarifaMirembajtese:'',
   } as BankAccountModel)
 
   useEffect(() => {
@@ -26,6 +27,7 @@ export default function EditBankAccount() {
               id:bankData.id,
               accountType:bankData.accountType,
               accountDescription:bankData.accountDescription,
+              tarifaMirembajtese:bankData.tarifaMirembajtese,
           })
         }
       } catch (error) {
@@ -40,6 +42,7 @@ export default function EditBankAccount() {
  const validation = yup.object<BankAccountModel>({
    accountType:yup.string().required(),
    accountDescription:yup.string().required(),
+   tarifaMirembajtese:yup.string().required(),
 })
  const navigate = useNavigate();
 
@@ -76,6 +79,11 @@ export default function EditBankAccount() {
           <MyTextInput
             placeholder="Account Description"
             name="accountDescription"
+            onchange={handleChange}
+          />
+          <MyTextInput
+            placeholder="Tarifa Mirembajtese"
+            name="tarifaMirembajtese"
             onchange={handleChange}
           />
           

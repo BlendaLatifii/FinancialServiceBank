@@ -35,6 +35,12 @@ namespace Api.Controllers
             var model =await clientBankAccService.GetClientAccountById(id, cancellationToken);
             return Ok(model);
         }
+        [HttpGet("personalNumber/{personalNumber}")]
+        public async Task<IActionResult> GetClientByPersonalNumber([FromRoute] string personalNumber, CancellationToken cancellationToken)
+        {
+            var model = await clientBankAccService.GetByPersonalNumberAsync(personalNumber, cancellationToken);
+            return Ok(model);
+        }
 
         [AllowAnonymous]
         [HttpPost]
@@ -49,6 +55,20 @@ namespace Api.Controllers
         {
             await clientBankAccService.DeleteClientBankAccount(id, cancellationToken);
             return Ok();
+        }
+
+        [HttpPost("deduct-maintenance-fees-after-a-month")]
+        public async Task<IActionResult> DeductMaintenanceFeesAfterAMonth(CancellationToken cancellationToken)
+        {
+            try
+            {
+                await clientBankAccService.DeductMaintenanceFeesAfterAMonth(cancellationToken);
+                return Ok("Maintenance fees deducted after a month successfully.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
     }
 }

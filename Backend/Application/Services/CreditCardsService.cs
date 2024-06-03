@@ -88,6 +88,22 @@ namespace Application.Services
                 return model;
             }
         }
+        public async Task<CreditCardsModel> GetByAccountNumberAsync(string accountNumber, CancellationToken cancellationToken)
+        {
+            var client = await appDbContext.CreditCards
+               .Where(x => x.ClientBankAccount.AccountNumberGeneratedID == accountNumber)
+                .FirstOrDefaultAsync(cancellationToken);
+            if (client == null)
+            {
+                throw new AppBadDataException();
+            }
+            else
+            {
+                await appDbContext.SaveChangesAsync(cancellationToken);
+                var model = _mapper.Map<CreditCardsModel>(client);
+                return model;
+            }
+        }
 
         public async Task DeleteCreditCards(Guid id, CancellationToken cancellationToken)
         {

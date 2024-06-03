@@ -17,7 +17,7 @@ function Header(){
                 <li><Link to="/Services">Services</Link></li>
                 <li><Link to="/AboutUs">About Us</Link></li>
                 <li><Link to="/ContactUs">Contact Us</Link></li>
-                {AuthService.GetUserRole() == 'Admin' &&<li><Link to="/Navbar">Dashboard</Link></li>}
+                {AuthService.GetUserRole() == 'Admin' &&<li><Link to="/Navbar"></Link></li>}
                 {AuthService.LoggedInUser() == null && <li><Link to="/Login">Login</Link></li>}
                 </ul>
               </nav>

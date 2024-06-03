@@ -7,7 +7,7 @@ export class ClientBankAccountService {
     public static async DeleteBankAcc(id: string): Promise<void> {
       var result = await axios.delete(`${ClientBankAccountService.baseUrl}/${id}`);
     }
-  
+
     public static async GetAllBankAcc(): Promise<ClientBankAccountModel[]> {
       const result = await axios.get(ClientBankAccountService.baseUrl);
       return result.data;
@@ -28,4 +28,17 @@ export class ClientBankAccountService {
       draggable: true,
     });
   }
-}
+
+  public static async DeductMaintenanceFeesAfterAMonth(): Promise<void> {
+      
+          const result = await axios.post(`${ClientBankAccountService.baseUrl}/deduct-maintenance-fees-after-a-month`);
+          toast.success("Maintenance fees deducted after a month successfully", {
+              position: "bottom-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+          });
+     }
+  }

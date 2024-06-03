@@ -63,7 +63,8 @@ namespace Application.Services
                 var newBankAcc = new BankAccount()
                 {
                     AccountType = model.AccountType,
-                    AccountDescription = model.AccountDescription
+                    AccountDescription = model.AccountDescription,
+                    TarifaMirembajtese=model.TarifaMirembajtese
                 };
 
                 await _context.BankAccounts.AddAsync(newBankAcc, cancellationToken);
@@ -73,7 +74,8 @@ namespace Application.Services
                 {
                     Id = newBankAcc.Id,
                     AccountType = newBankAcc.AccountType,
-                    AccountDescription = newBankAcc.AccountDescription
+                    AccountDescription = newBankAcc.AccountDescription,
+                    TarifaMirembajtese=newBankAcc.TarifaMirembajtese
                 };
             }
             else
@@ -86,6 +88,7 @@ namespace Application.Services
 
                 existingBankAcc.AccountType = model.AccountType;
                 existingBankAcc.AccountDescription = model.AccountDescription;
+                existingBankAcc.TarifaMirembajtese = model.TarifaMirembajtese;
 
                 await _context.SaveChangesAsync(cancellationToken);
 
@@ -93,7 +96,8 @@ namespace Application.Services
                 {
                     Id = existingBankAcc.Id,
                     AccountType = existingBankAcc.AccountType,
-                    AccountDescription = existingBankAcc.AccountDescription
+                    AccountDescription = existingBankAcc.AccountDescription,
+                    TarifaMirembajtese=existingBankAcc.TarifaMirembajtese
                 };
             }
         }

@@ -99,6 +99,22 @@ namespace Application.Services
                 };
             }
         }
+        public async Task<ClientBankAccountModel> GetByPersonalNumberAsync(string personalNumber, CancellationToken cancellationToken)
+        {
+            var client = await _context.ClientBankAccounts
+               .Where(x => x.Client.PersonalNumberId == personalNumber)
+                .FirstOrDefaultAsync(cancellationToken);
+            if (client == null)
+            {
+                throw new AppBadDataException();
+            }
+            else
+            {
+                await _context.SaveChangesAsync(cancellationToken);
+                var model = mapper.Map<ClientBankAccountModel>(client);
+                return model;
+            }
+        }
 
         public async Task DeleteClientBankAccount(Guid Id, CancellationToken cancellationToken)
         {
@@ -114,6 +130,34 @@ namespace Application.Services
         }
 
 
+        public async Task DeductMaintenanceFeesAfterAMonth(CancellationToken cancellationToken)
+        {
+            // Merr të gjitha llogaritë bankare të klientëve
+            var clientBankAccounts = await _context.ClientBankAccounts
+                .Include(cba => cba.BankAccount)
+                .ToListAsync(cancellationToken);
 
+            // Përcakto datën e sotme
+            var currentDate = DateTime.UtcNow;
+
+            foreach (var clientBankAccount in clientBankAccounts)
+            {
+                // Kontrollo nëse ka kaluar një muaj nga data e fundit e përditësimit të llogarisë
+                if (currentDate > clientBankAccount.DateLastUpdated.AddMonths(1))
+                {
+                    // Merr tarifën e mirëmbajtjes së llogarisë së zgjedhur nga klienti
+                    var maintenanceFee = Decimal.Parse(clientBankAccount.BankAccount.TarifaMirembajtese);
+
+                    // Zbres balancën e llogarisë së klientit
+                    clientBankAccount.CurrentBalance -= maintenanceFee;
+
+                    // Përditëso datën e fundit të përditësimit të llogarisë
+                    clientBankAccount.DateLastUpdated = currentDate;
+                }
+            }
+
+            // Ruaj ndryshimet në bazën e të dhënave
+            await _context.SaveChangesAsync(cancellationToken);
+        }
     }
 }

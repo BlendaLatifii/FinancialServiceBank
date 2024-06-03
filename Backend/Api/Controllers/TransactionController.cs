@@ -42,6 +42,14 @@ namespace Api.Controllers
             var model = await transactionService.GetTransactionById(id, cancellationToken);
             return Ok(model);
         }
+
+        [HttpGet("accountNumber/{accountNumber}")]
+        public async Task<IActionResult> GetByAccountNumberAsync(string accountNumber, CancellationToken cancellationToken)
+        {
+            var model = await transactionService.GetByAccountNumberAsync(accountNumber, cancellationToken);
+            return Ok(model);
+        } 
+
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTransaction(Guid id, CancellationToken cancellationToken)

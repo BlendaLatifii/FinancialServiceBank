@@ -49,6 +49,22 @@ namespace Application.Services
             }
 
         }
+        public async Task<TransactionModel> GetByAccountNumberAsync(string accountNumber, CancellationToken cancellationToken)
+        {
+            var client = await _context.Transactions
+               .Where(x => x.SourceClientBankAccount.AccountNumberGeneratedID == accountNumber)
+                .FirstOrDefaultAsync(cancellationToken);
+            if (client == null)
+            {
+                throw new AppBadDataException();
+            }
+            else
+            {
+                await _context.SaveChangesAsync(cancellationToken);
+                var model = mapper.Map<TransactionModel>(client);
+                return model;
+            }
+        }
 
         public async Task<TransactionModel> CreateOrEditTransaction(TransactionModel model, CancellationToken cancellationToken)
         {

@@ -9,24 +9,38 @@ import { ClientBankAccountModel } from '../interfaces/clientaccount-model';
 import axios from 'axios';
 import { ClientService } from '../services/ClientService';
 import { ClientModel } from '../interfaces/client-model';
+import { StateOfClient } from '../interfaces/StateOfClient';
+import { CityOfClient } from '../interfaces/CityOfClient';
 
 export default function RegisterForClients() {
   const { id } = useParams<{ id: string}>();
   const [formData, setFormData] = useState<ClientModel>({
     id:null,
-    personalNumberId:'',
-    firstName: '',
-    middleName: '',
-    lastName:'',
-    phoneNumber:'',
-    emailAddress: '',
-    state:'',
-    city:'',
-    zipCode: ''
+    personalNumberId:null,
+    firstName: null,
+    middleName: null,
+    lastName:null,
+    phoneNumber:null,
+    emailAddress: null,
+    state:StateOfClient.Kosove,
+    city:CityOfClient.Prishtine,
+    zipCode: null
   });
 
   const navigate = useNavigate();
   const [registered, setRegistered] = useState(false);
+  const citySelectList =  Object.keys(CityOfClient).map((key,i) => ({
+    key: i,
+    value: +i,
+    text: CityOfClient[+key]
+  })).filter(x=> x.text != '' && x.text != null);
+
+  const stateSelectList =  Object.keys(StateOfClient).map((key,i) => ({
+    key: i,
+    value: +i,
+    text: StateOfClient[+key]
+  })).filter(x=> x.text != '' && x.text != null);
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -50,7 +64,7 @@ export default function RegisterForClients() {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData({...formData, [name]: value });
   };
@@ -66,8 +80,8 @@ export default function RegisterForClients() {
         lastName: formData.lastName,
         phoneNumber:formData.phoneNumber,
         emailAddress: formData.emailAddress,
-        state:formData.state,
-        city:formData.city,
+        state:+formData.state,
+        city:+formData.city,
         zipCode:formData.zipCode
       }
       const response = await axios.post(`https://localhost:7254/api/Client`,model);
@@ -83,7 +97,6 @@ export default function RegisterForClients() {
       <div className="container">
         <div className="row">
           <form className="needs-validation" noValidate  onSubmit={handleSubmit}>
-            <div className="col-lg-12 col-md-12">
               <div className="main-card mb-3 card">
                 <div className="card-body">
                   <ul className="nav nav-tabs mb-3" id="myTab" role="tablist">
@@ -146,22 +159,33 @@ export default function RegisterForClients() {
                         </div>
                       </div>
                       <div className="row">
-                      <div className="col-md-3 mb-3">
-                          <label htmlFor="validationTooltip04">State</label>
-                          <input type="text" className="form-control" onChange={handleChange} name="state" 
-                          value={formData.state || ''} id="state" placeholder="State" required />
-                          <div className="invalid-tooltip">
-                            Please provide a valid state.
-                          </div>
-                        </div>
-                        <div className="col-md-6 mb-3">
-                          <label htmlFor="validationTooltip03">City</label>
-                          <input type="text" className="form-control" onChange={handleChange} name="city"
-                          value={formData.city || ''} id="city" placeholder="City" required />
-                          <div className="invalid-tooltip">
-                            Please provide a valid city.
-                          </div>
-                        </div>
+                      <div className="form-group">
+                   <label htmlFor="state">State:</label>
+                  <select
+            style={{ padding: "5px", margin: "5px" }}
+            className="form-control"
+            id="state"
+            name="state"
+            value={formData.state}
+            onChange={handleChange}
+          >
+            {stateSelectList.map((x)=>
+              (<option key={x.key} value={x.value}>{x.text}</option>))}
+          </select>
+        </div>
+        <label htmlFor="city">City:</label>
+                  <select
+            style={{ padding: "5px", margin: "5px" }}
+            className="form-control"
+            id="city"
+            name="city"
+            value={formData.city}
+            onChange={handleChange}
+          >
+            {citySelectList.map((x)=>
+              (<option key={x.key} value={x.value}>{x.text}</option>))}
+          </select>
+        </div>
                         <div className="col-md-3 mb-3">
                           <label htmlFor="validationTooltip05">ZipCode</label>
                           <input type="text" className="form-control" onChange={handleChange} name="zipCode"
@@ -175,8 +199,6 @@ export default function RegisterForClients() {
                     </div>
                     </div>
                 </div>
-              </div>
-            </div>
           </form>
           </div>
       </div >

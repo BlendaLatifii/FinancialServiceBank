@@ -1,3 +1,6 @@
+import { StateOfClient } from "./StateOfClient";
+import { CityOfClient } from "./CityOfClient";
+
 export interface ClientModel{
     id: string | null;
     personalNumberId:string | null;
@@ -6,8 +9,8 @@ export interface ClientModel{
     lastName:string |null;
     phoneNumber:string|null;
     emailAddress:string | null;
-    state:string | null;
-    city:string | null;
+    state:StateOfClient;
+    city:CityOfClient;
     zipCode:string| null;
     
 }

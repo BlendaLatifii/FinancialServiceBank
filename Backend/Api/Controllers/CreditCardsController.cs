@@ -37,6 +37,13 @@ namespace Api.Controllers
             return Ok(model);
         }
 
+        [HttpGet("accountNumber/{accountNumber}")]
+        public async Task<IActionResult> GetByAccountNumberAsync(string accountNumber, CancellationToken cancellationToken)
+        {
+            var model = await creditCardsService.GetByAccountNumberAsync(accountNumber, cancellationToken);
+            return Ok(model);
+        }
+
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateOrUpdateCreditCards(CreditCardsModel model, CancellationToken cancellationToken)
