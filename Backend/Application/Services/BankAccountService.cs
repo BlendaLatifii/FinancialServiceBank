@@ -102,6 +102,7 @@ namespace Application.Services
             }
         }
 
+
         public async Task DeleteAccount(Guid id, CancellationToken cancellationToken)
         {
             var account = await _context.BankAccounts

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { TransactionModel } from "../interfaces/transaction-model";
 import { toast } from "react-toastify";
+import { TransactionTypePercentageModel } from "../interfaces/TransactionTypePercentageModel";
 
 export class TransactionService {
   private static baseUrl = "https://localhost:7254/api/Transaction";
@@ -10,6 +11,10 @@ export class TransactionService {
 
   public static async GetAllTransactions(): Promise<TransactionModel[]> {
     const result = await axios.get(TransactionService.baseUrl);
+    return result.data;
+  }
+  public static async GetAllTransactionsPercentage(): Promise<TransactionTypePercentageModel[]> {
+    const result = await axios.get<TransactionTypePercentageModel[]>(`${TransactionService.baseUrl}/type_percentages`);
     return result.data;
   }
   public static async GetTransactionDetails(id: string): Promise<TransactionModel> {

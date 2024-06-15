@@ -16,6 +16,10 @@ export class ClientBankAccountService {
         const result = await axios.get(`${ClientBankAccountService.baseUrl}/${id}`);
         return result.data;
     }
+    public static async CountAccount(): Promise<number> {
+      const result = await axios.get(`${this.baseUrl}/count`);
+      return result.data;
+  }
 
    public static async EditOrAddBankAcc(model: ClientBankAccountModel): Promise<void> {
     const result = await axios.post(`${ClientBankAccountService.baseUrl}`, model);

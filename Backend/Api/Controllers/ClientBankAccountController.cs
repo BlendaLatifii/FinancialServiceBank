@@ -27,7 +27,13 @@ namespace Api.Controllers
 
             return Ok(clientAcc);
         }
-
+        [Authorize(Roles = "Admin")]
+        [HttpGet("count")]
+        public async Task<ActionResult<int>> GetClientBankAccountCount(CancellationToken cancellationToken)
+        {
+            var count = await clientBankAccService.GetClientBankAccountCount(cancellationToken);
+            return Ok(count);
+        }
         [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetClientAccountById([FromRoute]Guid id, CancellationToken cancellationToken)

@@ -74,7 +74,7 @@ export default function Transaction() {
         model
       );
       setTransaction(true);
-        navigate('/Transaction');
+        navigate('/');
     } catch (error) {
       console.error("Error creating transaction:", error);
     }

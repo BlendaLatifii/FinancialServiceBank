@@ -16,6 +16,11 @@ export class CreditCardsService {
         const result = await axios.get(`${CreditCardsService.baseUrl}/${id}`);
         return result.data;
     }
+  
+  public static async CountCreditCards(): Promise<number> {
+    const result = await axios.get(`${this.baseUrl}/count`);
+    return result.data;
+}
 
    public static async EditOrAddCreditCards(model: CreditCardsModel): Promise<void> {
     const result = await axios.post(`${CreditCardsService.baseUrl}`, model);

@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Domain.Enums;
 
 namespace Domain.Models
 {
@@ -14,7 +14,7 @@ namespace Domain.Models
         public int? LoanPeriod { get; set; }
         public string Income { get; set; } = default!;
         public decimal? LoanInstallment { get; set; }
-        public string EmploymentStatus { get; set; } = default!;
+        public EmploymentStatus EmploymentStatus { get; set; } = default!;
 
     }
 }

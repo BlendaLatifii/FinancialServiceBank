@@ -30,7 +30,7 @@ function Login() {
     }
     else if(AuthService.role == "Admin")
       {
-        navigete("/RegisterTable");
+        navigete("/");
       }
 
     setIsSubmitting(false);

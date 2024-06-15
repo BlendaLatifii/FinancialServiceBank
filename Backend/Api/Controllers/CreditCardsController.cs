@@ -14,12 +14,10 @@ namespace Api.Controllers
     public class CreditCardsController : ControllerBase
     {
         private readonly ICreditCardsService creditCardsService;
-        private readonly AppDbContext appDbContext;
 
-        public CreditCardsController(ICreditCardsService creditCardsService, AppDbContext appDbContext)
+        public CreditCardsController(ICreditCardsService creditCardsService)
         {
             this.creditCardsService = creditCardsService;
-            this.appDbContext = appDbContext;
         }
 
         [Authorize(Roles = "Admin")]
@@ -35,6 +33,13 @@ namespace Api.Controllers
         {
             var model = await creditCardsService.GetCreditCardsById(id, cancellationToken);
             return Ok(model);
+        }
+        [Authorize(Roles = "Admin")]
+        [HttpGet("count")]
+        public async Task<ActionResult<int>> GetCreditCardsCount(CancellationToken cancellationToken)
+        {
+            var count = await creditCardsService.GetCreditCardsCount(cancellationToken);
+            return Ok(count);
         }
 
         [HttpGet("accountNumber/{accountNumber}")]

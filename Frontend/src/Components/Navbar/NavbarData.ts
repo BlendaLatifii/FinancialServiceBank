@@ -5,7 +5,12 @@ import { NavItem } from '../../interfaces/nav-item';
 
 export const SidebarData : NavItem[] = [
   {
-
+    title: 'Dashboard',
+    path: '/Dashboard',
+    icon: '',
+    className: 'nav-text background:var(--color-primary)'
+  },
+  {
     title: 'Users',
     path: '/RegisterTable',
     icon: '',

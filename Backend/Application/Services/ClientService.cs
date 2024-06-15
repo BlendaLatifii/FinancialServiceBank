@@ -60,6 +60,10 @@ namespace Application.Services
                 return model;
             }
         }
+        public async Task<int> GetClientCount(CancellationToken cancellationToken)
+        {
+            return await _context.Clients.CountAsync(cancellationToken);
+        }
         public async Task<ClientModel> CreateOrUpdateClientAsync(ClientModel model, CancellationToken cancellationToken)
         {
             if (model.Id == null)

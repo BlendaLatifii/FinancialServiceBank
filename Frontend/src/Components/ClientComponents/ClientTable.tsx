@@ -14,6 +14,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { ClientModel } from "../../interfaces/client-model";
 import { ClientService } from "../../services/ClientService";
 import Header from "../Header";
+import { StateOfClient } from "../../interfaces/StateOfClient";
+import { CityOfClient } from "../../interfaces/CityOfClient";
 
 export default function ClientTable() {
   const [clients, setClients] = useState<ClientModel[]>([]);
@@ -93,8 +95,24 @@ export default function ClientTable() {
               <TableCell>{item.lastName}</TableCell>
               <TableCell>{item.phoneNumber}</TableCell>
               <TableCell>{item.emailAddress}</TableCell>
-              <TableCell>{item.state}</TableCell>
-              <TableCell>{item.city}</TableCell>
+              <TableCell>
+                  {item.state === StateOfClient.Kosove ? "Kosove" : 
+                   item.state === StateOfClient.Shqiperi ? "Shqiperi" :
+                   item.state === StateOfClient.Maqedoni ? "Maqedoni" :''}
+              </TableCell>
+              <TableCell>
+                  {item.city === CityOfClient.Prishtine ? "Prishtine" : 
+                   item.city === CityOfClient.Peje ? "Peje" :
+                   item.city === CityOfClient.Prizren ? "Prizren" :
+                   item.city === CityOfClient.Gjakove ? "Gjakove" : 
+                   item.city === CityOfClient.Gjilan ? "Gjilan" :
+                   item.city === CityOfClient.Mitrovice ? "Mitrovice" :
+                   item.city === CityOfClient.Shkoder ? "Shkoder" : 
+                   item.city === CityOfClient.Shkup ? "Shkup" :
+                   item.city === CityOfClient.Tirane ? "Tirane" :
+                   item.city === CityOfClient.Vlore ? "Vlore" : ''}
+              </TableCell>
+
               <TableCell>{item.zipCode}</TableCell>
               <TableCell>
                 <Button  type="button"  className="btn ui green basic button" onClick={()=>sendToDetails(item.id!)}>Edit</Button>

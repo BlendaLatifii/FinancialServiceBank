@@ -26,6 +26,10 @@ namespace Application.Services
             var clientAccmodel = mapper.Map<List<ClientBankAccountModel>>(clientAcc);
             return clientAccmodel;
         }
+        public async Task<int> GetClientBankAccountCount(CancellationToken cancellationToken)
+        {
+            return await _context.ClientBankAccounts.CountAsync(cancellationToken);
+        }
         public async Task<ClientBankAccountModel> GetClientAccountById(Guid Id, CancellationToken cancellationToken)
         {
             var client = await _context.ClientBankAccounts

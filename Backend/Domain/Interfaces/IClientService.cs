@@ -7,6 +7,7 @@ namespace Domain.Interfaces
     {
         Task<List<ClientModel>> GetAllClientAsync(CancellationToken cancellationToken);
         Task<ClientModel> GetByIdAsync (Guid id, CancellationToken cancellationToken);
+        Task<int> GetClientCount(CancellationToken cancellationToken);
         Task<ClientModel> CreateOrUpdateClientAsync(ClientModel model, CancellationToken cancellationToken);
         Task<ClientModel> GetByPersonalNumberAsync(string personalNumber, CancellationToken cancellationToken);
         Task DeleteClient(Guid Id, CancellationToken cancellationToken);

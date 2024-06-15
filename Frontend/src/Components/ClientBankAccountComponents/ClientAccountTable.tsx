@@ -66,7 +66,7 @@ export default function ClientAccountTable() {
       <Table striped>
         <TableHeader>
           <TableRow>
-            <TableHeaderCell>NumriLlogarise</TableHeaderCell>
+            <TableHeaderCell>Account Number</TableHeaderCell>
             <TableHeaderCell>Personal Number</TableHeaderCell>
             <TableHeaderCell>Current Balance</TableHeaderCell>
             <TableHeaderCell>Date Created</TableHeaderCell>

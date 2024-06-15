@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240602131607_db-table")]
+    [Migration("20240609115305_db-table")]
     partial class dbtable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -226,9 +226,8 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("ClientBankAccountId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("EmploymentStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("EmploymentStatus")
+                        .HasColumnType("int");
 
                     b.Property<string>("Income")
                         .IsRequired()

@@ -91,7 +91,7 @@ const handleSubmit = async (model:CreditCardsModel) => {
             name="clientAccountNumber"
             onChange={handleChange}
           />
-            <MySelectInput name="typesOfCreditCardsID" onChange={handleChange} placeholder='Select Bank Account' options={typesOfCreditCards} />
+            <MySelectInput name="typesOfCreditCardsID" onChange={handleChange} placeholder='Select Credit Card Type' options={typesOfCreditCards} />
 
            <Button floated="right" disabled={!isValid}  positive type="submit" content="Submit" />
         </Form>

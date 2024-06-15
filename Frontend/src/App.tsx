@@ -37,6 +37,7 @@ import LoanTable from "./Components/LoanComponents/LoanTable";
 import ForgotPassword from "./Components/ForgotPassword";
 import ResetPassword from "./Components/ResetPassword";
 import MyProfile from "./Components/MyProfile";
+import Dashboard from "./Components/Dashboard";
 
 function App() {
   axios.interceptors.request.use((config) => {
@@ -83,6 +84,7 @@ function App() {
     { <Navbar/>}
       <Routes>
         <Route path="/Header" element={<Header />} />
+         <Route path="/Dashboard" element={<Dashboard/>} />
         <Route path="/Footer" element={<Footer />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/Services" element={<Services />} />

@@ -13,6 +13,7 @@ import MySelectInput from '../../FormElements/DropDown';
 import MyTextInput from '../../FormElements/MyTextInput';
 import { LoanModel } from '../../interfaces/loan-model';
 import { LoanService } from '../../services/LoanService';
+import { employmentStatus } from '../../interfaces/employmentStatus';
 
 
 type Props = {}
@@ -23,10 +24,10 @@ export default function LoanForm({ }: Props) {
   const [values, setValues] = useState<LoanModel>({
     id:id!,
     clientAccountNumber: '',
-    loansTypeId: '',
+    loansTypeId: null,
     monthlyPayment:'',
     income:'',
-    employmentStatus:''
+    employmentStatus:0
   } as LoanModel);
 
   const navigate = useNavigate();
@@ -41,7 +42,7 @@ export default function LoanForm({ }: Props) {
        loansTypeId:userData.loansTypeId,
        monthlyPayment:userData.monthlyPayment,
        income:userData.income,
-       employmentStatus:userData.employmentStatus
+       employmentStatus:+userData.employmentStatus
      }as LoanModel);
     }
   };
@@ -60,28 +61,33 @@ const handleSubmit = async (model:LoanModel) => {
   navigate('/LoanTable');
  };
 
- const fetchLoansTypes = async () => {
+ const fetchLoanTypes = async () => {
   try {
     const response = await LoansTypeService.GetSelectList(); 
 
     setTypesOfLoans(response.map((item,i) => ({
       key: i,
-      value: item.id,
+      value: item.name,
       text: item.name
     } as SelectListItem)).filter(x=> x.text != '' && x.text != null));
 
   } catch (error) {
-    console.error('Error fetching account types:', error);
+    console.error('Error fetching loans types:', error);
   }
 };
 
-  useEffect(() => {
-    fetchLoansTypes();
-  }, []);
+useEffect(()=>{
+  fetchLoanTypes()
+},[])
+
+  const typeSelectList =  Object.keys(employmentStatus).map((key,i) => ({
+    key: i,
+    value: +i,
+    text: employmentStatus[+key]
+  })).filter(x=> x.text != '' && x.text != null);
 
   const validation = yup.object<LoanModel>({
     clientAccountNumber:yup.string().required(),
-    loansTypeId:yup.string().required(),
     monthlyPayment:yup.string().required(),
     income:yup.string().required(),
     employmentStatus: yup.string().required()
@@ -115,10 +121,7 @@ const handleSubmit = async (model:LoanModel) => {
             onChange={handleChange}
           />
           <MySelectInput 
-              name="employmentStatus" 
-              onChange={handleChange} 
-              placeholder='Select Employment Status' 
-              options={["i pa pune", "i punesuar", "i vete punesuar"]} 
+          name="employmentStatus" placeholder='Select Employment Status' options={typeSelectList}
           />
 
            <Button floated="right" disabled={!isValid}  positive type="submit" content="Submit" />

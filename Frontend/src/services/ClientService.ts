@@ -28,5 +28,9 @@ export class ClientService {
       draggable: true,
     });
   }
+  public static async CountAccount(): Promise<number> {
+    const result = await axios.get(`${this.baseUrl}/count`);
+    return result.data;
+}
 }
   

@@ -26,6 +26,14 @@ namespace Api.Controllers
 
             return Ok(transactions);
         }
+        [HttpGet("type_percentages")]
+        public async Task<ActionResult<List<TransactionTypePercentageModel>>> GetTransactionTypePercentages(CancellationToken cancellationToken)
+        {
+           
+             var percentages = await transactionService.GetTransactionTypePercentagesAsync(cancellationToken);
+                return Ok(percentages);
+            
+        }
 
         [AllowAnonymous]
         [HttpPost]

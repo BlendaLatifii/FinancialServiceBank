@@ -20,6 +20,10 @@ namespace Application.Services
             this.appDbContext = appDbContext;
             this._mapper = _mapper;
         }
+        public async Task<int> GetCreditCardsCount(CancellationToken cancellationToken)
+        {
+            return await appDbContext.CreditCards.CountAsync(cancellationToken);
+        }
 
         public async Task<List<CreditCardsModel>> GetAllCreditCards(CancellationToken cancellationToken)
         {
@@ -27,6 +31,11 @@ namespace Application.Services
             var cardModel = _mapper.Map<List<CreditCardsModel>>(card);
             return cardModel;
 
+        }
+        public async Task<int> CountAllAccountsAsync(CancellationToken cancellationToken)
+        {
+            // Kthe numrin e të gjitha llogarive
+            return await appDbContext.CreditCards.CountAsync(cancellationToken);
         }
         public async Task<CreditCardsModel> CreateOrUpdateCreditCards(CreditCardsModel model, CancellationToken cancellationToken)
         {

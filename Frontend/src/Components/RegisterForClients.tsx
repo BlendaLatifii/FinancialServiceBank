@@ -162,13 +162,13 @@ export default function RegisterForClients() {
                       <div className="form-group">
                    <label htmlFor="state">State:</label>
                   <select
-            style={{ padding: "5px", margin: "5px" }}
-            className="form-control"
-            id="state"
-            name="state"
-            value={formData.state}
-            onChange={handleChange}
-          >
+                   style={{ padding: "5px", margin: "5px" }}
+                   className="form-control"
+                   id="state"
+                   name="state"
+                   value={formData.state}
+                   onChange={handleChange}
+                 >
             {stateSelectList.map((x)=>
               (<option key={x.key} value={x.value}>{x.text}</option>))}
           </select>

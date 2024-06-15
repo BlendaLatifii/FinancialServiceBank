@@ -315,7 +315,7 @@ namespace Infrastructure.Migrations
                     LoanPeriod = table.Column<int>(type: "int", nullable: false),
                     Income = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LoanInstallment = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    EmploymentStatus = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    EmploymentStatus = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -43,7 +43,13 @@ namespace Api.Controllers
             var model = await clientService.GetByPersonalNumberAsync(personalNumber, cancellationToken);
             return Ok(model);
         }
-
+        [Authorize(Roles = "Admin")]
+        [HttpGet("count")]
+        public async Task<ActionResult<int>> GetClientCount(CancellationToken cancellationToken)
+        {
+            var count = await clientService.GetClientCount(cancellationToken);
+            return Ok(count);
+        }
 
         [AllowAnonymous]
         [HttpPost]

@@ -224,9 +224,8 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("ClientBankAccountId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("EmploymentStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("EmploymentStatus")
+                        .HasColumnType("int");
 
                     b.Property<string>("Income")
                         .IsRequired()

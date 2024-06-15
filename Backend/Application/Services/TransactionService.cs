@@ -30,6 +30,11 @@ namespace Application.Services
             var transactionmodel = mapper.Map<List<TransactionModel>>(transactions);
             return transactionmodel;
         }
+        public async Task<int> CountAllAccountsAsync(CancellationToken cancellationToken)
+        {
+            // Kthe numrin e të gjitha llogarive
+            return await _context.Transactions.CountAsync(cancellationToken);
+        }
         public async Task<TransactionModel> GetTransactionById(Guid id, CancellationToken cancellationToken)
         {
             var transaction = await _context.Transactions
@@ -65,7 +70,6 @@ namespace Application.Services
                 return model;
             }
         }
-
         public async Task<TransactionModel> CreateOrEditTransaction(TransactionModel model, CancellationToken cancellationToken)
         {
 
@@ -258,6 +262,23 @@ namespace Application.Services
                 _context.Transactions.Remove(transaction);
                 await _context.SaveChangesAsync(cancellationToken);
             }
+        }
+
+        public async Task<List<TransactionTypePercentageModel>> GetTransactionTypePercentagesAsync(CancellationToken cancellationToken)
+        {
+            var totalTransactions = await _context.Transactions.CountAsync(cancellationToken);
+
+            var transactionTypeCounts = await _context.Transactions
+                .GroupBy(x => x.TransactionType)
+                .Select(g => new TransactionTypePercentageModel
+                {
+                    TransactionType = g.Key,
+                    Count = g.Count(),
+                    Percentage = (double)g.Count() / totalTransactions * 100
+                })
+                .ToListAsync(cancellationToken);
+
+            return transactionTypeCounts;
         }
     }
 }

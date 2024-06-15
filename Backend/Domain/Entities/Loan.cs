@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using Domain.Enums;
 using Microsoft.AspNetCore.Identity;
 
 namespace Domain.Entities
@@ -15,7 +16,7 @@ namespace Domain.Entities
         public int LoanPeriod { get; set; }
         public string Income { get; set; }
         public decimal LoanInstallment { get; set; }
-        public string EmploymentStatus { get; set; }
+        public EmploymentStatus EmploymentStatus { get; set; }
         public LoansType LoansTypes { get; set; } = default!;
         public ClientBankAccount ClientBankAccount { get; set; } = default!;
 
