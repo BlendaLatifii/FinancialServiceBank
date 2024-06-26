@@ -1,10 +1,11 @@
 import {TypesOfCreditCardsModel} from "./TypesOfCreditCards-model";
 
 export interface CreditCardsModel {
-    id:string | null;
-    cVV: string | null;
+    id:number| null;
+    balance:number;
+    limite:number| null;
     clientBankAccountId: string |null;
     clientAccountNumber:string | null;
-    typesOfCreditCardsID: string | null ;
+    typesOfCreditCardsID: number;
     validThru: string | null;
 }

@@ -8,15 +8,12 @@ import { BranchModel } from '../interfaces/branch-model';
 import { Link } from 'react-router-dom';
 import { BankAccountService } from '../services/BankAccountService';
 import { BankAccountModel } from '../interfaces/bankAcc-model';
-import { LoansTypeService } from '../services/LoansTypeService';
-import { LoansTypeModel } from '../interfaces/loanstype-model';
 import { TypesOfCreditCardsService } from '../services/TypesOfCreditCardsService';
 import { TypesOfCreditCardsModel } from '../interfaces/TypesOfCreditCards-model';
 function Services() {
   const [branches, setBranches] = useState<BranchModel[]>([]);
   const [accounts, setAccounts] = useState<BankAccountModel[]>([]);
   const [creditCards, setCreditCards] = useState<TypesOfCreditCardsModel[]>([]);
-  const [loans, setLoans] = useState<LoansTypeModel[]>([]);
   useEffect(() => {
     async function fetchCreditCards() {
       const result = await TypesOfCreditCardsService.GetAllTypes();
@@ -33,13 +30,6 @@ function Services() {
     fetchBranches();
   }, []);
   
-  useEffect(() => {
-    async function fetchLoans() {
-      const result = await LoansTypeService.GetAllLoansType();
-      setLoans(result);
-    }
-    fetchLoans();
-  }, []);
 
   useEffect(() => {
     async function fetchBankAccounts() {
@@ -116,18 +106,6 @@ function Services() {
         </div>
     </Link>
 </div>
-
-<div className="account-list">
-         <h1>Type of Loans</h1>
-        <div className="accounts-container">
-            {loans.map(loan => (
-                <div key={loan.id} className="account-card">
-                    <h3>{loan.loanType}</h3>
-                </div>
-            ))}
-        </div>
-</div>
-
         <div className="branch-list-container">
             <h1>Branches</h1>
             <ul className="branch-list">

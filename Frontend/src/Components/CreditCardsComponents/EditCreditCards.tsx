@@ -3,37 +3,33 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Header from '../Header';
 import Footer from '../Footer';
-import * as yup from 'yup';
-import { ListItemModel } from '../../interfaces/list-item-model';
 import { TypesOfCreditCardsService } from '../../services/TypesOfCreditCardsService';
-import { SelectListItem } from '../../interfaces/select-list-item';
 import { CreditCardsModel } from '../../interfaces/creditCards-model';
-import { Button,  Segment, Select } from "semantic-ui-react";
-import { Formik,Form } from 'formik';
-import MyTextInput from "../../FormElements/MyTextInput";
-import MySelectInput from "../../FormElements/DropDown";
-import { TypesOfCreditCardsModel } from '../../interfaces/TypesOfCreditCards-model';
 import { CreditCardsService } from '../../services/CreditCardsService';
+import { SelectListItemInt } from '../../interfaces/select-list-itemInt';
 
 export default function EditCreditCards() {
   const { id } = useParams<{ id: string}>();
-  const [typesOfCreditCards, setTypesOfCreditCards] = useState<SelectListItem[]>([]);
+  const [typesOfCreditCards, setTypesOfCreditCards] = useState<SelectListItemInt[]>([]);
   const [values, setValues] = useState<CreditCardsModel>({
-    id:id!,
+    id:+id!,
     clientAccountNumber: '',
-    typesOfCreditCardsID: null,
+    typesOfCreditCardsID: 0,
+    limite:null,
   } as CreditCardsModel);
 
   const navigate = useNavigate();
+  const [creditCards, setCreditCards] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       if(id!=null){
-     const response = await CreditCardsService.GetCreditCardsDetails(id!);
+     const response = await CreditCardsService.GetCreditCardsDetails(+id!);
      const userData = response;
      setValues({
        id: userData.id!,
        clientAccountNumber: userData.clientAccountNumber,
-       typesOfCreditCardsID: userData.typesOfCreditCardsID
+       typesOfCreditCardsID: userData.typesOfCreditCardsID,
+       limite:userData.limite,
      }as CreditCardsModel);
     }
   };
@@ -41,35 +37,46 @@ export default function EditCreditCards() {
   fetchData();
 
 }, [id!]);
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  try {
+    let model = {
+      id: values.id,
+      clientAccountNumber: values.clientAccountNumber,
+      limite: values.limite,
+      typesOfCreditCardsID: values.typesOfCreditCardsID,
+    } as CreditCardsModel;
+
+    const response = await axios.post(
+      "https://localhost:7254/api/CreditCards",
+      model
+    );
+    setCreditCards(true);
+      navigate('/');
+  } catch (error) {
+    console.error("Error creating creditCards:", error);
+  }
+};
+const handleChange = (
+  e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+) => {
+  const { name, value } = e.target;
+  setValues({ ...values, [name]: value });
+};
 
 
-const validation = yup.object<CreditCardsModel>({
-  clientAccountNumber:yup.string().required(),
-});
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setValues({...values, [name]: value });
-  };
-
-const handleSubmit = async (model:CreditCardsModel) => {
-  await CreditCardsService.EditOrAddCreditCards(model);
-  navigate('/CreditCardsTable');
- };
-  const fetchCreditCardsTypes = async () => {
-    try {
-      const response = await TypesOfCreditCardsService.GetSelectList(); 
-
-      setTypesOfCreditCards(response.map((item,i) => ({
-        key: i,
-        value: item.id,
-        text: item.name
-      } as SelectListItem)).filter(x=> x.text != '' && x.text != null));
-
-    } catch (error) {
-      console.error('Error fetching account types:', error);
-    }
-  };
+ const fetchCreditCardsTypes = async () => {
+  try {
+    const response = await TypesOfCreditCardsService.GetSelectList();
+    setTypesOfCreditCards(response.map((item) => ({
+      key: item.id,
+      value: item.id!, // Ensure value is a number
+      text: item.name,
+    })as SelectListItemInt).filter(x => x.text));
+  } catch (error) {
+    console.error('Error fetching account types:', error);
+  }
+}
 
   useEffect(() => {
     fetchCreditCardsTypes();
@@ -78,26 +85,51 @@ const handleSubmit = async (model:CreditCardsModel) => {
   return (
     <>  
     <Header/>
-      <h1 style={{ marginLeft: "15px" }}>{ values.id != null ?'Edit': 'Add'} CreditCards</h1>
-      <Segment clearing style={{ marginRight: "30px", marginTop: "30px", marginLeft: "10px" }}>
-      <Formik validationSchema={validation}
-           enableReinitialize 
-           initialValues={values} 
-           onSubmit={values => handleSubmit(values)}>
-           {({handleSubmit,isSubmitting,dirty,isValid})=>(
-        <Form  className='ui form'style={{backgroundColor:"#f5f6f7"}}  onSubmit={handleSubmit} autoComplete="off">
-          <MyTextInput fluid
-            placeholder="Account Number"
+    <form onSubmit={handleSubmit} style={{ padding: "20px", margin: "20px" }}>
+        <h2 style={{ padding: "5px", margin: "5px" }}>Credit Cards</h2>
+        <div className="form-group">
+          <input
+            style={{ padding: "5px", margin: "5px" }}
+            type="text"
+            placeholder=" Account Number"
+            className="form-control"
+            id="clientAccountNumber"
             name="clientAccountNumber"
+            value={values.clientAccountNumber!}
             onChange={handleChange}
           />
-            <MySelectInput name="typesOfCreditCardsID" onChange={handleChange} placeholder='Select Credit Card Type' options={typesOfCreditCards} />
-
-           <Button floated="right" disabled={!isValid}  positive type="submit" content="Submit" />
-        </Form>
-         )}
-         </Formik>
-      </Segment>
+        </div>
+          <div className="form-group">
+            <input
+              style={{ padding: "5px", margin: "5px" }}
+              type="number"
+              placeholder="Limite"
+              className="form-control"
+              id="limite"
+              name="limite"
+              value={values.limite!}
+              onChange={handleChange}
+            />
+          </div>
+          <select
+            style={{ padding: "5px", margin: "5px" }}
+            className="form-control"
+            id="typesOfCreditCardsID"
+            name="typesOfCreditCardsID"
+            onChange={handleChange}
+            value={values.typesOfCreditCardsID!}
+          >
+            {typesOfCreditCards.map((x)=>
+              (<option key={x.key} value={x.value}>{x.text}</option>))}
+          </select>
+        <button
+          type="submit"
+          className="btn btn-primary"
+          style={{ padding: "5px", margin: "5px" }}
+        >
+          Submit
+        </button>
+      </form>
       <Footer/>
     </>
   );

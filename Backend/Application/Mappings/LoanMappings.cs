@@ -17,7 +17,6 @@ namespace Application.Mappings
                      .ForMember(x => x.MonthlyPayment, y => y.MapFrom(x => x.MonthlyPayment))
                      .ForMember(x => x.LoanPeriod, y => y.MapFrom(x => x.LoanPeriod))
                      .ForMember(x => x.Income, y => y.MapFrom(x => x.Income))
-                     .ForMember(x => x.LoanInstallment, y => y.MapFrom(x => x.LoanInstallment))
                      .ForMember(x => x.EmploymentStatus, y => y.MapFrom(x => x.EmploymentStatus));
             CreateMap<LoanModel, Loan>()
                 .ForMember(x => x.Id, y => y.MapFrom(x => x.Id))
@@ -28,7 +27,6 @@ namespace Application.Mappings
                    .ForMember(x => x.MonthlyPayment, y => y.MapFrom(x => x.MonthlyPayment))
                    .ForMember(x => x.LoanPeriod, y => y.MapFrom(x => x.LoanPeriod))
                    .ForMember(x => x.Income, y => y.MapFrom(x => x.Income))
-                   .ForMember(x => x.LoanInstallment, y => y.MapFrom(x => x.LoanInstallment))
                    .ForMember(x => x.EmploymentStatus, y => y.MapFrom(x => x.EmploymentStatus));
         }
     }

@@ -115,22 +115,11 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "LoansType",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    LoanType = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_LoansType", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "TypesOfCreditCards",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -279,10 +268,12 @@ namespace Infrastructure.Migrations
                 name: "CreditCards",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CVV = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     ClientBankAccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TypesOfCreditCardsID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TypesOfCreditCardsID = table.Column<int>(type: "int", nullable: false),
+                    Balance = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Limite = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     ValidThru = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -308,14 +299,14 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ClientBankAccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    LoansTypesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LoansTypesId = table.Column<int>(type: "int", nullable: false),
                     LoanAmount = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    InterestRate = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    InterestRate = table.Column<double>(type: "float", nullable: false),
                     MonthlyPayment = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LoanPeriod = table.Column<int>(type: "int", nullable: false),
+                    LoanPeriod = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Income = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LoanInstallment = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    EmploymentStatus = table.Column<int>(type: "int", nullable: false)
+                    EmploymentStatus = table.Column<int>(type: "int", nullable: false),
+                    LoanType = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -324,12 +315,6 @@ namespace Infrastructure.Migrations
                         name: "FK_Loans_ClientBankAccounts_ClientBankAccountId",
                         column: x => x.ClientBankAccountId,
                         principalTable: "ClientBankAccounts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Loans_LoansType_LoansTypesId",
-                        column: x => x.LoansTypesId,
-                        principalTable: "LoansType",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -441,11 +426,6 @@ namespace Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Loans_LoansTypesId",
-                table: "Loans",
-                column: "LoansTypesId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Transactions_DestinationClientBankAccountId",
                 table: "Transactions",
                 column: "DestinationClientBankAccountId");
@@ -496,9 +476,6 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "TypesOfCreditCards");
-
-            migrationBuilder.DropTable(
-                name: "LoansType");
 
             migrationBuilder.DropTable(
                 name: "ClientBankAccounts");

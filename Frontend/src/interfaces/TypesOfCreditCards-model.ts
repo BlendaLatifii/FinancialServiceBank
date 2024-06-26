@@ -1,5 +1,5 @@
 export interface TypesOfCreditCardsModel{
-    id : string | null,
+    id : number | null,
     name : string | null,
     description : string | null
 }

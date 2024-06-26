@@ -13,6 +13,7 @@ export default function Dashboard() {
   const [accountCount, setAccountCount] = useState<number>(0);
   const [clientCount, setClientCount] = useState<number>(0);
   const [creditCardsCount, setCreditCardsCount] = useState<number>(0);
+  const [studentClients, setStudentClients] = useState<string[]>([]);
 
   useEffect(() => {
     fetchData();
@@ -66,6 +67,17 @@ export default function Dashboard() {
   useEffect(() => {
     fetchCreditCardsCount();
   }, []);
+  const fetchStudentClients = async () => {
+    try {
+      const clients = await ClientBankAccountService.GetStudentAccountClients();
+      setStudentClients(clients);
+    } catch (error) {
+      console.error('Error fetching student clients:', error);
+    }
+  };
+  useEffect(() => {
+    fetchStudentClients();
+  }, []);
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
@@ -75,7 +87,9 @@ export default function Dashboard() {
       flexWrap: 'wrap',
       gap: '20px',
       justifyContent: 'center',
-      padding: '20px'
+      padding: '20px',
+      backgroundColor: '#f0f2f5',
+      fontFamily: 'Arial, sans-serif',
     },
     link: {
       display: 'flex',
@@ -87,65 +101,131 @@ export default function Dashboard() {
       textDecoration: 'none',
       fontSize: '1.2em',
       fontWeight: 'bold',
-      borderRadius: '8px',
-      transition: 'transform 0.3s, background-color 0.3s'
+      borderRadius: '12px',
+      transition: 'transform 0.3s, background-color 0.3s',
+      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
     },
     linkHover: {
       transform: 'scale(1.05)'
     },
-    register: { backgroundColor: '#ff6347' },  // Tomato
-    client: { backgroundColor: '#4682b4' },   // Steel Blue
-    bankAccount: { backgroundColor: '#32cd32' }, // Lime Green
-    clientAccount: { backgroundColor: '#ff4500' }, // Orange Red
-    transaction: { backgroundColor: '#1e90ff' }, // Dodger Blue
-    creditCards: { backgroundColor: '#9370db' }, // Medium Purple
+    register: { backgroundColor: '#ff6347', backgroundImage: 'linear-gradient(135deg, #ff6347 0%, #ff4500 100%)' },  // Tomato to Orange Red
+    client: { backgroundColor: '#4682b4', backgroundImage: 'linear-gradient(135deg, #4682b4 0%, #1e90ff 100%)' },   // Steel Blue to Dodger Blue
+    bankAccount: { backgroundColor: '#32cd32', backgroundImage: 'linear-gradient(135deg, #32cd32 0%, #228b22 100%)' }, // Lime Green to Forest Green
+    clientAccount: { backgroundColor: '#ff4500', backgroundImage: 'linear-gradient(135deg, #ff4500 0%, #ff6347 100%)' }, // Orange Red to Tomato
+    transaction: { backgroundColor: '#1e90ff', backgroundImage: 'linear-gradient(135deg, #1e90ff 0%, #4682b4 100%)' }, // Dodger Blue to Steel Blue
+    creditCards: { backgroundColor: '#9370db', backgroundImage: 'linear-gradient(135deg, #9370db 0%, #8a2be2 100%)' }, // Medium Purple to Blue Violet
     widgetContainer: {
       margin: '20px 0',
       display: 'flex',
+      flexDirection: 'row',
       justifyContent: 'space-around',
-      width: '100%'
+      width: '100%',
+      flexWrap: 'wrap',
+      gap: '20px'
     },
     widget: {
-      flex: '1',
-      margin: '0 10px',
+      flex: '1 1 300px',
+      margin: '10px',
       padding: '20px',
-      border: '1px solid ',
-      backgroundColor: 'white',
-      boxShadow: '0 0 10px rgba(0,0,0,0.1)'
-    }
+      border: '1px solid #e0e0e0',
+      borderRadius: '12px',
+      backgroundColor: '#ffffff',
+      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+      textAlign: 'center',
+    },
+    pieChartContainer: {
+      flex: '1',
+      backgroundColor: '#ffffff',
+      borderRadius: '12px',
+      padding: '20px',
+      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+    },
+    tableContainer: {
+      flex: '1',
+      backgroundColor: '#ffffff',
+      borderRadius: '12px',
+      padding: '20px',
+      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+    },
+    table: {
+      width: '100%',
+      borderCollapse: 'collapse',
+    },
+    tableHeader: {
+      backgroundColor: '#f8f8f8',
+      fontWeight: 'bold',
+    },
+    tableRow: {
+      borderBottom: '1px solid #e0e0e0',
+    },
+    tableCell: {
+      padding: '10px',
+      textAlign: 'left',
+    },
   };
 
   return (
     <>
       <Header />
       <br />
-      <div style={{ display: 'flex',
+      <div style={{display: 'flex',
       flexWrap: 'wrap',
       gap: '20px',
       justifyContent: 'center',
-      padding: '20px'}}>
+      padding: '20px',
+      backgroundColor: '#f0f2f5',
+      fontFamily: 'Arial, sans-serif'}}>
         <Link to="/RegisterTable" style={{ ...styles.link, ...styles.register }}>Register</Link>
         <Link to="/ClientTable" style={{ ...styles.link, ...styles.client }}>Client</Link>
         <Link to="/BankAccountTable" style={{ ...styles.link, ...styles.bankAccount }}>Bank Account</Link>
         <Link to="/ClientAccountTable" style={{ ...styles.link, ...styles.clientAccount }}>Client Account</Link>
         <Link to="/TransactionTable" style={{ ...styles.link, ...styles.transaction }}>Transaction</Link>
         <Link to="/CreditCardsTable" style={{ ...styles.link, ...styles.creditCards }}>Credit Cards</Link>
+      </div>
 
-      <div>
-      <div style={styles.widget}>
+      <div style={{margin: '20px 0',
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      width: '100%',
+      flexWrap: 'wrap',
+      gap: '20px'}}>
+        <div style={{flex: '1 1 300px',
+      margin: '10px',
+      padding: '20px',
+      border: '1px solid #e0e0e0',
+      borderRadius: '12px',
+      backgroundColor: '#ffffff',
+      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+      textAlign: 'center'}}>
           <h2>Clients</h2>
           <p>{clientCount}</p>
         </div>
-        <div style={styles.widget}>
+        <div style={{flex: '1 1 300px',
+      margin: '10px',
+      padding: '20px',
+      border: '1px solid #e0e0e0',
+      borderRadius: '12px',
+      backgroundColor: '#ffffff',
+      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+      textAlign: 'center'}}>
           <h2>Client Bank Accounts</h2>
           <p>{accountCount}</p>
         </div>
-        <div style={styles.widget}>
-          <h2>CreditCards</h2>
+        <div style={{flex: '1 1 300px',
+      margin: '10px',
+      padding: '20px',
+      border: '1px solid #e0e0e0',
+      borderRadius: '12px',
+      backgroundColor: '#ffffff',
+      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+      textAlign: 'center'}}>
+          <h2>Credit Cards</h2>
           <p>{creditCardsCount}</p>
         </div>
-        </div>  
-      <div>
+      </div>
+<div style={{display: "flex"}}>
+      <div style={styles.pieChartContainer}>
         <h2>Pie Chart</h2>
         {pieData.length > 0 ? (
           <PieChart width={400} height={400}>
@@ -170,7 +250,31 @@ export default function Dashboard() {
           <p>Loading data...</p>
         )}
       </div>
-    </div>
+      <div style={styles.tableContainer}>
+        <h2>Student Account Clients</h2>
+        {studentClients.length > 0 ? (
+          <table style={{width: '100%',
+            borderCollapse: 'collapse'}}>
+            <thead style={styles.tableHeader}>
+              <tr>
+                <th style={{padding: '10px',
+      textAlign: 'left'}}>Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              {studentClients.map((name, index) => (
+                <tr key={index} style={styles.tableRow}>
+                  <td style={{padding: '10px',
+      textAlign: 'left'}}>{name}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p>Loading data...</p>
+        )}
+      </div>
+      </div>
     </>
   );
 }

@@ -30,7 +30,7 @@ namespace Application.Services
         }
         public async Task<TypesOfCreditCardsModel> CreateOrUpdateTypesOfCreditCards(TypesOfCreditCardsModel model, CancellationToken cancellationToken)
         {
-            if (model.Id == null || model.Id == Guid.Empty)
+            if (model.Id == null )
             {
                 var newCard = new TypesOfCreditCards()
                 {
@@ -68,10 +68,10 @@ namespace Application.Services
             }
         }
 
-        public async Task<List<ListItemModel>> GetTypesOfCreditCardsSelectListAsync(CancellationToken cancellationToken)
+        public async Task<List<ListItemIntModel>> GetTypesOfCreditCardsSelectListAsync(CancellationToken cancellationToken)
         {
             var model = await appDbContext.TypesOfCreditCards
-                .Select(x => new ListItemModel()
+                .Select(x => new ListItemIntModel()
                 {
                     Id = x.Id,
                     Name = x.Name
@@ -80,7 +80,7 @@ namespace Application.Services
             return model;
 
         }
-        public async Task<TypesOfCreditCardsModel> GetTypesOfCreditCardsById(Guid id, CancellationToken cancellationToken)
+        public async Task<TypesOfCreditCardsModel> GetTypesOfCreditCardsById(int id, CancellationToken cancellationToken)
         {
             var card = await appDbContext.TypesOfCreditCards
                 .Where(x => x.Id == id)
@@ -97,7 +97,7 @@ namespace Application.Services
             }
         }
 
-        public async Task DeleteTypesOfCreditCards(Guid id, CancellationToken cancellationToken)
+        public async Task DeleteTypesOfCreditCards(int id, CancellationToken cancellationToken)
         {
             var card = await appDbContext.TypesOfCreditCards
                  .Where(x => x.Id == id)

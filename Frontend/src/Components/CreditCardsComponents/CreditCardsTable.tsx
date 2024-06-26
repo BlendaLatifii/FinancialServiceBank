@@ -19,7 +19,7 @@ import Header from "../Header";
 export default function CreditCardsTable() {
   const [creditCards, setCreditCards] = useState<CreditCardsModel[]>([]);
   const [openConfirm, setOpenConfirm] = useState<boolean>(false);
-  const [deleteCreditCardsId, setDeleteCreditCardsId] = useState<string>("");
+  const [deleteCreditCardsId, setDeleteCreditCardsId] = useState<number | null>(null);
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
   useEffect(() => {
@@ -30,19 +30,19 @@ export default function CreditCardsTable() {
     const result = await CreditCardsService.GetAllCreditCards();
     setCreditCards(result);
   };
-  function deleteCreditCards(id: string) {
+  function deleteCreditCards(id: number) {
     setOpenConfirm(true);
     setDeleteCreditCardsId(id);
   }
 
-  async function confirmedDeleteCards(id: string) {
+  async function confirmedDeleteCards(id: number) {
     var result = await CreditCardsService.DeleteCreditCards(id);
     setCreditCards(creditCards.filter((card) => card.id !== id));
     setOpenConfirm(false);
-    setDeleteCreditCardsId("");
+    setDeleteCreditCardsId(null);
   }
 
-  function sendToDetails(id: string | null) {
+  function sendToDetails(id:number) {
     navigate(`/EditCreditCards/${id}`);
   }
 
@@ -66,9 +66,10 @@ export default function CreditCardsTable() {
       <Table striped>
         <TableHeader>
           <TableRow>
-            <TableHeaderCell>CVV</TableHeaderCell>
             <TableHeaderCell>Account Number</TableHeaderCell>
             <TableHeaderCell>Types Of Credit Card</TableHeaderCell>
+            <TableHeaderCell>Balance</TableHeaderCell>
+            <TableHeaderCell>Limite</TableHeaderCell>
             <TableHeaderCell>validThru</TableHeaderCell>
             <TableHeaderCell>Actions</TableHeaderCell>
           </TableRow>
@@ -77,17 +78,18 @@ export default function CreditCardsTable() {
         <TableBody>
           {creditCards.map((item) => (
             <TableRow key={item.id}>
-              <TableCell>{item.cVV}</TableCell>
               <TableCell>{item.clientAccountNumber}</TableCell>
               <TableCell>
                 {item.typesOfCreditCardsID}
               </TableCell>
+              <TableCell>{item.balance}</TableCell>
+              <TableCell>{item.limite}</TableCell>
               <TableCell>{item.validThru}</TableCell>
               <TableCell>
                 <Button
                   type="button"
                   className="btn ui green basic button"
-                  onClick={() => sendToDetails(item.id!)}
+                  onClick={() => sendToDetails(+item.id!)}
                 >
                   Edit
                 </Button>
@@ -95,7 +97,7 @@ export default function CreditCardsTable() {
                   type="button"
                   className="btn btn-danger"
                   negative
-                  onClick={() => deleteCreditCards(item.id!)}
+                  onClick={() => deleteCreditCards(+item.id!)}
                 >
                   Delete
                 </Button>
@@ -105,7 +107,7 @@ export default function CreditCardsTable() {
           <Confirm
             open={openConfirm}
             onCancel={() => setOpenConfirm(false)}
-            onConfirm={() => confirmedDeleteCards(deleteCreditCardsId)}
+            onConfirm={() => confirmedDeleteCards(deleteCreditCardsId!)}
           />
         </TableBody>
       </Table>

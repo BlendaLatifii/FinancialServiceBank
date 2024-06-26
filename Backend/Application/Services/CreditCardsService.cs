@@ -34,7 +34,6 @@ namespace Application.Services
         }
         public async Task<int> CountAllAccountsAsync(CancellationToken cancellationToken)
         {
-            // Kthe numrin e të gjitha llogarive
             return await appDbContext.CreditCards.CountAsync(cancellationToken);
         }
         public async Task<CreditCardsModel> CreateOrUpdateCreditCards(CreditCardsModel model, CancellationToken cancellationToken)
@@ -49,17 +48,28 @@ namespace Application.Services
                 var newCard = new CreditCards()
                 {
                     ClientBankAccountId = clientAccount.Id,
-                    TypesOfCreditCardsID = model.TypesOfCreditCardsID
+                    TypesOfCreditCardsID = model.TypesOfCreditCardsID,
+                    Limite = model.Limite,
+                    Balance=clientAccount.CurrentBalance,
+                    
                 };
+                if (newCard.Balance > newCard.Limite)
+                {
+                    throw new Exception("Balance cannot exceed the credit limit.");
+                }
                 await appDbContext.CreditCards.AddAsync(newCard, cancellationToken);
                 await appDbContext.SaveChangesAsync(cancellationToken);
 
                 return new CreditCardsModel
                 {
                     Id = newCard.Id,
+                    Balance=newCard.Balance,
                     ClientBankAccountId = newCard.ClientBankAccountId,
-                    TypesOfCreditCardsID = newCard.TypesOfCreditCardsID
+                    TypesOfCreditCardsID = newCard.TypesOfCreditCardsID,
+                    Limite=newCard.Limite,
+                    ValidThru = newCard.ValidThru,
                 };
+                
             }
             else
             {
@@ -69,19 +79,27 @@ namespace Application.Services
                     throw new AppBadDataException();
                 }
                 existingCard.ClientBankAccountId = clientAccount.Id;
+                existingCard.Limite = model.Limite;
                 existingCard.TypesOfCreditCardsID = model.TypesOfCreditCardsID;
+                if (existingCard.Balance > existingCard.Limite)
+                {
+                    throw new Exception("Balance cannot exceed the credit limit.");
+                }
 
                 await appDbContext.SaveChangesAsync(cancellationToken);
 
                 return new CreditCardsModel
                 {
-                    Id = model.Id,
-                    ClientBankAccountId = model.ClientBankAccountId,
-                    TypesOfCreditCardsID = model.TypesOfCreditCardsID
+                    Id = existingCard.Id,
+                    Balance = existingCard.Balance,
+                    ClientBankAccountId = existingCard.ClientBankAccountId,
+                    TypesOfCreditCardsID = existingCard.TypesOfCreditCardsID,
+                    Limite = existingCard.Limite,
+                    ValidThru = existingCard.ValidThru,
                 };
             }
         }
-        public async Task<CreditCardsModel> GetCreditCardsById(Guid id, CancellationToken cancellationToken)
+        public async Task<CreditCardsModel> GetCreditCardsById(int id, CancellationToken cancellationToken)
         {
             var card = await appDbContext.CreditCards
                 .Where(x => x.Id == id)
@@ -114,7 +132,7 @@ namespace Application.Services
             }
         }
 
-        public async Task DeleteCreditCards(Guid id, CancellationToken cancellationToken)
+        public async Task DeleteCreditCards(int id, CancellationToken cancellationToken)
         {
             var card = await appDbContext.CreditCards
                  .Where(x => x.Id == id)

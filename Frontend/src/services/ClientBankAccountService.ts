@@ -23,7 +23,7 @@ export class ClientBankAccountService {
 
    public static async EditOrAddBankAcc(model: ClientBankAccountModel): Promise<void> {
     const result = await axios.post(`${ClientBankAccountService.baseUrl}`, model);
-    toast.success("The application was completed successfully", {
+    toast.success("Completed successfully", {
       position: "bottom-right",
       autoClose: 3000,
       hideProgressBar: false,
@@ -32,17 +32,11 @@ export class ClientBankAccountService {
       draggable: true,
     });
   }
-
+  public static async GetStudentAccountClients(): Promise<string[]> {
+    const result = await axios.get(`${ClientBankAccountService.baseUrl}/student-accounts/clients`);
+    return result.data;
+}
   public static async DeductMaintenanceFeesAfterAMonth(): Promise<void> {
-      
-          const result = await axios.post(`${ClientBankAccountService.baseUrl}/deduct-maintenance-fees-after-a-month`);
-          toast.success("Maintenance fees deducted after a month successfully", {
-              position: "bottom-right",
-              autoClose: 3000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-          });
+  const result = await axios.post(`${ClientBankAccountService.baseUrl}/deduct-maintenance-fees-after-a-month`);
      }
   }

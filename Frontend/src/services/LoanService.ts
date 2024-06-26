@@ -3,7 +3,7 @@ import { LoanModel } from "../interfaces/loan-model";
 import { toast } from "react-toastify";
 
 export class LoanService {
-    private static baseUrl = "https://localhost:7254/api/CreditCards";
+    private static baseUrl = "https://localhost:7254/api/Loan";
     public static async DeleteLoan(id: string): Promise<void> {
       var result = await axios.delete(`${LoanService.baseUrl}/${id}`);
     }

@@ -62,7 +62,7 @@ export default function EditUser() {
     navigate('/RegisterTable')
    }
 
-   const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+   const handleChange = (e:React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
      const { name, value } = e.target;
      setValues({ ...values, [name]: value });
    };
@@ -100,7 +100,17 @@ export default function EditUser() {
              name="password"
              onChange={handleChange}
            />
-            <MySelectInput name="role" placeholder='Select Role' options={roleSelectList} />
+            <select
+            style={{ padding: "5px", margin: "5px" }}
+            className="form-control"
+            id="role"
+            name="role"
+            value={values.role!}
+            onChange={handleChange}
+          >
+            {roleSelectList.map((x)=>
+              (<option key={x.key} value={x.value}>{x.text}</option>))}
+          </select>
             <Button floated="right" disabled={!isValid}  positive type="submit" content="Submit" />
            <Button floated="right" onClick={sendToOverview} className="ui blue basic button">Cancel</Button>
          </Form>

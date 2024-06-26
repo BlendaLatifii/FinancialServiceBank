@@ -10,8 +10,8 @@ namespace Api.Controllers
     [ApiController]
     public class LoanController : ControllerBase
     {
-        private readonly AppDbContext appDbContext;
         private readonly ILoanService _loanService;
+        private readonly AppDbContext appDbContext;
 
         public LoanController(AppDbContext appDbContext, ILoanService _loanService)
         {

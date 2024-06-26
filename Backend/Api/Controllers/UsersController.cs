@@ -22,6 +22,7 @@ namespace Api.Controllers
             this.appDbContext = appDbContext;
             this._userService = _userService;
         }
+        
         [HttpGet]
         public async Task<ActionResult<List<UserModel>>> GetAllUsers(CancellationToken cancellationToken)
         {

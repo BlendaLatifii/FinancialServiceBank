@@ -9,7 +9,8 @@ namespace Domain.Interfaces
         Task DeleteClientBankAccount(Guid Id, CancellationToken cancellationToken);
         Task<int> GetClientBankAccountCount(CancellationToken cancellationToken);
         Task DeductMaintenanceFeesAfterAMonth(CancellationToken cancellationToken);
-        Task<ClientBankAccountModel> GetByPersonalNumberAsync(string personalNumber, CancellationToken cancellationToken);
+        Task<List<string>> GetStudentAccountClientsAsync(CancellationToken cancellationToken);
+        Task<List<ClientBankAccountModel>> GetByPersonalNumberAsync(string personalNumber, CancellationToken cancellationToken);
         Task<ClientBankAccountModel> CreateOrUpdateClientBankAccount(ClientBankAccountModel model, CancellationToken cancellationToken);
     }
 }

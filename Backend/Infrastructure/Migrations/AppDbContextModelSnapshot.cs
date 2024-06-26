@@ -188,19 +188,23 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.CreditCards", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
 
-                    b.Property<string>("CVV")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<decimal>("Balance")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid>("ClientBankAccountId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("TypesOfCreditCardsID")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<decimal>("Limite")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("TypesOfCreditCardsID")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("ValidThru")
                         .HasColumnType("datetime2");
@@ -231,21 +235,22 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("InterestRate")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("InterestRate")
+                        .HasColumnType("float");
 
                     b.Property<string>("LoanAmount")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("LoanInstallment")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<string>("LoanPeriod")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("LoanPeriod")
+                    b.Property<int>("LoanType")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("LoansTypesId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("LoansTypesId")
+                        .HasColumnType("int");
 
                     b.Property<string>("MonthlyPayment")
                         .IsRequired()
@@ -256,24 +261,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("ClientBankAccountId")
                         .IsUnique();
 
-                    b.HasIndex("LoansTypesId");
-
                     b.ToTable("Loans");
-                });
-
-            modelBuilder.Entity("Domain.Entities.LoansType", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("LoanType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("LoansType");
                 });
 
             modelBuilder.Entity("Domain.Entities.Role", b =>
@@ -342,9 +330,11 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.TypesOfCreditCards", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -591,15 +581,7 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.LoansType", "LoansTypes")
-                        .WithMany("Loans")
-                        .HasForeignKey("LoansTypesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("ClientBankAccount");
-
-                    b.Navigation("LoansTypes");
                 });
 
             modelBuilder.Entity("Domain.Entities.Transaction", b =>
@@ -695,11 +677,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("RecivedTransations");
 
                     b.Navigation("SendTransations");
-                });
-
-            modelBuilder.Entity("Domain.Entities.LoansType", b =>
-                {
-                    b.Navigation("Loans");
                 });
 
             modelBuilder.Entity("Domain.Entities.Role", b =>

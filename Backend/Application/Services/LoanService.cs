@@ -55,15 +55,16 @@ namespace Application.Services
                 var newLoan = new Loan()
                 {
                     ClientBankAccountId = clientAccount.Id,
-                    LoansTypesId=model.LoansTypesId,
-                    LoanAmount=model.LoanAmount,
-                    MonthlyPayment=model.MonthlyPayment,
-                    Income=model.Income,
-                    EmploymentStatus=model.EmploymentStatus
+                    LoansTypesId = model.LoansTypesId,
+                    LoanAmount = model.LoanAmount,
+                    MonthlyPayment = model.MonthlyPayment,
+                    Income = model.Income,
+                    LoanPeriod = model.LoanPeriod,
+                    EmploymentStatus = model.EmploymentStatus
                 };
                 await _context.Loans.AddAsync(newLoan, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
-
+                
                 return new LoanModel
                 {
                     Id = newLoan.Id,
@@ -72,7 +73,8 @@ namespace Application.Services
                     LoanAmount=newLoan.LoanAmount,
                     MonthlyPayment=newLoan.MonthlyPayment,
                     Income=newLoan.Income,
-                    EmploymentStatus=newLoan.EmploymentStatus
+                    LoanPeriod = newLoan.LoanPeriod,
+                    EmploymentStatus =newLoan.EmploymentStatus
                 };
             }
             else
@@ -85,21 +87,24 @@ namespace Application.Services
                 existingLoan.ClientBankAccountId = clientAccount.Id;
                 existingLoan.LoansTypesId = model.LoansTypesId;
                 existingLoan.LoanAmount = model.LoanAmount;
+                existingLoan.LoanPeriod = model.LoanPeriod;
                 existingLoan.MonthlyPayment = model.MonthlyPayment;
                 existingLoan.Income = model.Income;
                 existingLoan.EmploymentStatus = model.EmploymentStatus;
+             
 
                 await _context.SaveChangesAsync(cancellationToken);
 
                 return new LoanModel
                 {
-                    Id = model.Id,
-                    ClientBankAccountId = model.ClientBankAccountId,
-                    LoansTypesId = model.LoansTypesId,
-                    LoanAmount = model.LoanAmount,
-                    MonthlyPayment = model.MonthlyPayment,
-                    Income = model.Income,
-                    EmploymentStatus = model.EmploymentStatus,
+                    Id = existingLoan.Id,
+                    LoanPeriod = existingLoan.LoanPeriod,
+                    ClientBankAccountId = existingLoan.ClientBankAccountId,
+                    LoansTypesId = existingLoan.LoansTypesId,
+                    LoanAmount = existingLoan.LoanAmount,
+                    MonthlyPayment = existingLoan.MonthlyPayment,
+                    Income = existingLoan.Income,
+                    EmploymentStatus = existingLoan.EmploymentStatus
                 };
             }
         }

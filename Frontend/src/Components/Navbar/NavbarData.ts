@@ -17,12 +17,6 @@ export const SidebarData : NavItem[] = [
     className: 'nav-text background:var(--color-primary)'
   },
   {
-    title:'Client Bank Account',
-    path:'/ClientAccountTable',
-    icon:'',
-    className: 'nav-text background:var(--color-primary)'
-  },
-  {
     title:'Bank Account',
     path:'/AccountTable',
     icon:'',
@@ -35,20 +29,32 @@ export const SidebarData : NavItem[] = [
     className: 'nav-text background:var(--color-primary)'
   },
   {
+    title:'Client Bank Account',
+    path:'/ClientAccountTable',
+    icon:'',
+    className: 'nav-text background:var(--color-primary)'
+  },
+  {
     title:'Transaction',
     path:'/TransactionTable',
     icon:'',
     className: 'nav-text background:var(--color-primary)'
   },
   {
+    title:'Credit Cards',
+   path:'/CreditCardsTable',
+     icon:'',
+     className: 'nav-text background:var(--color-primary)'
+   },
+   {
+    title:'Types Of Credit Cards',
+   path:'/TypesOfCreditCardsTable',
+     icon:'',
+     className: 'nav-text background:var(--color-primary)'
+   },
+  {
     title:'Loan',
     path:'/LoanTable',
-    icon:'',
-    className: 'nav-text background:var(--color-primary)'
-  },
-  {
-    title:'Loans Type',
-    path:'/LoansTypeTable',
     icon:'',
     className: 'nav-text background:var(--color-primary)'
   },
@@ -63,17 +69,5 @@ export const SidebarData : NavItem[] = [
     path:'/ContactTable',
     icon:'',
     className: 'nav-text background:var(--color-primary)'
-  },
-   {
-    title:'Types Of Credit Cards',
-   path:'/TypesOfCreditCardsTable',
-     icon:'',
-     className: 'nav-text background:var(--color-primary)'
-   },
-   {
-    title:'Credit Cards',
-   path:'/CreditCardsTable',
-     icon:'',
-     className: 'nav-text background:var(--color-primary)'
-   },
+  }
 ];

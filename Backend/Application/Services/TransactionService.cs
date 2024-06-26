@@ -53,21 +53,22 @@ namespace Application.Services
                 return model;
             }
 
-        }
-        public async Task<TransactionModel> GetByAccountNumberAsync(string accountNumber, CancellationToken cancellationToken)
+        } 
+       public async Task<List<TransactionModel>> GetByAccountNumberAsync(string accountNumber, CancellationToken cancellationToken)
         {
-            var client = await _context.Transactions
-               .Where(x => x.SourceClientBankAccount.AccountNumberGeneratedID == accountNumber)
-                .FirstOrDefaultAsync(cancellationToken);
-            if (client == null)
+            var clientAccounts = await _context.Transactions
+                .Where(x => x.SourceClientBankAccount.AccountNumberGeneratedID == accountNumber)
+                .ToListAsync(cancellationToken);
+
+            if (clientAccounts == null)
             {
                 throw new AppBadDataException();
             }
             else
             {
                 await _context.SaveChangesAsync(cancellationToken);
-                var model = mapper.Map<TransactionModel>(client);
-                return model;
+                var models = clientAccounts.Select(client => mapper.Map<TransactionModel>(client)).ToList();
+                return models;
             }
         }
         public async Task<TransactionModel> CreateOrEditTransaction(TransactionModel model, CancellationToken cancellationToken)

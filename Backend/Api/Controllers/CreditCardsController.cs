@@ -29,7 +29,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetCreditCardsId(Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetCreditCardsId(int id, CancellationToken cancellationToken)
         {
             var model = await creditCardsService.GetCreditCardsById(id, cancellationToken);
             return Ok(model);
@@ -59,7 +59,7 @@ namespace Api.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCreditCards(Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> DeleteCreditCards(int id, CancellationToken cancellationToken)
         {
             await creditCardsService.DeleteCreditCards(id, cancellationToken);
             return Ok();

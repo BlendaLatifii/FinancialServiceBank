@@ -103,20 +103,21 @@ namespace Application.Services
                 };
             }
         }
-        public async Task<ClientBankAccountModel> GetByPersonalNumberAsync(string personalNumber, CancellationToken cancellationToken)
+        public async Task<List<ClientBankAccountModel>> GetByPersonalNumberAsync(string personalNumber, CancellationToken cancellationToken)
         {
-            var client = await _context.ClientBankAccounts
-               .Where(x => x.Client.PersonalNumberId == personalNumber)
-                .FirstOrDefaultAsync(cancellationToken);
-            if (client == null)
+            var clientAccounts = await _context.ClientBankAccounts
+                .Where(x => x.Client.PersonalNumberId == personalNumber)
+                .ToListAsync(cancellationToken);
+
+            if (clientAccounts == null || clientAccounts.Count == 0)
             {
                 throw new AppBadDataException();
             }
             else
             {
                 await _context.SaveChangesAsync(cancellationToken);
-                var model = mapper.Map<ClientBankAccountModel>(client);
-                return model;
+                var models = clientAccounts.Select(client => mapper.Map<ClientBankAccountModel>(client)).ToList();
+                return models;
             }
         }
 
@@ -162,6 +163,20 @@ namespace Application.Services
 
             // Ruaj ndryshimet në bazën e të dhënave
             await _context.SaveChangesAsync(cancellationToken);
+        }
+        public async Task<List<string>> GetStudentAccountClientsAsync(CancellationToken cancellationToken)
+        {
+            var studentAccounts = await _context.ClientBankAccounts
+                .Include(cba => cba.Client)
+                .Include(cba => cba.BankAccount)
+                .Where(cba => cba.BankAccount.AccountType == "Llogari studentore")
+                .ToListAsync(cancellationToken);
+
+            var clientNames = studentAccounts
+                .Select(cba => $"{cba.Client.FirstName} {cba.Client.LastName}")
+                .ToList();
+
+            return clientNames;
         }
     }
 }

@@ -10,9 +10,8 @@ export default function MyProfile() {
     const [personalNumber, setPersonalNumber] = useState('');
     const [accountNumber, setAccountNumber] = useState('');
     const [client, setClient] = useState<ClientModel | null>(null);
-    const [clientBankAccount, setClientBankAccount] = useState<ClientBankAccountModel |null>(null);
+    const [clientBankAccounts, setClientBankAccounts] = useState<ClientBankAccountModel[]>([]);
     const[creditCards, setCreditCards]= useState<CreditCardsModel |null>(null);
-    const[transaction, setTransaction]= useState<TransactionModel |null>(null);
 
     const handleInputChange = (e : React.ChangeEvent<HTMLInputElement>) => {
         setPersonalNumber(e.target.value);
@@ -27,13 +26,13 @@ export default function MyProfile() {
         try {
             if(personalNumber!=null){
             const response = await axios.get(`https://localhost:7254/api/Client/personalNumber/${personalNumber}`);
-            const result = await axios.get(`https://localhost:7254/api/ClientBankAccount/personalNumber/${personalNumber}`);
+            const bankAccountsResponse = await axios.get(`https://localhost:7254/api/ClientBankAccount/personalNumber/${personalNumber}`);
             setClient(response.data);
-            setClientBankAccount(result.data);
+            setClientBankAccounts(bankAccountsResponse.data);
             }
         } catch (err) {
             setClient(null);
-            setClientBankAccount(null);
+            setClientBankAccounts([]);
         }
     };
     const handleSubmit1= async(e:React.FormEvent<HTMLFormElement>) => {
@@ -41,13 +40,10 @@ export default function MyProfile() {
         try {
             if(accountNumber!=null){
             const creditCardsResponse = await axios.get(`https://localhost:7254/api/CreditCards/accountNumber/${accountNumber}`);
-          // const transactionResponse = await axios.get(`https://localhost:7254/api/Transactions/accountNumber/${accountNumber}`);
             setCreditCards(creditCardsResponse.data);
-           //setTransaction(transactionResponse.data);
             }
         } catch (err) {
             setCreditCards(null);
-            setTransaction(null);
         }
         }
 
@@ -78,13 +74,13 @@ export default function MyProfile() {
                     <p><strong>Email Address:</strong> {client.emailAddress}</p>
                 </div>
             )}
-             {clientBankAccount && (
-                <div style={styles.clientDetails}>
-                    <h2>Bank Account Details</h2>
-                    <p><strong>Account Number:</strong> {clientBankAccount.accountNumberGeneratedID}</p>
-                    <p><strong>Current Balance:</strong> {clientBankAccount.currentBalance}</p>
-                </div>
-            )}
+              {clientBankAccounts.length > 0 && clientBankAccounts.map(account => (
+                    <div key={account.id} style={styles.clientDetails}>
+                        <h2>Bank Account Details</h2>
+                        <p><strong>Account Number:</strong> {account.accountNumberGeneratedID}</p>
+                        <p><strong>Current Balance:</strong> {account.currentBalance}</p>
+                    </div>
+                ))}
          </div>
          <br/>
          <br/>
@@ -100,19 +96,10 @@ export default function MyProfile() {
         <button type="submit" style={styles.button}>Get BankAccount Details</button>
         {creditCards && (
                 <div style={styles.clientDetails}>
-                    <h2>Client Details</h2>
-                    <p><strong>cVV:</strong> {creditCards.cVV}</p>
+                    <h2>Credit Cards Details</h2>
                     <p><strong>ValidThru:</strong> {creditCards.validThru}</p>
                 </div>
             )}
-         {transaction && (
-                <div style={styles.clientDetails}>
-                    <h2>Transaction Details</h2>
-                    <p><strong>DestinationClient Bank Account:</strong> {transaction.destinationClientBankAccount}</p>
-                    <p><strong>transaction Amount:</strong> {transaction.transactionAmount}</p>
-
-                </div>
-            )}     
     </form>
     </div>
     </>

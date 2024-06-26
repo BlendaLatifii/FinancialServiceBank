@@ -24,8 +24,6 @@ import AccountTable from "./Components/BankAccountComponents/AccountTable";
 import ClientTable from "./Components/ClientComponents/ClientTable";
 import ClientAccountTable from "./Components/ClientBankAccountComponents/ClientAccountTable";
 import EditClientAccount from "./Components/ClientBankAccountComponents/EditClientAccount";
-import EditLoansType from "./Components/LoansTypeComponents/EditLoansType";
-import LoansTypeTable from "./Components/LoansTypeComponents/LoansTypeTable";
 import TypesOfCreditCardsTable from "./Components/TypesOfCreditCardsComponents/TypesOfCreditCardsTable";
 import EditTypesOfCreditCards from "./Components/TypesOfCreditCardsComponents/EditTypesOfCreditCards";
 import Transaction from "./Components/TransactionComponents/Transaction";
@@ -83,8 +81,10 @@ function App() {
     <>
     { <Navbar/>}
       <Routes>
+        
+        { isAdmin &&  <Route path="/Dashboard" element={<Dashboard/>} />}
+
         <Route path="/Header" element={<Header />} />
-         <Route path="/Dashboard" element={<Dashboard/>} />
         <Route path="/Footer" element={<Footer />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/Services" element={<Services />} />
@@ -95,39 +95,36 @@ function App() {
         <Route path="/Login" element={<Login />} />
         <Route path="/EditUser/:id" element={<EditUser />} />
         <Route path="/AddUser" element={<EditUser />} />
-        <Route path="/RegisterTable" element={<RegisterTable />} />
-        <Route path="/BranchTable" element={<BranchTable />} />
-        <Route path="/ContactTable" element={<ContactTable />} />
+        { isAdmin && <Route path="/RegisterTable" element={<RegisterTable />} />}
+        { isAdmin && <Route path="/BranchTable" element={<BranchTable />} />}
+        { isAdmin && <Route path="/ContactTable" element={<ContactTable />} />}
         <Route path="/AddBranches" element={<EditBranch />}/>
         <Route path="/EditBranch/:id" element={<EditBranch />}/>
         <Route path="/AddBankAccount" element={<EditBankAccount/>}/>
         <Route path="/EditBankAccount/:id" element={<EditBankAccount/>}/>
-        <Route path="/AccountTable" element={<AccountTable />}/>
-        <Route path="/AddLoanType" element={<EditLoansType/>}/>
-        <Route path="/EditLoansType/:id" element={<EditLoansType/>}/>
-        <Route path="/LoansTypeTable" element={<LoansTypeTable />}/>
+        { isAdmin && <Route path="/AccountTable" element={<AccountTable />}/>}
         <Route path="/RegisterForClients" element={<RegisterForClients />} />
         <Route path="/AddClient" element={<RegisterForClients/>}/>
         <Route path="/RegisterForClients/:id" element={<RegisterForClients/>}/>
-        <Route path="/ClientTable" element={<ClientTable />}/>
+        { isAdmin && <Route path="/ClientTable" element={<ClientTable />}/>}
         <Route path="/AddClientAccount" element={<EditClientAccount/>}/>
         <Route path="/EditClientAccount/:id" element={<EditClientAccount/>}/>
         <Route path="/EditClientAccount" element={<EditClientAccount />}/>
-        <Route path="/ClientAccountTable" element={<ClientAccountTable />}/>
+        { isAdmin && <Route path="/ClientAccountTable" element={<ClientAccountTable />}/>}
         <Route path="/EditTypesOfCreditCards/:id" element ={<EditTypesOfCreditCards/>}/>
         <Route path="/AddTypesOfCreditCards" element ={<EditTypesOfCreditCards/>}/>
         <Route path="/TypesOfCreditCardsTable" element ={<TypesOfCreditCardsTable/>}/>
-        <Route path ="/CreditCardsTable" element = {<CreditCardsTable/>}/>
+        { isAdmin && <Route path ="/CreditCardsTable" element = {<CreditCardsTable/>}/>}
         <Route path="/EditCreditCards/:id" element = {<EditCreditCards/>}/>
         <Route path="/AddCreditCards" element = {<EditCreditCards/>}/>
         <Route path="/Transaction" element={<Transaction/>}/>
         <Route path="/AddTransaction" element={<Transaction/>}/>
         <Route path="/EditTransaction/:id" element={<Transaction/>}/>
-        <Route path="/TransactionTable" element={<TransactionTable />} />
+        { isAdmin && <Route path="/TransactionTable" element={<TransactionTable />} />}
         <Route path="LoanForm" element={<LoanForm />} />
         <Route path="/AddLoan" element={<LoanForm/>}/>
         <Route path="/EditLoan/:id" element={<LoanForm/>}/>
-        <Route path="/LoanTable" element={<LoanTable />} />
+        { isAdmin &&<Route path="/LoanTable" element={<LoanTable />} />}
         <Route path="/ForgotPassword" element={<ForgotPassword/>} />
         <Route path="/ResetPassword" element={<ResetPassword/>} />
       </Routes>

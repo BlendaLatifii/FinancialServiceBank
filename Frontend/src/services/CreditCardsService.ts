@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 export class CreditCardsService {
     private static baseUrl = "https://localhost:7254/api/CreditCards";
-    public static async DeleteCreditCards(id: string): Promise<void> {
+    public static async DeleteCreditCards(id: number): Promise<void> {
       var result = await axios.delete(`${CreditCardsService.baseUrl}/${id}`);
     }
   
@@ -12,7 +12,7 @@ export class CreditCardsService {
       const result = await axios.get(CreditCardsService.baseUrl);
       return result.data;
     }
-    public static async GetCreditCardsDetails(id: string): Promise<CreditCardsModel> {
+    public static async GetCreditCardsDetails(id: number): Promise<CreditCardsModel> {
         const result = await axios.get(`${CreditCardsService.baseUrl}/${id}`);
         return result.data;
     }
@@ -24,7 +24,7 @@ export class CreditCardsService {
 
    public static async EditOrAddCreditCards(model: CreditCardsModel): Promise<void> {
     const result = await axios.post(`${CreditCardsService.baseUrl}`, model);
-    toast.success("Add Successfully", {
+    toast.success("Successfully", {
       position: "bottom-right",
       autoClose: 3000,
       hideProgressBar: false,

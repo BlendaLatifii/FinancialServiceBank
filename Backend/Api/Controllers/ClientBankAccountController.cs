@@ -27,6 +27,13 @@ namespace Api.Controllers
 
             return Ok(clientAcc);
         }
+        [HttpGet("personalNumber/{personalNumber}")]
+        public async Task<ActionResult<List<ClientBankAccountModel>>> GetByPersonalNumberAsync(string personalNumber,CancellationToken cancellationToken)
+        {
+            var clientAcc = await clientBankAccService.GetByPersonalNumberAsync(personalNumber,cancellationToken);
+
+            return Ok(clientAcc);
+        }
         [Authorize(Roles = "Admin")]
         [HttpGet("count")]
         public async Task<ActionResult<int>> GetClientBankAccountCount(CancellationToken cancellationToken)
@@ -39,12 +46,6 @@ namespace Api.Controllers
         public async Task<IActionResult> GetClientAccountById([FromRoute]Guid id, CancellationToken cancellationToken)
         {
             var model =await clientBankAccService.GetClientAccountById(id, cancellationToken);
-            return Ok(model);
-        }
-        [HttpGet("personalNumber/{personalNumber}")]
-        public async Task<IActionResult> GetClientByPersonalNumber([FromRoute] string personalNumber, CancellationToken cancellationToken)
-        {
-            var model = await clientBankAccService.GetByPersonalNumberAsync(personalNumber, cancellationToken);
             return Ok(model);
         }
 
@@ -75,6 +76,13 @@ namespace Api.Controllers
             {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
+        }
+        [Authorize(Roles = "Admin")]
+        [HttpGet("student-accounts/clients")]
+        public async Task<IActionResult> GetStudentAccountClients(CancellationToken cancellationToken)
+        {
+            var clientNames = await clientBankAccService.GetStudentAccountClientsAsync(cancellationToken);
+            return Ok(clientNames);
         }
     }
 }

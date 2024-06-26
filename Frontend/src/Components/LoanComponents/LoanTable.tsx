@@ -72,11 +72,11 @@ export default function TransactionTable() {
             <TableHeaderCell>clientAccountNumber</TableHeaderCell>
             <TableHeaderCell>loanType</TableHeaderCell>
             <TableHeaderCell>monthlyPayment</TableHeaderCell>
+            <TableHeaderCell>loanAmount</TableHeaderCell>
             <TableHeaderCell>income</TableHeaderCell>
-            <TableHeaderCell>loanInstallment</TableHeaderCell>
             <TableHeaderCell>interestRate</TableHeaderCell>
             <TableHeaderCell>loanPeriod</TableHeaderCell>
-            <TableHeaderCell>emplymentStatus</TableHeaderCell>
+            <TableHeaderCell>employmentStatus</TableHeaderCell>
             <TableHeaderCell>Actions</TableHeaderCell>
           </TableRow>
         </TableHeader>
@@ -84,11 +84,11 @@ export default function TransactionTable() {
         <TableBody>
           {loans.map((item) => (
             <TableRow key={item.id}>
-              <TableCell>{item.clientAccountNumber}</TableCell>
-              <TableCell>{item.loansTypeId}</TableCell>
+              <TableCell>{item.clientAccountNumber!}</TableCell>
+              <TableCell>{item.loansTypesId}</TableCell>
               <TableCell>{item.monthlyPayment}</TableCell>
+              <TableCell>{item.loanAmount}</TableCell>
               <TableCell>{item.income}</TableCell>
-              <TableCell>{item.loanInstallment}</TableCell>
               <TableCell>{item.interestRate}</TableCell>
               <TableCell>{item.loanPeriod}</TableCell>
               <TableCell>{item.employmentStatus}</TableCell>

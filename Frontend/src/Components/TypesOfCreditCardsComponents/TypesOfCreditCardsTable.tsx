@@ -19,7 +19,7 @@ import Header from "../Header";
 export default function TypesOfCreditCardsTable() {
   const [type, setType] = useState<TypesOfCreditCardsModel[]>([]);
   const [openConfirm, setOpenConfirm] = useState<boolean>(false);
-  const [deleteTypeId, setDeleteTypeId] = useState<string>("");
+  const [deleteTypeId, setDeleteTypeId] = useState<number | null>(null);
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
   useEffect(() => {
@@ -31,19 +31,19 @@ export default function TypesOfCreditCardsTable() {
     setType(result);
   }
   
-  function deleteType(id: string) {
+  function deleteType(id: number) {
     setOpenConfirm(true);
     setDeleteTypeId(id);
   }
 
-  async function confirmedDeleteType(id: string) {
+  async function confirmedDeleteType(id: number) {
     var result = await TypesOfCreditCardsService.DeleteType(id);
     setType(type.filter((types) => types.id !== id));
     setOpenConfirm(false);
-    setDeleteTypeId("");
+    setDeleteTypeId(null);
   }
 
-  function sendToDetails(id: string | null) {
+  function sendToDetails(id:number) {
     navigate(`/EditTypesOfCreditCards/${id}`);
   }
 
@@ -69,6 +69,7 @@ export default function TypesOfCreditCardsTable() {
           <TableRow>
             <TableHeaderCell>Name</TableHeaderCell>
             <TableHeaderCell>Description</TableHeaderCell>
+            <TableHeaderCell>Action</TableHeaderCell>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -77,14 +78,14 @@ export default function TypesOfCreditCardsTable() {
               <TableCell>{item.name}</TableCell>
               <TableCell>{item.description}</TableCell>
               <TableCell>
-                <Button type="button" className="btn ui green basic button" onClick={() => sendToDetails(item.id!)}>
+                <Button type="button" className="btn ui green basic button" onClick={() => sendToDetails(+item.id!)}>
                    Edit
                 </Button>
                 <Button
                   type="button"
                   className="btn btn-danger"
                   negative
-                  onClick={() => deleteType(item.id!)}
+                  onClick={() => deleteType(+item.id!)}
                 >
                   Delete
                 </Button>
@@ -94,7 +95,7 @@ export default function TypesOfCreditCardsTable() {
           <Confirm
             open={openConfirm}
             onCancel={() => setOpenConfirm(false)}
-            onConfirm={() => confirmedDeleteType(deleteTypeId)}
+            onConfirm={() => confirmedDeleteType(deleteTypeId!)}
           />
         </TableBody>
       </Table>

@@ -59,7 +59,7 @@ export default function EditClientAccount() {
    navigate('/')
   }
 
-  const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e:React.ChangeEvent<HTMLInputElement | HTMLSelectElement >) => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
   };
@@ -104,7 +104,17 @@ export default function EditClientAccount() {
             name="currentBalance"
             onChange={handleChange}
           />
-            <MySelectInput name="bankAccountId" onChange={handleChange} placeholder='Select Bank Account' options={accountTypeSelectList} />
+           <select
+            style={{ padding: "5px", margin: "5px" }}
+            className="form-control"
+            id="bankAccountId"
+            name="bankAccountId"
+            value={values.bankAccountId!}
+            onChange={handleChange}
+          >
+            {accountTypeSelectList.map((x)=>
+              (<option key={x.key} value={x.value}>{x.text}</option>))}
+          </select>
 
            <Button floated="right" disabled={!isValid}  positive type="submit" content="Submit" />
           <Button floated="right" onClick={sendToOverview} className="ui blue basic button">Cancel</Button>
