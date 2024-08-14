@@ -63,6 +63,7 @@ namespace Application.Services
                 return new CreditCardsModel
                 {
                     Id = newCard.Id,
+                    Cvv=newCard.Cvv,
                     Balance=newCard.Balance,
                     ClientBankAccountId = newCard.ClientBankAccountId,
                     TypesOfCreditCardsID = newCard.TypesOfCreditCardsID,
@@ -91,6 +92,7 @@ namespace Application.Services
                 return new CreditCardsModel
                 {
                     Id = existingCard.Id,
+                    Cvv = existingCard.Cvv,
                     Balance = existingCard.Balance,
                     ClientBankAccountId = existingCard.ClientBankAccountId,
                     TypesOfCreditCardsID = existingCard.TypesOfCreditCardsID,
@@ -99,7 +101,7 @@ namespace Application.Services
                 };
             }
         }
-        public async Task<CreditCardsModel> GetCreditCardsById(int id, CancellationToken cancellationToken)
+        public async Task<CreditCardsModel> GetCreditCardsById(Guid id, CancellationToken cancellationToken)
         {
             var card = await appDbContext.CreditCards
                 .Where(x => x.Id == id)
@@ -132,7 +134,7 @@ namespace Application.Services
             }
         }
 
-        public async Task DeleteCreditCards(int id, CancellationToken cancellationToken)
+        public async Task DeleteCreditCards(Guid id, CancellationToken cancellationToken)
         {
             var card = await appDbContext.CreditCards
                  .Where(x => x.Id == id)
@@ -140,7 +142,7 @@ namespace Application.Services
 
             if (card == null)
             {
-                throw new ApplicationException("This Type of Credit Card does not exist.");
+                throw new ApplicationException("This Credit Card does not exist.");
             }
             appDbContext.CreditCards.Remove(card);
             await appDbContext.SaveChangesAsync();

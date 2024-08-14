@@ -57,9 +57,7 @@ namespace Application.Services
                     ClientBankAccountId = clientAccount.Id,
                     LoansTypesId = model.LoansTypesId,
                     LoanAmount = model.LoanAmount,
-                    MonthlyPayment = model.MonthlyPayment,
                     Income = model.Income,
-                    LoanPeriod = model.LoanPeriod,
                     EmploymentStatus = model.EmploymentStatus
                 };
                 await _context.Loans.AddAsync(newLoan, cancellationToken);
@@ -71,6 +69,7 @@ namespace Application.Services
                     ClientBankAccountId = newLoan.ClientBankAccountId,
                     LoansTypesId = newLoan.LoansTypesId,
                     LoanAmount=newLoan.LoanAmount,
+                    InterestRate = model.InterestRate,
                     MonthlyPayment=newLoan.MonthlyPayment,
                     Income=newLoan.Income,
                     LoanPeriod = newLoan.LoanPeriod,
@@ -87,8 +86,6 @@ namespace Application.Services
                 existingLoan.ClientBankAccountId = clientAccount.Id;
                 existingLoan.LoansTypesId = model.LoansTypesId;
                 existingLoan.LoanAmount = model.LoanAmount;
-                existingLoan.LoanPeriod = model.LoanPeriod;
-                existingLoan.MonthlyPayment = model.MonthlyPayment;
                 existingLoan.Income = model.Income;
                 existingLoan.EmploymentStatus = model.EmploymentStatus;
              
@@ -101,6 +98,7 @@ namespace Application.Services
                     LoanPeriod = existingLoan.LoanPeriod,
                     ClientBankAccountId = existingLoan.ClientBankAccountId,
                     LoansTypesId = existingLoan.LoansTypesId,
+                    InterestRate = existingLoan.InterestRate,
                     LoanAmount = existingLoan.LoanAmount,
                     MonthlyPayment = existingLoan.MonthlyPayment,
                     Income = existingLoan.Income,

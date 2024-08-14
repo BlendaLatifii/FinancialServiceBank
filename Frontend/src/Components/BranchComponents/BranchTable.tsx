@@ -73,6 +73,7 @@ export default function BranchTable() {
             <TableHeaderCell>Address</TableHeaderCell>
             <TableHeaderCell>PhoneNumber</TableHeaderCell>
             <TableHeaderCell>Opened</TableHeaderCell>
+            <TableHeaderCell>AddedBy</TableHeaderCell>
             <TableHeaderCell>Actions</TableHeaderCell>
           </TableRow>
         </TableHeader>
@@ -84,6 +85,7 @@ export default function BranchTable() {
               <TableCell>{item.address}</TableCell>
               <TableCell>{item.phoneNumber}</TableCell>
               <TableCell>{item.opened}</TableCell>
+              <TableCell>{item.userName}</TableCell>
               <TableCell>
                 <Button  type="button"  className="btn ui green basic button" onClick={()=>sendToDetails(item.branchId!)}>Edit</Button>
                 <Button

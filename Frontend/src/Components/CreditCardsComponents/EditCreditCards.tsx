@@ -7,12 +7,13 @@ import { TypesOfCreditCardsService } from '../../services/TypesOfCreditCardsServ
 import { CreditCardsModel } from '../../interfaces/creditCards-model';
 import { CreditCardsService } from '../../services/CreditCardsService';
 import { SelectListItemInt } from '../../interfaces/select-list-itemInt';
+import { SelectListItem } from '../../interfaces/select-list-item';
 
 export default function EditCreditCards() {
   const { id } = useParams<{ id: string}>();
-  const [typesOfCreditCards, setTypesOfCreditCards] = useState<SelectListItemInt[]>([]);
+  const [typesOfCreditCards, setTypesOfCreditCards] = useState<SelectListItem[]>([]);
   const [values, setValues] = useState<CreditCardsModel>({
-    id:+id!,
+    id:id!,
     clientAccountNumber: '',
     typesOfCreditCardsID: 0,
     limite:null,
@@ -23,7 +24,7 @@ export default function EditCreditCards() {
   useEffect(() => {
     const fetchData = async () => {
       if(id!=null){
-     const response = await CreditCardsService.GetCreditCardsDetails(+id!);
+     const response = await CreditCardsService.GetCreditCardsDetails(id!);
      const userData = response;
      setValues({
        id: userData.id!,
@@ -68,11 +69,11 @@ const handleChange = (
  const fetchCreditCardsTypes = async () => {
   try {
     const response = await TypesOfCreditCardsService.GetSelectList();
-    setTypesOfCreditCards(response.map((item) => ({
-      key: item.id,
-      value: item.id!, // Ensure value is a number
-      text: item.name,
-    })as SelectListItemInt).filter(x => x.text));
+    setTypesOfCreditCards(response.map((item,i) => ({
+      key: i,
+      value: item.id,
+      text: item.name
+    } as SelectListItem)).filter(x=> x.text != '' && x.text != null));
   } catch (error) {
     console.error('Error fetching account types:', error);
   }

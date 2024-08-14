@@ -9,12 +9,11 @@ namespace Domain.Models
         public LoanType LoansTypesId { get; set; }
         public string ClientAccountNumber { get; set; } = default!;
         public string LoanAmount { get; set; } = default!;
-        public double? InterestRate { get; set; }
-        public string MonthlyPayment { get; set; } = default!;
-        public string LoanPeriod { get; set; }
         public string Income { get; set; } = default!;
         public EmploymentStatus EmploymentStatus { get; set; } = default!;
-        public LoanType LoanType { get; set; } = default!;
+        public string? LoanPeriod { get; set; }
+        public double? InterestRate { get; set; }
+        public string? MonthlyPayment { get; set; }
 
     }
 }

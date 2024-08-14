@@ -4,7 +4,9 @@ using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
 using Infrastructure.Data;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace Application.Services
 {
@@ -12,11 +14,13 @@ namespace Application.Services
     {
         public readonly AppDbContext _context;
         private readonly IMapper mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public BranchService(AppDbContext context, IMapper mapper)
+        public BranchService(AppDbContext context, IMapper mapper, IHttpContextAccessor _httpContextAccessor)
         {
             _context = context;
             this.mapper = mapper;
+            this._httpContextAccessor= _httpContextAccessor;
         }
         public async Task<List<BranchModel>> GetAllBranchesAsync(CancellationToken cancellationToken)
         {
@@ -42,8 +46,27 @@ namespace Application.Services
             }
            
         }
+        public async Task<List<ListItemModel>> GetBranchesSelectListAsync(CancellationToken cancellationToken)
+        {
+            var model = await _context.Branches
+                .Select(x => new ListItemModel()
+                {
+                    Id = x.BranchId,
+                    Name = x.BranchName
+                }).ToListAsync(cancellationToken);
+
+            return model;
+
+        }
         public async Task<BranchModel> CreateOrUpdateBranchAsync(BranchModel model, CancellationToken cancellationToken)
         {
+            string userId = _httpContextAccessor.HttpContext.User.FindFirstValue("userId");
+
+            if (userId == null)
+            {
+                throw new UnauthorizedAccessException("User is not authenticated.");
+            }
+
             if (model.BranchId == null || model.BranchId == Guid.Empty)
             {
                 // Krijoni një degë të re
@@ -52,7 +75,8 @@ namespace Application.Services
                     BranchName = model.BranchName,
                     Address = model.Address,
                     PhoneNumber = model.PhoneNumber,
-                    Opened = model.Opened
+                    Opened = model.Opened,
+                    UserId = Guid.Parse(userId)
                 };
 
                 await _context.Branches.AddAsync(newBranch, cancellationToken);
@@ -65,7 +89,9 @@ namespace Application.Services
                     BranchName = newBranch.BranchName,
                     Address = newBranch.Address,
                     PhoneNumber = newBranch.PhoneNumber,
-                    Opened = newBranch.Opened
+                    Opened = newBranch.Opened,
+                    UserId = newBranch.UserId, // ID e përdoruesit që e krijoi degën
+                    UserName = _context.Users.Find(newBranch.UserId).UserName
                 };
             }
             else
@@ -91,7 +117,9 @@ namespace Application.Services
                     BranchName = existingBranch.BranchName,
                     Address = existingBranch.Address,
                     PhoneNumber = existingBranch.PhoneNumber,
-                    Opened = existingBranch.Opened
+                    Opened = existingBranch.Opened,
+                    UserId = existingBranch.UserId,
+                    UserName = _context.Users.Find(existingBranch.UserId).UserName
                 };
             }
         }

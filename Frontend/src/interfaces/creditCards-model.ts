@@ -1,7 +1,6 @@
-import {TypesOfCreditCardsModel} from "./TypesOfCreditCards-model";
-
 export interface CreditCardsModel {
-    id:number| null;
+    id:string| null;
+    cvv:string |null;
     balance:number;
     limite:number| null;
     clientBankAccountId: string |null;

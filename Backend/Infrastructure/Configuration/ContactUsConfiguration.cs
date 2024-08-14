@@ -15,6 +15,9 @@ namespace Infrastructure.Configuration
         public void Configure(EntityTypeBuilder<ContactUs> builder)
         {
             builder.HasKey(x => x.Id);
+            builder.HasOne(x => x.Users)
+                .WithMany(x => x.ContactUs)
+               .HasForeignKey(x => x.UserId);
         }
     }
 }

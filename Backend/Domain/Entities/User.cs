@@ -11,5 +11,7 @@ namespace Domain.Entities
     {
         public string LastName { get; set; }
         public List<UserRole> UserRoles { get; set; }
+        public List<ContactUs> ContactUs { get; set; } = new List<ContactUs>();
+        public List<Branch> Branches { get; set; } = new List<Branch>();
     }
 }

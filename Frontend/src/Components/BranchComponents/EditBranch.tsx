@@ -34,7 +34,7 @@ export default function EditBranch() {
             address: userData.address,
             phoneNumber: userData.phoneNumber,
             opened: userData.opened,
-          })
+          }as BranchModel)
         }
       } catch (error) {
         console.error("Error fetching branch details:", error);

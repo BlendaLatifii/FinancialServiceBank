@@ -11,7 +11,7 @@ import { TypesOfCreditCardsService } from "../../services/TypesOfCreditCardsServ
 export default function EditTypesOfCreditCards() {
   const { id } = useParams<{ id: string}>();
  const[values, setValues]= useState<TypesOfCreditCardsModel>({
-      id:+id!,
+      id:id!,
       name:'',
       description: '',
   } as TypesOfCreditCardsModel);
@@ -20,7 +20,7 @@ export default function EditTypesOfCreditCards() {
     const fetchData = async () => {
       try {
         if(id){
-          const response = await TypesOfCreditCardsService.GetTypesOfCreditCardsDetails(+id!);
+          const response = await TypesOfCreditCardsService.GetTypesOfCreditCardsDetails(id!);
           const typeData = response;
           setValues({
               id:typeData.id!,
