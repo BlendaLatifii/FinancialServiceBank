@@ -12,11 +12,13 @@ namespace Domain.Entities
         public string AccountNumberGeneratedID { get; set; } = GenerateAccountNumber();
         public Guid ClientId { get; set; } 
         public Guid BankAccountId { get; set; }
+        public Guid BranchId { get; set; }
         public decimal CurrentBalance { get; set; } = default!;
         public DateTime DateCreated { get; set; } = default!;
         public DateTime DateLastUpdated { get; set; } = default!;
         public Client Client { get; set; } = default!;
         public BankAccount BankAccount { get; set; } = default!;
+        public Branch Branch { get; set; } = default!;
         public CreditCards CreditCards { get; set; } = default!;
         public Loan Loans { get; set; } = default!;
         public List<Transaction> SendTransations { get; set; } = new List<Transaction>();

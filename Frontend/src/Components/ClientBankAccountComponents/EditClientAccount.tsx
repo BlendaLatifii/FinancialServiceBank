@@ -9,15 +9,18 @@ import MySelectInput from "../../FormElements/DropDown";
 import { ClientBankAccountModel } from "../../interfaces/clientaccount-model";
 import { SelectListItem } from "../../interfaces/select-list-item";
 import { BankAccountService } from "../../services/BankAccountService";
+import { BranchService } from "../../services/BranchService";
 
 export default function EditClientAccount() {
  const { id } = useParams<{ id: string}>();
  const [accountTypeSelectList, setAccountTypeSelectList] = useState<SelectListItem[]>([]);
+ const [branchSelectList, setBranchSelectList] = useState<SelectListItem[]>([]);
  const [values, setValues] = useState<ClientBankAccountModel>({
     id: id!,
     personalNumber: '',
     currentBalance: null,
     bankAccountId: null,
+    branchId:null
   } as ClientBankAccountModel);
  
   useEffect(() => {
@@ -28,9 +31,10 @@ export default function EditClientAccount() {
           const userData=response;
           setValues({
           id: userData.id!,
-         personalNumber: userData.personalNumber,
-         currentBalance: userData.currentBalance,
-         bankAccountId:userData.bankAccountId
+          personalNumber: userData.personalNumber,
+          currentBalance: userData.currentBalance,
+          bankAccountId:userData.bankAccountId,
+          branchId:userData.branchId
           }as ClientBankAccountModel)
         }
       } catch (error) {
@@ -83,6 +87,25 @@ export default function EditClientAccount() {
     fetchAccountTypes()
   },[])
 
+  const fetchBranch = async () => {
+    try {
+      const response = await BranchService.GetSelectList(); 
+
+      setBranchSelectList(response.map((item,i) => ({
+        key: i,
+        value: item.id,
+        text: item.name
+      } as SelectListItem)).filter(x=> x.text != '' && x.text != null));
+
+    } catch (error) {
+      console.error('Error fetching branch:', error);
+    }
+  };
+
+  useEffect(()=>{
+    fetchBranch()
+  },[])
+
   return (
     <>
     
@@ -112,7 +135,18 @@ export default function EditClientAccount() {
             value={values.bankAccountId!}
             onChange={handleChange}
           >
-            {accountTypeSelectList.map((x)=>
+            {branchSelectList.map((x)=>
+              (<option key={x.key} value={x.value}>{x.text}</option>))}
+          </select>
+          <select
+            style={{ padding: "5px", margin: "5px" }}
+            className="form-control"
+            id="branchId"
+            name="branchId"
+            value={values.branchId!}
+            onChange={handleChange}
+          >
+            {branchSelectList.map((x)=>
               (<option key={x.key} value={x.value}>{x.text}</option>))}
           </select>
 

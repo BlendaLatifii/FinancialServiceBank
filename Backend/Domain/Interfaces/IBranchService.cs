@@ -13,5 +13,6 @@ namespace Domain.Interfaces
         Task<List<BranchModel>> GetAllBranchesAsync(CancellationToken cancellationToken);
         Task<BranchModel> CreateOrUpdateBranchAsync(BranchModel model, CancellationToken cancellationToken);
         Task DeleteBranch(Guid branchId, CancellationToken cancellationToken);
+        Task<List<ListItemModel>> GetBranchesSelectListAsync(CancellationToken cancellationToken);
     }
 }

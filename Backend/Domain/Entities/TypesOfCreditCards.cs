@@ -3,7 +3,7 @@ namespace Domain.Entities
 {
 	public class TypesOfCreditCards
 	{
-		public int Id { get; set; }
+		public Guid Id { get; set; }
 		public string Name { get; set; }
 		public string Description { get; set; }
 		public List<CreditCards> CreditCards { get; set; } = new List<CreditCards>();

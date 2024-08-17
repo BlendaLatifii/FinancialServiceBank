@@ -19,7 +19,7 @@ import Header from "../Header";
 export default function CreditCardsTable() {
   const [creditCards, setCreditCards] = useState<CreditCardsModel[]>([]);
   const [openConfirm, setOpenConfirm] = useState<boolean>(false);
-  const [deleteCreditCardsId, setDeleteCreditCardsId] = useState<number | null>(null);
+  const [deleteCreditCardsId, setDeleteCreditCardsId] = useState<string>("");
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
   useEffect(() => {
@@ -30,19 +30,19 @@ export default function CreditCardsTable() {
     const result = await CreditCardsService.GetAllCreditCards();
     setCreditCards(result);
   };
-  function deleteCreditCards(id: number) {
+  function deleteCreditCards(id: string) {
     setOpenConfirm(true);
     setDeleteCreditCardsId(id);
   }
 
-  async function confirmedDeleteCards(id: number) {
+  async function confirmedDeleteCards(id: string) {
     var result = await CreditCardsService.DeleteCreditCards(id);
     setCreditCards(creditCards.filter((card) => card.id !== id));
     setOpenConfirm(false);
-    setDeleteCreditCardsId(null);
+    setDeleteCreditCardsId("");
   }
 
-  function sendToDetails(id:number) {
+  function sendToDetails(id:string | null) {
     navigate(`/EditCreditCards/${id}`);
   }
 
@@ -66,6 +66,7 @@ export default function CreditCardsTable() {
       <Table striped>
         <TableHeader>
           <TableRow>
+          <TableHeaderCell>CVV</TableHeaderCell>
             <TableHeaderCell>Account Number</TableHeaderCell>
             <TableHeaderCell>Types Of Credit Card</TableHeaderCell>
             <TableHeaderCell>Balance</TableHeaderCell>
@@ -78,6 +79,7 @@ export default function CreditCardsTable() {
         <TableBody>
           {creditCards.map((item) => (
             <TableRow key={item.id}>
+              <TableCell>{item.cvv}</TableCell>
               <TableCell>{item.clientAccountNumber}</TableCell>
               <TableCell>
                 {item.typesOfCreditCardsID}
@@ -89,7 +91,7 @@ export default function CreditCardsTable() {
                 <Button
                   type="button"
                   className="btn ui green basic button"
-                  onClick={() => sendToDetails(+item.id!)}
+                  onClick={() => sendToDetails(item.id!)}
                 >
                   Edit
                 </Button>
@@ -97,7 +99,7 @@ export default function CreditCardsTable() {
                   type="button"
                   className="btn btn-danger"
                   negative
-                  onClick={() => deleteCreditCards(+item.id!)}
+                  onClick={() => deleteCreditCards(item.id!)}
                 >
                   Delete
                 </Button>

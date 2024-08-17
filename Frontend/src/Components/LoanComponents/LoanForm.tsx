@@ -23,10 +23,8 @@ export default function LoanForm({}: Props) {
     id: id!,
     clientAccountNumber: '',
     loansTypesId: 0,
-    monthlyPayment: '',
     loanAmount: null,
     income: '',
-    loanPeriod: '',
     employmentStatus: 0,
   } as LoanModel);
 
@@ -81,9 +79,7 @@ export default function LoanForm({}: Props) {
   const validation = yup.object<LoanModel>({
     clientAccountNumber: yup.string().required(),
     loanAmount: yup.string().required(),
-    monthlyPayment: yup.string().required(),
     income: yup.string().required(),
-    loanPeriod: yup.string().required(),
     loansTypesId:yup.string().required(),
     employmentStatus: yup.string().required(),
   });
@@ -118,11 +114,6 @@ export default function LoanForm({}: Props) {
                 onChange={handleChange}
               />
               <MyTextInput
-                placeholder="Monthly Payment"
-                name="monthlyPayment"
-                onChange={handleChange}
-              />
-              <MyTextInput
                 placeholder="Loan Amount"
                 name="loanAmount"
                 onChange={handleChange}
@@ -130,11 +121,6 @@ export default function LoanForm({}: Props) {
               <MyTextInput
                 placeholder="Income"
                 name="income"
-                onChange={handleChange}
-              />
-              <MyTextInput
-                placeholder="Loan Period"
-                name="loanPeriod"
                 onChange={handleChange}
               />
                <select

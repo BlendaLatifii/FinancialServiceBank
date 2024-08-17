@@ -5,6 +5,8 @@ using Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace Api.Controllers
 {
@@ -39,12 +41,19 @@ namespace Api.Controllers
         [HttpPost]
         public async Task<ActionResult<ContactUsModel>> AddContact([FromBody] ContactUsModel model, CancellationToken cancellationToken)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
             var contact = new ContactUs()
             {
                 Name = model.Name,
                 Email = model.Email,
                 Subject = model.Subject,
-                Message = model.Message
+                Message = model.Message,
+                UserId = Guid.Parse(userId)
             };
 
             await appDbContext.Contacts.AddAsync(contact);

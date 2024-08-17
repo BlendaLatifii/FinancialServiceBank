@@ -8,6 +8,8 @@ export interface ClientBankAccountModel {
     currentBalance: number | null ;
     dateCreated: Date | null;
     dateLastUpdated : Date | null;
-    clientId : string | null,
-    bankAccountId: string | null,
+    clientId : string | null;
+    bankAccountId: string | null;
+    branchId:string | null;
+
 }

@@ -22,6 +22,11 @@ namespace Infrastructure.Configuration
               .HasForeignKey(x => x.BankAccountId)
               .IsRequired(true);
 
+            builder.HasOne(x => x.Branch)
+             .WithMany(x => x.ClientBankAccounts)
+             .HasForeignKey(x => x.BranchId)
+             .IsRequired(true);
+
 
         }
     }

@@ -10,7 +10,7 @@ function ContactUs(){
     name: '',
     email: '',
     subject: '',
-    message: ''
+    message: '',
   });
 
   const navigate = useNavigate();

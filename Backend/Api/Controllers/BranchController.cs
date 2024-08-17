@@ -34,6 +34,12 @@ namespace Api.Controllers
             var model = await branchService.GetBranchById(branchId, cancellationToken);
             return Ok(model);
         }
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetBranchesSelectListAsync(CancellationToken cancellationToken)
+        {
+            var model = await branchService.GetBranchesSelectListAsync(cancellationToken);
+            return Ok(model);
+        }
 
         [Authorize(Roles = "Admin")]
         [HttpPost]

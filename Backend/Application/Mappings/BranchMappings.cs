@@ -10,6 +10,8 @@ namespace Application.Mappings
         {
             CreateMap<Branch, BranchModel>()
                 .ForMember(x => x.BranchId, y => y.MapFrom(x => x.BranchId))
+                .ForMember(x => x.UserId, y => y.MapFrom(x => x.UserId))
+                 .ForMember(x => x.UserName, y => y.MapFrom(x => x.Users.UserName))
                  .ForMember(x => x.BranchName, y => y.MapFrom(x => x.BranchName))
                  .ForMember(x => x.Address, y => y.MapFrom(x => x.Address))
                  .ForMember(x => x.PhoneNumber, y => y.MapFrom(x => x.PhoneNumber))
@@ -17,6 +19,7 @@ namespace Application.Mappings
 
             CreateMap<BranchModel, Branch>()
                .ForMember(x => x.BranchId, y => y.MapFrom(x => x.BranchId))
+               .ForMember(x => x.UserId, y => y.MapFrom(x => x.UserId))
                 .ForMember(x => x.BranchName, y => y.MapFrom(x => x.BranchName))
                 .ForMember(x => x.Address, y => y.MapFrom(x => x.Address))
                 .ForMember(x => x.PhoneNumber, y => y.MapFrom(x => x.PhoneNumber))

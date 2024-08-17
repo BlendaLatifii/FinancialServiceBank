@@ -67,7 +67,12 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("BranchId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Branches");
                 });
@@ -133,6 +138,9 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("BankAccountId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("BranchId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("ClientId")
                         .HasColumnType("uniqueidentifier");
 
@@ -151,6 +159,8 @@ namespace Infrastructure.Migrations
                         .IsUnique();
 
                     b.HasIndex("BankAccountId");
+
+                    b.HasIndex("BranchId");
 
                     b.HasIndex("ClientId");
 
@@ -181,18 +191,21 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Contacts");
                 });
 
             modelBuilder.Entity("Domain.Entities.CreditCards", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Balance")
                         .HasColumnType("decimal(18,2)");
@@ -200,11 +213,15 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("ClientBankAccountId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Cvv")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("Limite")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("TypesOfCreditCardsID")
-                        .HasColumnType("int");
+                    b.Property<Guid>("TypesOfCreditCardsID")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("ValidThru")
                         .HasColumnType("datetime2");
@@ -330,11 +347,9 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.TypesOfCreditCards", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -535,11 +550,28 @@ namespace Infrastructure.Migrations
                     b.HasDiscriminator().HasValue("UserRole");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Branch", b =>
+                {
+                    b.HasOne("Domain.Entities.User", "Users")
+                        .WithMany("Branches")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Users");
+                });
+
             modelBuilder.Entity("Domain.Entities.ClientBankAccount", b =>
                 {
                     b.HasOne("Domain.Entities.BankAccount", "BankAccount")
                         .WithMany("ClientBankAccounts")
                         .HasForeignKey("BankAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Branch", "Branch")
+                        .WithMany("ClientBankAccounts")
+                        .HasForeignKey("BranchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -551,7 +583,20 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("BankAccount");
 
+                    b.Navigation("Branch");
+
                     b.Navigation("Client");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ContactUs", b =>
+                {
+                    b.HasOne("Domain.Entities.User", "Users")
+                        .WithMany("ContactUs")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("Domain.Entities.CreditCards", b =>
@@ -661,6 +706,11 @@ namespace Infrastructure.Migrations
                     b.Navigation("ClientBankAccounts");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Branch", b =>
+                {
+                    b.Navigation("ClientBankAccounts");
+                });
+
             modelBuilder.Entity("Domain.Entities.Client", b =>
                 {
                     b.Navigation("ClientBankAccounts");
@@ -691,6 +741,10 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.User", b =>
                 {
+                    b.Navigation("Branches");
+
+                    b.Navigation("ContactUs");
+
                     b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618

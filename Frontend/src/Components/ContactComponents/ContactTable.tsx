@@ -57,6 +57,7 @@ export default function ContactUsTable() {
                 <TableHeaderCell>E-mail</TableHeaderCell>
                 <TableHeaderCell>Subject</TableHeaderCell>
                 <TableHeaderCell>Message</TableHeaderCell>
+                <TableHeaderCell>AddedBy</TableHeaderCell>
                 <TableHeaderCell>Actions</TableHeaderCell>
               </TableRow>
             </TableHeader>
@@ -68,6 +69,7 @@ export default function ContactUsTable() {
                   <TableCell>{item.email}</TableCell>
                   <TableCell>{item.subject}</TableCell>
                   <TableCell>{item.message}</TableCell>
+                  <TableCell>{item.userName}</TableCell>
                   <TableCell>
                     {" "}
                     <Button

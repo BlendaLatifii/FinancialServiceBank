@@ -19,7 +19,7 @@ import Header from "../Header";
 export default function TypesOfCreditCardsTable() {
   const [type, setType] = useState<TypesOfCreditCardsModel[]>([]);
   const [openConfirm, setOpenConfirm] = useState<boolean>(false);
-  const [deleteTypeId, setDeleteTypeId] = useState<number | null>(null);
+  const [deleteTypeId, setDeleteTypeId] = useState<string>("");
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
   useEffect(() => {
@@ -31,19 +31,19 @@ export default function TypesOfCreditCardsTable() {
     setType(result);
   }
   
-  function deleteType(id: number) {
+  function deleteType(id: string) {
     setOpenConfirm(true);
     setDeleteTypeId(id);
   }
 
-  async function confirmedDeleteType(id: number) {
+  async function confirmedDeleteType(id: string) {
     var result = await TypesOfCreditCardsService.DeleteType(id);
     setType(type.filter((types) => types.id !== id));
     setOpenConfirm(false);
-    setDeleteTypeId(null);
+    setDeleteTypeId("");
   }
 
-  function sendToDetails(id:number) {
+  function sendToDetails(id:string | null) {
     navigate(`/EditTypesOfCreditCards/${id}`);
   }
 
@@ -78,14 +78,14 @@ export default function TypesOfCreditCardsTable() {
               <TableCell>{item.name}</TableCell>
               <TableCell>{item.description}</TableCell>
               <TableCell>
-                <Button type="button" className="btn ui green basic button" onClick={() => sendToDetails(+item.id!)}>
+                <Button type="button" className="btn ui green basic button" onClick={() => sendToDetails(item.id!)}>
                    Edit
                 </Button>
                 <Button
                   type="button"
                   className="btn btn-danger"
                   negative
-                  onClick={() => deleteType(+item.id!)}
+                  onClick={() => deleteType(item.id!)}
                 >
                   Delete
                 </Button>
