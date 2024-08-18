@@ -5,6 +5,7 @@ using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
 using Infrastructure.Data;
+using Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services
@@ -13,16 +14,18 @@ namespace Application.Services
     {
         public readonly AppDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IAuthorizationManager _authorizationManager;
 
-        public BankAccountService(AppDbContext _context, IMapper _mapper)
+        public BankAccountService(AppDbContext _context, IAuthorizationManager authorizationManager, IMapper _mapper)
         {
             this._context = _context;
             this._mapper = _mapper;
+            _authorizationManager = authorizationManager;
         }
 
         public async Task<List<BankAccountModel>> GetAllBankAccountsAsync(CancellationToken cancellationToken)
         {
-            var bankAcc = await _context.BankAccounts.ToListAsync(cancellationToken);
+            var bankAcc = await _context.BankAccounts.Include(x => x.User).ToListAsync(cancellationToken);
 
             var bankaccmodel = _mapper.Map<List<BankAccountModel>>(bankAcc);
             return bankaccmodel;
@@ -31,6 +34,7 @@ namespace Application.Services
         {
             var account = await _context.BankAccounts
                 .Where(x => x.Id == id)
+                .Include(x => x.User)
                 .FirstOrDefaultAsync(cancellationToken);
             if (account == null)
             {
@@ -58,25 +62,26 @@ namespace Application.Services
         }
         public async Task<BankAccountModel> CreateOrUpdateBankAccount(BankAccountModel model, CancellationToken cancellationToken)
         {
+            Guid? userId = _authorizationManager.GetUserId();
+
+            if (userId is null)
+            {
+                throw new UnauthorizedAccessException("User is not authenticated.");
+            }
             if (model.Id == null || model.Id == Guid.Empty)
             {
                 var newBankAcc = new BankAccount()
                 {
                     AccountType = model.AccountType,
                     AccountDescription = model.AccountDescription,
-                    TarifaMirembajtese=model.TarifaMirembajtese
+                    TarifaMirembajtese=model.TarifaMirembajtese,
+                    UserId = userId ?? Guid.Empty
                 };
 
                 await _context.BankAccounts.AddAsync(newBankAcc, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
 
-                return new BankAccountModel
-                {
-                    Id = newBankAcc.Id,
-                    AccountType = newBankAcc.AccountType,
-                    AccountDescription = newBankAcc.AccountDescription,
-                    TarifaMirembajtese=newBankAcc.TarifaMirembajtese
-                };
+                return await GetBankAccountById(newBankAcc.Id, cancellationToken);
             }
             else
             {

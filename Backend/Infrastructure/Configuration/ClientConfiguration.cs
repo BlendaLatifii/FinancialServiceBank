@@ -16,6 +16,9 @@ namespace Infrastructure.Configuration
             builder.HasKey(x => x.Id);
 
             builder.HasIndex(x => x.PersonalNumberId).IsUnique();
+            builder.HasOne(x => x.User)
+               .WithMany(x => x.Clients)
+              .HasForeignKey(x => x.UserId);
         }
     }
 }

@@ -25,7 +25,7 @@ export default function RegisterForClients() {
     state:StateOfClient.Kosove,
     city:CityOfClient.Prishtine,
     zipCode: null
-  });
+  }as ClientModel);
 
   const navigate = useNavigate();
   const [registered, setRegistered] = useState(false);

@@ -73,6 +73,7 @@ export default function ClientAccountTable() {
             <TableHeaderCell>Date Updated</TableHeaderCell>
             <TableHeaderCell>BankAccount Type</TableHeaderCell>
             <TableHeaderCell>Branch</TableHeaderCell>
+            <TableHeaderCell>AddedBy</TableHeaderCell>
             <TableHeaderCell>Actions</TableHeaderCell>
           </TableRow>
         </TableHeader>
@@ -99,6 +100,7 @@ export default function ClientAccountTable() {
               <TableCell>
                 {item.branchId}
               </TableCell>
+              <TableCell>{item.userName}</TableCell>
               <TableCell>
                 <Button
                   type="button"

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240812174809_tables")]
-    partial class tables
+    [Migration("20240818193100_table")]
+    partial class table
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -42,7 +42,12 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("BankAccounts");
                 });
@@ -115,6 +120,9 @@ namespace Infrastructure.Migrations
                     b.Property<int>("State")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("ZipCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -123,6 +131,8 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("PersonalNumberId")
                         .IsUnique();
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Clients");
                 });
@@ -155,6 +165,9 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("DateLastUpdated")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AccountNumberGeneratedID")
@@ -165,6 +178,8 @@ namespace Infrastructure.Migrations
                     b.HasIndex("BranchId");
 
                     b.HasIndex("ClientId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("ClientBankAccounts");
                 });
@@ -225,6 +240,9 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("TypesOfCreditCardsID")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("ValidThru")
                         .HasColumnType("datetime2");
 
@@ -234,6 +252,8 @@ namespace Infrastructure.Migrations
                         .IsUnique();
 
                     b.HasIndex("TypesOfCreditCardsID");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("CreditCards");
                 });
@@ -275,10 +295,15 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ClientBankAccountId")
                         .IsUnique();
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Loans");
                 });
@@ -338,11 +363,16 @@ namespace Infrastructure.Migrations
                     b.Property<int>("TransactionType")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("DestinationClientBankAccountId");
 
                     b.HasIndex("SourceClientBankAccountId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Transactions");
                 });
@@ -361,7 +391,12 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("TypesOfCreditCards");
                 });
@@ -552,15 +587,37 @@ namespace Infrastructure.Migrations
                     b.HasDiscriminator().HasValue("UserRole");
                 });
 
+            modelBuilder.Entity("Domain.Entities.BankAccount", b =>
+                {
+                    b.HasOne("Domain.Entities.User", "User")
+                        .WithMany("BankAccount")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Domain.Entities.Branch", b =>
                 {
-                    b.HasOne("Domain.Entities.User", "Users")
+                    b.HasOne("Domain.Entities.User", "User")
                         .WithMany("Branches")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Users");
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Client", b =>
+                {
+                    b.HasOne("Domain.Entities.User", "User")
+                        .WithMany("Clients")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Domain.Entities.ClientBankAccount", b =>
@@ -568,18 +625,24 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.BankAccount", "BankAccount")
                         .WithMany("ClientBankAccounts")
                         .HasForeignKey("BankAccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Branch", "Branch")
                         .WithMany("ClientBankAccounts")
                         .HasForeignKey("BranchId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Client", "Client")
                         .WithMany("ClientBankAccounts")
                         .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.User", "User")
+                        .WithMany("ClientBankAccounts")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -588,17 +651,19 @@ namespace Infrastructure.Migrations
                     b.Navigation("Branch");
 
                     b.Navigation("Client");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Domain.Entities.ContactUs", b =>
                 {
-                    b.HasOne("Domain.Entities.User", "Users")
+                    b.HasOne("Domain.Entities.User", "User")
                         .WithMany("ContactUs")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Users");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Domain.Entities.CreditCards", b =>
@@ -606,18 +671,26 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.ClientBankAccount", "ClientBankAccount")
                         .WithOne("CreditCards")
                         .HasForeignKey("Domain.Entities.CreditCards", "ClientBankAccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.TypesOfCreditCards", "TypesOfCreditCards")
                         .WithMany("CreditCards")
                         .HasForeignKey("TypesOfCreditCardsID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.User", "User")
+                        .WithMany("CreditCards")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("ClientBankAccount");
 
                     b.Navigation("TypesOfCreditCards");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Domain.Entities.Loan", b =>
@@ -625,10 +698,18 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.ClientBankAccount", "ClientBankAccount")
                         .WithOne("Loans")
                         .HasForeignKey("Domain.Entities.Loan", "ClientBankAccountId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.User", "User")
+                        .WithMany("Loans")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("ClientBankAccount");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Domain.Entities.Transaction", b =>
@@ -643,9 +724,28 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("SourceClientBankAccountId")
                         .OnDelete(DeleteBehavior.NoAction);
 
+                    b.HasOne("Domain.Entities.User", "User")
+                        .WithMany("Transactions")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("DestinationClientBankAccount");
 
                     b.Navigation("SourceClientBankAccount");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Entities.TypesOfCreditCards", b =>
+                {
+                    b.HasOne("Domain.Entities.User", "User")
+                        .WithMany("TypesOfCreditCards")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -743,9 +843,23 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.User", b =>
                 {
+                    b.Navigation("BankAccount");
+
                     b.Navigation("Branches");
 
+                    b.Navigation("ClientBankAccounts");
+
+                    b.Navigation("Clients");
+
                     b.Navigation("ContactUs");
+
+                    b.Navigation("CreditCards");
+
+                    b.Navigation("Loans");
+
+                    b.Navigation("Transactions");
+
+                    b.Navigation("TypesOfCreditCards");
 
                     b.Navigation("UserRoles");
                 });

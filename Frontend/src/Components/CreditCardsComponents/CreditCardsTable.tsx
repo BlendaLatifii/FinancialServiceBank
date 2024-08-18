@@ -71,7 +71,8 @@ export default function CreditCardsTable() {
             <TableHeaderCell>Types Of Credit Card</TableHeaderCell>
             <TableHeaderCell>Balance</TableHeaderCell>
             <TableHeaderCell>Limite</TableHeaderCell>
-            <TableHeaderCell>validThru</TableHeaderCell>
+            <TableHeaderCell>ValidThru</TableHeaderCell>
+            <TableHeaderCell>AddedBy</TableHeaderCell>
             <TableHeaderCell>Actions</TableHeaderCell>
           </TableRow>
         </TableHeader>
@@ -87,6 +88,7 @@ export default function CreditCardsTable() {
               <TableCell>{item.balance}</TableCell>
               <TableCell>{item.limite}</TableCell>
               <TableCell>{item.validThru}</TableCell>
+              <TableCell>{item.userName}</TableCell>
               <TableCell>
                 <Button
                   type="button"

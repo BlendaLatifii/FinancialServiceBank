@@ -61,6 +61,7 @@ export class AuthService {
   }
 
   public static GetUserRole(): string | null {
+    console.log(localStorage.getItem("role"));
     return localStorage.getItem("role");
   }
 }

@@ -69,14 +69,15 @@ export default function TransactionTable() {
       <Table striped>
         <TableHeader>
           <TableRow>
-            <TableHeaderCell>clientAccountNumber</TableHeaderCell>
-            <TableHeaderCell>loanType</TableHeaderCell>
-            <TableHeaderCell>monthlyPayment</TableHeaderCell>
-            <TableHeaderCell>loanAmount</TableHeaderCell>
-            <TableHeaderCell>income</TableHeaderCell>
-            <TableHeaderCell>interestRate</TableHeaderCell>
-            <TableHeaderCell>loanPeriod</TableHeaderCell>
-            <TableHeaderCell>employmentStatus</TableHeaderCell>
+            <TableHeaderCell>ClientAccountNumber</TableHeaderCell>
+            <TableHeaderCell>LoanType</TableHeaderCell>
+            <TableHeaderCell>MonthlyPayment</TableHeaderCell>
+            <TableHeaderCell>LoanAmount</TableHeaderCell>
+            <TableHeaderCell>Income</TableHeaderCell>
+            <TableHeaderCell>InterestRate</TableHeaderCell>
+            <TableHeaderCell>LoanPeriod</TableHeaderCell>
+            <TableHeaderCell>EmploymentStatus</TableHeaderCell>
+            <TableHeaderCell>AddedBy</TableHeaderCell>
             <TableHeaderCell>Actions</TableHeaderCell>
           </TableRow>
         </TableHeader>
@@ -92,6 +93,7 @@ export default function TransactionTable() {
               <TableCell>{item.interestRate}</TableCell>
               <TableCell>{item.loanPeriod}</TableCell>
               <TableCell>{item.employmentStatus}</TableCell>
+              <TableCell>{item.userName}</TableCell>
               <TableCell>
                 <Button  type="button"  className="btn ui green basic button" onClick={()=>sendToDetails(item.id!)}>Edit</Button>
                 <Button

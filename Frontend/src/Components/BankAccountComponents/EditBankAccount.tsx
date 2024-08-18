@@ -28,7 +28,7 @@ export default function EditBankAccount() {
               accountType:bankData.accountType,
               accountDescription:bankData.accountDescription,
               tarifaMirembajtese:bankData.tarifaMirembajtese,
-          })
+          } as BankAccountModel)
         }
       } catch (error) {
         console.error("Error fetching bank details:", error);

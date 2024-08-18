@@ -3,6 +3,7 @@ import {ClientModel} from "./client-model";
 
 export interface ClientBankAccountModel {
     id:string | null;
+    userId: string | null;
     accountNumberGeneratedID: string | null;
     personalNumber: string |null ;
     currentBalance: number | null ;
@@ -11,5 +12,6 @@ export interface ClientBankAccountModel {
     clientId : string | null;
     bankAccountId: string | null;
     branchId:string | null;
+    userName: string | null;
 
 }

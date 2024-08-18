@@ -14,6 +14,6 @@ namespace Domain.Entities
         public string Email { get; set; }
         public string Subject { get; set; }
         public string Message { get; set; }
-        public User Users { get; set; } = default!;
+        public User User { get; set; } = default!;
     }
 }

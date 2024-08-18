@@ -15,7 +15,7 @@ namespace Infrastructure.Configuration
         public void Configure(EntityTypeBuilder<ContactUs> builder)
         {
             builder.HasKey(x => x.Id);
-            builder.HasOne(x => x.Users)
+            builder.HasOne(x => x.User)
                 .WithMany(x => x.ContactUs)
                .HasForeignKey(x => x.UserId);
         }

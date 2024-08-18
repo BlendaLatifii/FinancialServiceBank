@@ -11,6 +11,7 @@ import MyTextInput from "../../FormElements/MyTextInput";
 import MySelectInput from "../../FormElements/DropDown";
 import { BranchModel } from "../../interfaces/branch-model";
 import { BranchService } from "../../services/BranchService";
+import '../EditBranch.css';
 
 export default function EditBranch() {
   const { id } = useParams<{ id: string}>();
@@ -66,6 +67,7 @@ export default function EditBranch() {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value })
   };
+  
   return (
     <>
     

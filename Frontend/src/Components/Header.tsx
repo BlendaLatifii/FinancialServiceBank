@@ -13,12 +13,12 @@ function Header(){
               </a>
               <nav id="navbar" className="navbar">
                 <ul>
-                <li><Link to="/">Home</Link></li>
+                <li><Link to="/HomePage">Home</Link></li>
                 <li><Link to="/Services">Services</Link></li>
                 <li><Link to="/AboutUs">About Us</Link></li>
                 <li><Link to="/ContactUs">Contact Us</Link></li>
                 {AuthService.GetUserRole() == 'Admin' &&<li><Link to="/Navbar"></Link></li>}
-                {AuthService.LoggedInUser() == null && <li><Link to="/Login">Login</Link></li>}
+                {AuthService.LoggedInUser() == null && <li><Link to="/">Login</Link></li>}
                 </ul>
               </nav>
               <i className="mobile-nav-toggle mobile-nav-show bi bi-list"></i>

@@ -4,6 +4,7 @@ using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
 using Infrastructure.Data;
+using Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services
@@ -13,15 +14,17 @@ namespace Application.Services
     {
         public readonly AppDbContext _context;
         private readonly IMapper mapper;
+        private readonly IAuthorizationManager _authorizationManager;
 
-        public ClientBankAccountService(AppDbContext _context, IMapper mapper)
+        public ClientBankAccountService(AppDbContext _context,  IMapper mapper, IAuthorizationManager authorizationManager)
         {
             this._context = _context;
             this.mapper = mapper;
+            _authorizationManager = authorizationManager;
         }
         public async Task<List<ClientBankAccountModel>> GetAllClientBankAccountAsync(CancellationToken cancellationToken)
         {
-            var clientAcc = await _context.ClientBankAccounts.Include(x=> x.Client).ToListAsync(cancellationToken);
+            var clientAcc = await _context.ClientBankAccounts.Include(x => x.User).Include(x=> x.Client).ToListAsync(cancellationToken);
 
             var clientAccmodel = mapper.Map<List<ClientBankAccountModel>>(clientAcc);
             return clientAccmodel;
@@ -35,6 +38,7 @@ namespace Application.Services
             var client = await _context.ClientBankAccounts
               .Where(x => x.Id == Id)
               .Include(x=> x.Client)
+              .Include(x => x.User)
               .FirstOrDefaultAsync(cancellationToken);
             if (client == null)
             {
@@ -48,6 +52,12 @@ namespace Application.Services
         }
         public async Task<ClientBankAccountModel> CreateOrUpdateClientBankAccount(ClientBankAccountModel model, CancellationToken cancellationToken)
         {
+            Guid? userId = _authorizationManager.GetUserId();
+
+            if (userId is null)
+            {
+                throw new UnauthorizedAccessException("User is not authenticated.");
+            }
             var client = await _context.Clients.FirstOrDefaultAsync(x => x.PersonalNumberId == model.PersonalNumber, cancellationToken);
             if (client == null)
             {
@@ -62,22 +72,14 @@ namespace Application.Services
                     BranchId = model.BranchId,
                     CurrentBalance = model.CurrentBalance,
                     DateCreated = DateTime.UtcNow,
-                    DateLastUpdated = DateTime.UtcNow
+                    DateLastUpdated = DateTime.UtcNow,
+                    UserId = userId ?? Guid.Empty
                 };
 
                 await _context.ClientBankAccounts.AddAsync(newBankAcc, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
 
-                return new ClientBankAccountModel
-                {
-                    Id = newBankAcc.Id,
-                    ClientId = newBankAcc.ClientId,
-                    BankAccountId = newBankAcc.BankAccountId,
-                    BranchId = model.BranchId,
-                    CurrentBalance = newBankAcc.CurrentBalance,
-                    DateCreated = newBankAcc.DateCreated,
-                    DateLastUpdated = newBankAcc.DateLastUpdated
-                };
+                return await GetClientAccountById(newBankAcc.Id, cancellationToken);
             }
             else
             {

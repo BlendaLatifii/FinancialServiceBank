@@ -3,6 +3,7 @@ import { CityOfClient } from "./CityOfClient";
 
 export interface ClientModel{
     id: string | null;
+    userId: string| null;
     personalNumberId:string | null;
     firstName:string |null;
     middleName:string |null;
@@ -12,5 +13,6 @@ export interface ClientModel{
     state:StateOfClient;
     city:CityOfClient;
     zipCode:string| null;
+    userName:string|null;
     
 }

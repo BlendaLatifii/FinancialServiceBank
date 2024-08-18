@@ -5,6 +5,8 @@ namespace Domain.Models
     public class LoanModel
     {
         public Guid? Id { get; set; }
+        public Guid? UserId { get; set; } = default!;
+        public string? UserName { get; set; } = default!;
         public Guid? ClientBankAccountId { get; set; }
         public LoanType LoansTypesId { get; set; }
         public string ClientAccountNumber { get; set; } = default!;

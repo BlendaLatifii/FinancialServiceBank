@@ -3,7 +3,6 @@ import './HomePage.css';
 import Header from './Header';
 import Footer from './Footer';
 import { Link } from 'react-router-dom';
-// import 'jquery-smartwizard';
 import 'bootstrap/dist/css/bootstrap.css';
 
 type Props = {}

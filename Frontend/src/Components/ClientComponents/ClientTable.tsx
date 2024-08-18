@@ -82,6 +82,7 @@ export default function ClientTable() {
             <TableHeaderCell>State</TableHeaderCell>
             <TableHeaderCell>City</TableHeaderCell>
             <TableHeaderCell>ZipCode</TableHeaderCell>
+            <TableHeaderCell>AddedBy</TableHeaderCell>
             <TableHeaderCell>Actions</TableHeaderCell>
           </TableRow>
         </TableHeader>
@@ -114,6 +115,7 @@ export default function ClientTable() {
               </TableCell>
 
               <TableCell>{item.zipCode}</TableCell>
+              <TableCell>{item.userName}</TableCell>
               <TableCell>
                 <Button  type="button"  className="btn ui green basic button" onClick={()=>sendToDetails(item.id!)}>Edit</Button>
                 <Button

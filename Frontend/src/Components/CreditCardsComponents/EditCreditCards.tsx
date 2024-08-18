@@ -53,7 +53,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       model
     );
     setCreditCards(true);
-      navigate('/');
+      navigate('/HomePage');
   } catch (error) {
     console.error("Error creating creditCards:", error);
   }

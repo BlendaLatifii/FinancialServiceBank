@@ -72,6 +72,7 @@ export default function AccountTable() {
             <TableHeaderCell>Account Type</TableHeaderCell>
             <TableHeaderCell>Account Description</TableHeaderCell>
             <TableHeaderCell>Tarifa Mirembajtese</TableHeaderCell>
+            <TableHeaderCell>AddedBy</TableHeaderCell>
             <TableHeaderCell>Actions</TableHeaderCell>
           </TableRow>
         </TableHeader>
@@ -82,6 +83,7 @@ export default function AccountTable() {
               <TableCell>{item.accountType}</TableCell>
               <TableCell>{item.accountDescription}</TableCell>
               <TableCell>{item.tarifaMirembajtese}</TableCell>
+              <TableCell>{item.userName}</TableCell>
               <TableCell>
                 <Button  type="button"  className="btn ui green basic button" onClick={()=>sendToDetails(item.id!)}>Edit</Button>
                 <Button

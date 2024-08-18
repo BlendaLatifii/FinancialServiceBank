@@ -69,6 +69,7 @@ export default function TypesOfCreditCardsTable() {
           <TableRow>
             <TableHeaderCell>Name</TableHeaderCell>
             <TableHeaderCell>Description</TableHeaderCell>
+            <TableHeaderCell>AddedBy</TableHeaderCell>
             <TableHeaderCell>Action</TableHeaderCell>
           </TableRow>
         </TableHeader>
@@ -77,6 +78,7 @@ export default function TypesOfCreditCardsTable() {
             <TableRow key={item.id!}>
               <TableCell>{item.name}</TableCell>
               <TableCell>{item.description}</TableCell>
+              <TableCell>{item.userName}</TableCell>
               <TableCell>
                 <Button type="button" className="btn ui green basic button" onClick={() => sendToDetails(item.id!)}>
                    Edit

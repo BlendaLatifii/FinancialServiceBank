@@ -10,6 +10,8 @@ namespace Application.Mappings
         {
             CreateMap<CreditCards, CreditCardsModel>()
                    .ForMember(x => x.Id, y => y.MapFrom(x => x.Id))
+                   .ForMember(x => x.UserId, y => y.MapFrom(x => x.UserId))
+                   .ForMember(x => x.UserName, y => y.MapFrom(x => x.User.UserName))
                    .ForMember(x => x.ClientBankAccountId, y => y.MapFrom(x => x.ClientBankAccountId))
                    .ForMember(x => x.Cvv, y => y.MapFrom(x => x.Cvv))
                    .ForMember(x => x.Balance, y => y.MapFrom(x => x.ClientBankAccount.CurrentBalance))
@@ -19,6 +21,7 @@ namespace Application.Mappings
                    .ForMember(x => x.ValidThru, y => y.MapFrom(x => x.ValidThru));
             CreateMap<CreditCardsModel, CreditCards>()
                    .ForMember(x => x.Id, y => y.MapFrom(x => x.Id))
+                   .ForMember(x => x.UserId, y => y.MapFrom(x => x.UserId))
                    .ForMember(x => x.ClientBankAccountId, y => y.MapFrom(x => x.ClientBankAccountId))
                    .ForMember(x => x.Cvv, y => y.MapFrom(x => x.Cvv))
                    .ForMember(x => x.TypesOfCreditCardsID, y => y.MapFrom(x => x.TypesOfCreditCardsID))

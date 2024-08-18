@@ -4,6 +4,7 @@ using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
 using Infrastructure.Data;
+using Infrastructure.Security;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -14,17 +15,19 @@ namespace Application.Services
     {
         public readonly AppDbContext _context;
         private readonly IMapper mapper;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IAuthorizationManager _authorizationManager;
 
-        public BranchService(AppDbContext context, IMapper mapper, IHttpContextAccessor _httpContextAccessor)
+        public BranchService(AppDbContext context,
+            IAuthorizationManager authorizationManager,
+            IMapper mapper)
         {
             _context = context;
             this.mapper = mapper;
-            this._httpContextAccessor= _httpContextAccessor;
+            _authorizationManager = authorizationManager;
         }
         public async Task<List<BranchModel>> GetAllBranchesAsync(CancellationToken cancellationToken)
         {
-            var branches = await _context.Branches.ToListAsync(cancellationToken);
+            var branches = await _context.Branches.Include(x=> x.User).ToListAsync(cancellationToken);
 
             var branchmodel = mapper.Map<List<BranchModel>>(branches);
             return branchmodel;
@@ -33,6 +36,7 @@ namespace Application.Services
         {
             var branch = await _context.Branches
                 .Where(x => x.BranchId == id)
+                .Include(x=> x.User)
                 .FirstOrDefaultAsync(cancellationToken);
             if (branch == null)
             {
@@ -60,9 +64,9 @@ namespace Application.Services
         }
         public async Task<BranchModel> CreateOrUpdateBranchAsync(BranchModel model, CancellationToken cancellationToken)
         {
-            string userId = _httpContextAccessor.HttpContext.User.FindFirstValue("userId");
+            Guid? userId = _authorizationManager.GetUserId();
 
-            if (userId == null)
+            if (userId is null)
             {
                 throw new UnauthorizedAccessException("User is not authenticated.");
             }
@@ -76,23 +80,14 @@ namespace Application.Services
                     Address = model.Address,
                     PhoneNumber = model.PhoneNumber,
                     Opened = model.Opened,
-                    UserId = Guid.Parse(userId)
+                    UserId = userId ?? Guid.Empty
                 };
 
                 await _context.Branches.AddAsync(newBranch, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
 
                 // Kthe një përgjigje 201 Created dhe modelin e degës së krijuar
-                return new BranchModel
-                {
-                    BranchId = newBranch.BranchId,
-                    BranchName = newBranch.BranchName,
-                    Address = newBranch.Address,
-                    PhoneNumber = newBranch.PhoneNumber,
-                    Opened = newBranch.Opened,
-                    UserId = newBranch.UserId, // ID e përdoruesit që e krijoi degën
-                    UserName = _context.Users.Find(newBranch.UserId).UserName
-                };
+                return await GetBranchById(newBranch.BranchId, cancellationToken);
             }
             else
             {
@@ -118,8 +113,7 @@ namespace Application.Services
                     Address = existingBranch.Address,
                     PhoneNumber = existingBranch.PhoneNumber,
                     Opened = existingBranch.Opened,
-                    UserId = existingBranch.UserId,
-                    UserName = _context.Users.Find(existingBranch.UserId).UserName
+                    UserId = existingBranch.UserId
                 };
             }
         }

@@ -8,8 +8,7 @@
         public string Address { get; set; } = default!;
         public string PhoneNumber { get; set; } = default!;
         public string Opened { get; set; } = default!;
-        public User Users { get; set; } = default!;
-
+        public User User { get; set; } = default!;
         public List<ClientBankAccount> ClientBankAccounts { get; set; }
     }
 }

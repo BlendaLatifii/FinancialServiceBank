@@ -7,6 +7,7 @@ namespace Domain.Entities
     public class Loan
     {
         public Guid Id { get; set; }
+        public Guid UserId { get; set; } = default!;
         public Guid ClientBankAccountId { get; set; }
         public LoanType LoansTypesId { get; set; }
         public string LoanAmount { get; set; }
@@ -16,6 +17,7 @@ namespace Domain.Entities
         public double InterestRate { get; set; } 
         public string MonthlyPayment { get; set; }
         public LoanType LoanType { get; set; }
+        public User User { get; set; } = default!;
         public ClientBankAccount ClientBankAccount { get; set; } = default!;
         public Loan()
         {

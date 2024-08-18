@@ -9,6 +9,7 @@ namespace Domain.Entities
     public class ClientBankAccount
     {
         public Guid Id { get; set; }
+        public Guid UserId { get; set; } = default!;
         public string AccountNumberGeneratedID { get; set; } = GenerateAccountNumber();
         public Guid ClientId { get; set; } 
         public Guid BankAccountId { get; set; }
@@ -16,6 +17,7 @@ namespace Domain.Entities
         public decimal CurrentBalance { get; set; } = default!;
         public DateTime DateCreated { get; set; } = default!;
         public DateTime DateLastUpdated { get; set; } = default!;
+        public User User { get; set; } = default!;
         public Client Client { get; set; } = default!;
         public BankAccount BankAccount { get; set; } = default!;
         public Branch Branch { get; set; } = default!;

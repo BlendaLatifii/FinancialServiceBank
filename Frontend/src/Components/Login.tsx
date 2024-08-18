@@ -26,11 +26,11 @@ function Login() {
     const response = await AuthService.Login(user);
 
     if(AuthService.role == "Member"){
-      navigete("/");
+      navigete("/HomePage");
     }
     else if(AuthService.role == "Admin")
       {
-        navigete("/");
+        navigete("/HomePage");
       }
 
     setIsSubmitting(false);

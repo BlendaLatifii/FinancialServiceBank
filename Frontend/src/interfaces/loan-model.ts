@@ -3,6 +3,7 @@ import { employmentStatus } from "./employmentStatus";
 
 export interface LoanModel {
     id:string | null;
+    userId:string | null;
     loanAmount: string | null;
     interestRate:number;
     monthlyPayment:string|null;
@@ -12,4 +13,5 @@ export interface LoanModel {
     clientBankAccountId: string |null;
     clientAccountNumber:string | null;
     loansTypesId: LoanType ;
+    userName:string|null;
 }

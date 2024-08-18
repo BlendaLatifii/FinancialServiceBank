@@ -9,6 +9,8 @@ namespace Application.Mappings
         {
             CreateMap<ClientBankAccount, ClientBankAccountModel>()
                    .ForMember(x => x.Id, y => y.MapFrom(x => x.Id))
+                   .ForMember(x => x.UserId, y => y.MapFrom(x => x.UserId))
+                   .ForMember(x => x.UserName, y => y.MapFrom(x => x.User.UserName))
                    .ForMember(x => x.AccountNumberGeneratedID, y => y.MapFrom(x => x.AccountNumberGeneratedID))
                    .ForMember(x => x.ClientId, y => y.MapFrom(x => x.ClientId))
                    .ForMember(x => x.BankAccountId, y => y.MapFrom(x => x.BankAccountId))
@@ -20,6 +22,7 @@ namespace Application.Mappings
 
             CreateMap<ClientBankAccountModel, ClientBankAccount>()
                   .ForMember(x => x.Id, y => y.MapFrom(x => x.Id))
+                  .ForMember(x => x.UserId, y => y.MapFrom(x => x.UserId))
                   .ForMember(x => x.AccountNumberGeneratedID, y => y.MapFrom(x => x.AccountNumberGeneratedID))
                   .ForMember(x => x.ClientId, y => y.MapFrom(x => x.ClientId))
                   .ForMember(x => x.BankAccountId, y => y.MapFrom(x => x.BankAccountId))

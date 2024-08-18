@@ -7,6 +7,8 @@ namespace Domain.Models
     public class ClientModel
     {
         public Guid? Id { get; set; } = default!;
+        public Guid? UserId { get; set; } = default!;
+        public string? UserName { get; set; } = default!;
         [Required(ErrorMessage = "The PersonalNumber field is required.")]
         public string PersonalNumberId { get; set; } = default!;
         [Required(ErrorMessage = "The FirstName field is required.")]

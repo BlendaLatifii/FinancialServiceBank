@@ -5,6 +5,7 @@ using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
 using Infrastructure.Data;
+using Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services
@@ -13,16 +14,19 @@ namespace Application.Services
     {
         public readonly AppDbContext _context;
         private readonly IMapper mapper;
+        private readonly IAuthorizationManager _authorizationManager;
 
-        public TransactionService(AppDbContext context, IMapper mapper)
+        public TransactionService(AppDbContext context, IMapper mapper, IAuthorizationManager authorizationManager)
         {
             _context = context;
             this.mapper = mapper;
+            _authorizationManager = authorizationManager;
         }
 
         public async Task<List<TransactionModel>> GetAllTransactionsAsync(CancellationToken cancellationToken)
         {
             var transactions = await _context.Transactions
+                .Include(x => x.User)
                 .Include(x=> x.SourceClientBankAccount)
                 .Include(x=> x.DestinationClientBankAccount)
                 .ToListAsync(cancellationToken);
@@ -39,6 +43,7 @@ namespace Application.Services
         {
             var transaction = await _context.Transactions
                 .Where(x => x.Id == id)
+                .Include(x => x.User)
                 .Include(x=> x.SourceClientBankAccount)
                 .Include(x=> x.DestinationClientBankAccount)
                 .FirstOrDefaultAsync(cancellationToken);

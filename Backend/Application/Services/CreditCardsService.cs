@@ -4,6 +4,7 @@ using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
 using Infrastructure.Data;
+using Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel;
 using System.Xml.Linq;
@@ -14,11 +15,13 @@ namespace Application.Services
     {
         public readonly AppDbContext appDbContext;
         private readonly IMapper _mapper;
+        private readonly IAuthorizationManager _authorizationManager;
 
-        public CreditCardsService(AppDbContext appDbContext, IMapper _mapper)
+        public CreditCardsService(AppDbContext appDbContext, IMapper _mapper, IAuthorizationManager authorizationManager)
         {
             this.appDbContext = appDbContext;
             this._mapper = _mapper;
+            _authorizationManager = authorizationManager;
         }
         public async Task<int> GetCreditCardsCount(CancellationToken cancellationToken)
         {
@@ -27,7 +30,7 @@ namespace Application.Services
 
         public async Task<List<CreditCardsModel>> GetAllCreditCards(CancellationToken cancellationToken)
         {
-            var card = await appDbContext.CreditCards.Include(x => x.ClientBankAccount).ToListAsync(cancellationToken);
+            var card = await appDbContext.CreditCards.Include(x => x.User).Include(x => x.ClientBankAccount).ToListAsync(cancellationToken);
             var cardModel = _mapper.Map<List<CreditCardsModel>>(card);
             return cardModel;
 
@@ -38,6 +41,12 @@ namespace Application.Services
         }
         public async Task<CreditCardsModel> CreateOrUpdateCreditCards(CreditCardsModel model, CancellationToken cancellationToken)
         {
+            Guid? userId = _authorizationManager.GetUserId();
+
+            if (userId is null)
+            {
+                throw new UnauthorizedAccessException("User is not authenticated.");
+            }
             var clientAccount = await appDbContext.ClientBankAccounts.FirstOrDefaultAsync(x => x.AccountNumberGeneratedID == model.ClientAccountNumber, cancellationToken);
             if (clientAccount == null)
             {
@@ -51,6 +60,7 @@ namespace Application.Services
                     TypesOfCreditCardsID = model.TypesOfCreditCardsID,
                     Limite = model.Limite,
                     Balance=clientAccount.CurrentBalance,
+                    UserId= userId ?? Guid.Empty
                     
                 };
                 if (newCard.Balance > newCard.Limite)
@@ -60,17 +70,8 @@ namespace Application.Services
                 await appDbContext.CreditCards.AddAsync(newCard, cancellationToken);
                 await appDbContext.SaveChangesAsync(cancellationToken);
 
-                return new CreditCardsModel
-                {
-                    Id = newCard.Id,
-                    Cvv=newCard.Cvv,
-                    Balance=newCard.Balance,
-                    ClientBankAccountId = newCard.ClientBankAccountId,
-                    TypesOfCreditCardsID = newCard.TypesOfCreditCardsID,
-                    Limite=newCard.Limite,
-                    ValidThru = newCard.ValidThru,
-                };
-                
+                return await GetCreditCardsById(newCard.Id, cancellationToken);
+
             }
             else
             {
@@ -105,6 +106,7 @@ namespace Application.Services
         {
             var card = await appDbContext.CreditCards
                 .Where(x => x.Id == id)
+                .Include(x => x.User)
                 .Include(x => x.ClientBankAccount)
                 .FirstOrDefaultAsync(cancellationToken);
             if (card == null)

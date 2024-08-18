@@ -3,6 +3,7 @@ using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
 using Infrastructure.Data;
+using Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -16,15 +17,17 @@ namespace Application.Services
     {
         public readonly AppDbContext _context;
         private readonly IMapper _mapper;
-        public ContactUsService(AppDbContext context, IMapper mapper)
+        private readonly IAuthorizationManager _authorizationManager;
+        public ContactUsService(AppDbContext context, IMapper mapper, IAuthorizationManager authorizationManager)
         {
             _context = context;
             this._mapper = mapper;
+            _authorizationManager = authorizationManager;
         }
 
         public async Task<List<ContactUsModel>> GetAllContactsAsync(CancellationToken cancellationToken)
         {
-            var contacts = await _context.Contacts.ToListAsync(cancellationToken);
+            var contacts = await _context.Contacts.Include(x => x.User).ToListAsync(cancellationToken);
 
             var model = _mapper.Map<List<ContactUsModel>>(contacts);
             return model;
@@ -35,6 +38,7 @@ namespace Application.Services
         {
             var contact = await _context.Contacts
                 .Where(x => x.Id == contactId)
+                .Include(x => x.User)
                 .FirstOrDefaultAsync(cancellationToken);
             if (contact is null)
             {

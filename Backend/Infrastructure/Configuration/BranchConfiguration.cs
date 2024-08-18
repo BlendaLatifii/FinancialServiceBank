@@ -9,7 +9,7 @@ namespace Infrastructure.Configuration
         public void Configure(EntityTypeBuilder<Branch> builder)
         {
             builder.HasKey(x => x.BranchId);
-            builder.HasOne(x => x.Users)
+            builder.HasOne(x => x.User)
                 .WithMany(x => x.Branches)
                .HasForeignKey(x => x.UserId);
         }

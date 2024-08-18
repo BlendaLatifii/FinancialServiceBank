@@ -11,10 +11,14 @@ namespace Infrastructure.Configuration
         public void Configure(EntityTypeBuilder<Loan> builder)
         {
             builder.HasKey(x => x.Id);
+            builder.HasOne(x => x.User)
+               .WithMany(x => x.Loans)
+              .HasForeignKey(x => x.UserId);
 
             builder.HasOne(x => x.ClientBankAccount)
                 .WithOne(x => x.Loans)
-                .HasForeignKey<Loan>(x => x.ClientBankAccountId);
+                .HasForeignKey<Loan>(x => x.ClientBankAccountId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 

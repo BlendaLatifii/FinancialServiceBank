@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button,  Segment, Select } from "semantic-ui-react";
+import { Button,  Segment } from "semantic-ui-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Formik,Form } from 'formik';
 import * as yup from 'yup';
@@ -26,7 +26,7 @@ export default function EditTypesOfCreditCards() {
               id:typeData.id!,
               name:typeData.name,
               description:typeData.description,
-          })
+          }as TypesOfCreditCardsModel)
         }
       } catch (error) {
         console.error("Error fetching types of credit cards details:", error);

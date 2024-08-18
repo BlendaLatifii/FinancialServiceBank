@@ -4,6 +4,8 @@ namespace Domain.Models
     public class TransactionModel
     {
         public Guid? Id { get; set; }
+        public Guid? UserId { get; set; } = default!;
+        public string? UserName { get; set; } = default!;
         public decimal TransactionAmount { get; set; }
         public Guid? SourceClientBankAccountId { get; set; }
         public Guid? DestinationClientBankAccountId { get; set; }

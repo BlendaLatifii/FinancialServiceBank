@@ -10,6 +10,8 @@ namespace Domain.Models
     public class CreditCardsModel
     {
         public Guid? Id { get; set; }
+        public Guid? UserId { get; set; } = default!;
+        public string? UserName { get; set; } = default!;
         public string? Cvv { get; set; }
         public Guid? ClientBankAccountId { get; set; }
         public string ClientAccountNumber { get; set; }

@@ -60,7 +60,7 @@ export default function EditClientAccount() {
   };
 
   function sendToOverview(){
-   navigate('/')
+   navigate('/HomePage')
   }
 
   const handleChange = (e:React.ChangeEvent<HTMLInputElement | HTMLSelectElement >) => {
@@ -135,7 +135,7 @@ export default function EditClientAccount() {
             value={values.bankAccountId!}
             onChange={handleChange}
           >
-            {branchSelectList.map((x)=>
+            {accountTypeSelectList.map((x)=>
               (<option key={x.key} value={x.value}>{x.text}</option>))}
           </select>
           <select

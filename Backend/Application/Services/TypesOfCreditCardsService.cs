@@ -4,6 +4,7 @@ using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
 using Infrastructure.Data;
+using Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel;
 using System.Xml.Linq;
@@ -14,38 +15,42 @@ namespace Application.Services
     {
         public readonly AppDbContext appDbContext;
         private readonly IMapper _mapper;
+        private readonly IAuthorizationManager _authorizationManager;
 
-        public TypesOfCreditCardsService(AppDbContext appDbContext, IMapper _mapper)
+        public TypesOfCreditCardsService(AppDbContext appDbContext, IAuthorizationManager authorizationManager, IMapper _mapper)
         {
             this.appDbContext = appDbContext;
             this._mapper = _mapper;
+            _authorizationManager = authorizationManager;
         }
 
         public async Task<List<TypesOfCreditCardsModel>> GetAllTypesOfCreditCards(CancellationToken cancellationToken)
         {
-            var card = await appDbContext.TypesOfCreditCards.ToListAsync(cancellationToken);
+            var card = await appDbContext.TypesOfCreditCards.Include(x=>x.User).ToListAsync(cancellationToken);
             var cardModel = _mapper.Map<List<TypesOfCreditCardsModel>>(card);
             return cardModel;
 
         }
         public async Task<TypesOfCreditCardsModel> CreateOrUpdateTypesOfCreditCards(TypesOfCreditCardsModel model, CancellationToken cancellationToken)
         {
+            Guid? userId = _authorizationManager.GetUserId();
+
+            if (userId is null)
+            {
+                throw new UnauthorizedAccessException("User is not authenticated.");
+            }
             if (model.Id == null )
             {
                 var newCard = new TypesOfCreditCards()
                 {
                     Name = model.Name,
-                    Description = model.Description
+                    Description = model.Description,
+                    UserId = userId ?? Guid.Empty
                 };
                 await appDbContext.TypesOfCreditCards.AddAsync(newCard, cancellationToken);
                 await appDbContext.SaveChangesAsync(cancellationToken);
 
-                return new TypesOfCreditCardsModel
-                {
-                    Id = newCard.Id,
-                    Name = newCard.Name,
-                    Description = newCard.Description
-                };
+                return await GetTypesOfCreditCardsById(newCard.Id, cancellationToken);
             }
             else
             {
@@ -83,6 +88,7 @@ namespace Application.Services
         {
             var card = await appDbContext.TypesOfCreditCards
                 .Where(x => x.Id == id)
+                .Include(x => x.User)
                 .FirstOrDefaultAsync(cancellationToken);
             if (card == null)
             {

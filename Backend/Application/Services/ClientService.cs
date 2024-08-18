@@ -4,6 +4,7 @@ using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
 using Infrastructure.Data;
+using Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 namespace Application.Services
 {
@@ -11,16 +12,18 @@ namespace Application.Services
     {
         public readonly AppDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IAuthorizationManager _authorizationManager;
 
-        public ClientService(AppDbContext _context, IMapper _mapper)
+        public ClientService(AppDbContext _context, IMapper _mapper, IAuthorizationManager authorizationManager)
         {
             this._context = _context;
             this._mapper = _mapper;
+            _authorizationManager = authorizationManager;
         }
 
         public async Task<List<ClientModel>> GetAllClientAsync(CancellationToken cancellationToken)
         {
-            var clients = await _context.Clients.ToListAsync(cancellationToken);
+            var clients = await _context.Clients.Include(x => x.User).ToListAsync(cancellationToken);
 
             var clientModel = _mapper.Map<List<ClientModel>>(clients);
             return clientModel;
@@ -31,7 +34,8 @@ namespace Application.Services
         {
             var client = await _context.Clients
                .Where(x => x.Id == id)
-                .FirstOrDefaultAsync(cancellationToken);
+               .Include(x => x.User)
+               .FirstOrDefaultAsync(cancellationToken);
             if (client == null)
             {
                 throw new AppBadDataException();
@@ -66,6 +70,12 @@ namespace Application.Services
         }
         public async Task<ClientModel> CreateOrUpdateClientAsync(ClientModel model, CancellationToken cancellationToken)
         {
+            Guid? userId = _authorizationManager.GetUserId();
+
+            if (userId is null)
+            {
+                throw new UnauthorizedAccessException("User is not authenticated.");
+            }
             if (model.Id == null)
             {
                 var newClient = new Client()
@@ -79,24 +89,12 @@ namespace Application.Services
                     State = model.State,
                     City = model.City,
                     ZipCode = model.ZipCode,
+                    UserId=userId ?? Guid.Empty
                 };
 
                 await _context.Clients.AddAsync(newClient, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
-
-                return new ClientModel
-                {
-                    Id = newClient.Id,
-                    PersonalNumberId = newClient.PersonalNumberId,
-                    FirstName = newClient.FirstName,
-                    MiddleName = newClient.MiddleName,
-                    LastName = newClient.LastName,
-                    PhoneNumber = newClient.PhoneNumber,
-                    EmailAddress = newClient.EmailAddress,
-                    State = newClient.State,
-                    City = newClient.City,
-                    ZipCode = newClient.ZipCode
-                };
+                return await GetByIdAsync(newClient.Id, cancellationToken);
             }
             else
             {
