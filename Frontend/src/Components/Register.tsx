@@ -2,6 +2,8 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthService } from '../services/AuthService';
+import { StateOfClient } from '../interfaces/StateOfClient';
+import { CityOfClient } from '../interfaces/CityOfClient';
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -9,13 +11,15 @@ export default function Register() {
     lastName: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    personalNumberId:null,
+    middleName: null,
   });
 
   const navigate = useNavigate();
   const [registered, setRegistered] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData({...formData, [name]: value });
   };
@@ -31,11 +35,13 @@ export default function Register() {
         userName: formData.userName,
         lastName: formData.lastName,
         email:formData.email,
-        password: formData.password
+        password: formData.password,
+        personalNumberId: formData.personalNumberId,
+        middleName: formData.middleName,
       }
       const response = await AuthService.Register(body);
        setRegistered(true);
-       navigate("/login");
+       navigate("/");
     } catch (error) {
       console.error('Error registering user:', error);
     }
@@ -67,11 +73,20 @@ export default function Register() {
             <div className="row">
               <div className="col-md-6 mb-4">
                 <div data-mdb-input-init className="form-outline">
-                  <input type="text" id="username" className="form-control" name="userName" value={formData.userName}
+                  <input type="text" id="username" className="form-control" name="userName" value={formData.userName || ''}
                       onChange={handleChange}/>
                   <label className="form-label" htmlFor="form3Example1"> Username</label>
                 </div>
               </div>
+              <div className="col-md-6 mb-4">
+                <div data-mdb-input-init className="form-outline">
+                  <input type="text" id="middleName" name="middleName" className="form-control" value={formData.middleName || ''}
+                      onChange={handleChange} />
+                  <label className="form-label" htmlFor="middleName">Middle name</label>
+                </div>
+              </div>
+              </div>
+              <div className="row">
               <div className="col-md-6 mb-4">
                 <div data-mdb-input-init className="form-outline">
                   <input type="text" id="lastName" name="lastName" className="form-control" value={formData.lastName}
@@ -79,33 +94,40 @@ export default function Register() {
                   <label className="form-label" htmlFor="lastName">Last name</label>
                 </div>
               </div>
-            </div>
-
+            <div className="col-md-6 mb-4">
+                <div data-mdb-input-init className="form-outline">
+                  <input type="text" id="personalNumberId" name="personalNumberId" className="form-control" value={formData.personalNumberId || ''}
+                      onChange={handleChange} />
+                  <label className="form-label" htmlFor="lastName">Personal Number</label>
+                </div>
+              </div>
+              </div>
             <div data-mdb-input-init className="form-outline mb-4">
               <input type="email" id="email" name="email" className="form-control" value={formData.email}
                       onChange={handleChange} />
               <label className="form-label" htmlFor="email">Email address</label>
             </div>
-
-            <div data-mdb-input-init className="form-outline mb-4">
+            
+            <div className="row">
+            <div data-mdb-input-init className="form-outline mb-4 w-50">
               <input type="password" id="password" className="form-control"   name="password" value={formData.password}
                       onChange={handleChange} />
               <label className="form-label" htmlFor="password">Password</label>
             </div>
 
-            <div data-mdb-input-init className="form-outline mb-4">
+            <div data-mdb-input-init className="form-outline mb-4 w-50">
               <input type="password" id="confirmPassword" className="form-control"   name="confirmPassword" value={formData.confirmPassword}
                      onChange={handleChange}/>
               <label className="form-label" htmlFor="confirmPassword">Confirm Password</label>
             </div>
-
+            </div>
             <button type="submit" data-mdb-button-init data-mdb-ripple-init className="btn btn-primary btn-block mb-4">
               Sign up
             </button>
 
             <p>
                     Already a member?{' '}
-                    <Link to="/Login" className="link-info">
+                    <Link to="/" className="link-info">
                       Log in
                     </Link>
                   </p>

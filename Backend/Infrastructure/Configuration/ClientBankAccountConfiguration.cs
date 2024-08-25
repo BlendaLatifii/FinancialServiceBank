@@ -13,13 +13,9 @@ namespace Infrastructure.Configuration
             builder.HasIndex(x => x.AccountNumberGeneratedID).IsUnique();
             builder.HasOne(x => x.User)
                .WithMany(x => x.ClientBankAccounts)
-              .HasForeignKey(x => x.UserId);
-
-            builder.HasOne(x => x.Client)
-                .WithMany(x => x.ClientBankAccounts)
-                .HasForeignKey(x => x.ClientId)
-                .OnDelete(DeleteBehavior.NoAction)
-                .IsRequired(true);
+              .HasForeignKey(x => x.UserId)
+              .OnDelete(DeleteBehavior.NoAction)
+                .IsRequired(true); ;
 
             builder.HasOne(x => x.BankAccount)
               .WithMany(x => x.ClientBankAccounts)

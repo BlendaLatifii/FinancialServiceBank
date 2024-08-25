@@ -13,7 +13,6 @@ namespace Domain.Entities
         public TranType TransactionType { get; set; }
         public DateTime TransactionDate { get; set; } = DateTime.UtcNow;
         public DateTime TransactionDateUpdated { get; set; } = DateTime.UtcNow;
-
         public User User{ get; set; } = default!;
         public ClientBankAccount? SourceClientBankAccount { get; set; } = default!;
         public ClientBankAccount? DestinationClientBankAccount { get; set; } = default!;

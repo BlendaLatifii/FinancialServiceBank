@@ -117,7 +117,6 @@ builder.Services.AddScoped<ILoanService, LoanService>();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<DbInitialization>();
 builder.Services.AddScoped<IBankAccountService, BankAccountService>();
-builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IClientBankAccountService, ClientBankAccountService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IContactService, ContactUsService>();

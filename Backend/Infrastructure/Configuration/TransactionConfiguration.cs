@@ -12,7 +12,6 @@ namespace Infrastructure.Configuration
             builder.HasOne(x => x.User)
                .WithMany(x => x.Transactions)
               .HasForeignKey(x => x.UserId);
-
             builder.HasOne(x => x.SourceClientBankAccount)
                .WithMany(x => x.SendTransations)
                .HasForeignKey(x => x.SourceClientBankAccountId)

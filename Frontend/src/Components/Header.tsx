@@ -2,7 +2,32 @@ import { Link } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.css';
 import './Header.css';
 import { AuthService } from "../services/AuthService";
+import { useEffect } from "react";
 function Header(){
+
+  useEffect(() => {
+    const handleMobileNavToggle = () => {
+        const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
+        const navbar = document.querySelector('#navbar');
+        
+        if (mobileNavToggle && navbar) {
+            mobileNavToggle.addEventListener('click', function () {
+                navbar.classList.toggle('navbar-mobile');
+                mobileNavToggle.classList.toggle('bi-list');
+                mobileNavToggle.classList.toggle('bi-x');
+            });
+        }
+    };
+
+    handleMobileNavToggle();
+
+    return () => {
+      const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
+      if (mobileNavToggle) {
+          mobileNavToggle.removeEventListener('click', handleMobileNavToggle);
+      }
+  };
+}, []);
 
     return(
          <>
@@ -25,6 +50,7 @@ function Header(){
               <i className="mobile-nav-toggle mobile-nav-hide d-none bi bi-x"></i>
             </div>
           </header>
+          
          </>
     );
 }

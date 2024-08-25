@@ -22,12 +22,12 @@ export const SidebarData : NavItem[] = [
     icon:'',
     className: 'nav-text background:var(--color-primary)'
   },
-  {
-    title:'Client',
-    path:'/ClientTable',
-    icon:'',
-    className: 'nav-text background:var(--color-primary)'
-  },
+  // {
+  //   title:'Client',
+  //   path:'/ClientTable',
+  //   icon:'',
+  //   className: 'nav-text background:var(--color-primary)'
+  // },
   {
     title:'Client Bank Account',
     path:'/ClientAccountTable',

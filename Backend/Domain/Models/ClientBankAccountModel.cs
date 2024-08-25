@@ -4,7 +4,6 @@
     {
         public Guid? Id { get; set; }
         public string? AccountNumberGeneratedID { get; set; } = default!;
-        public Guid? ClientId { get; set; }
         public Guid BankAccountId { get; set; }
         public Guid BranchId { get; set; }
         public Guid? UserId { get; set; } = default!;
@@ -13,5 +12,7 @@
         public decimal CurrentBalance { get; set; } = default!;
         public DateTime? DateCreated { get; set; } = default!;
         public DateTime? DateLastUpdated { get; set; } = default!;
+        public Guid? CreatedByUserId { get; set; }
+        public Guid? LastUpdatedByUserId { get; set; }
     }
 }

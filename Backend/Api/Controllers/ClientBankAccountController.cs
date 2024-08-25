@@ -27,6 +27,12 @@ namespace Api.Controllers
 
             return Ok(clientAcc);
         }
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetClientAccountSelectListAsync(CancellationToken cancellationToken)
+        {
+            var model = await clientBankAccService.GetClientAccountsSelectListAsync(cancellationToken);
+            return Ok(model);
+        }
         [HttpGet("personalNumber/{personalNumber}")]
         public async Task<ActionResult<List<ClientBankAccountModel>>> GetByPersonalNumberAsync(string personalNumber,CancellationToken cancellationToken)
         {

@@ -84,7 +84,7 @@ export default function RegisterForClients() {
         city:+formData.city,
         zipCode:formData.zipCode
       }
-      const response = await axios.post(`https://localhost:7254/api/Client`,model);
+      const response = await axios.post(`https://localhost:7254/api/Account/register`,model);
        setRegistered(true);
       navigate("/EditClientAccount");
     } catch (error) {

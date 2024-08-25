@@ -73,6 +73,8 @@ export default function RegisterTable() {
             <TableHeaderCell>Name</TableHeaderCell>
             <TableHeaderCell>Lastname</TableHeaderCell>
             <TableHeaderCell>E-mail</TableHeaderCell>
+            <TableHeaderCell>MiddleName</TableHeaderCell>
+            <TableHeaderCell>PersonalNumber</TableHeaderCell>
             <TableHeaderCell>Actions</TableHeaderCell>
           </TableRow>
         </TableHeader>
@@ -83,6 +85,8 @@ export default function RegisterTable() {
               <TableCell>{item.userName}</TableCell>
               <TableCell>{item.lastName}</TableCell>
               <TableCell>{item.email}</TableCell>
+              <TableCell>{item.middleName}</TableCell>
+              <TableCell>{item.personalNumberId}</TableCell>
               <TableCell>
                 <Button  type="button"  className="btn ui green basic button" onClick={()=>sendToDetails(item.id!)}>Edit</Button>
                 <Button

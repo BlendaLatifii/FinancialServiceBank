@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Button,  Segment, Select } from "semantic-ui-react";
+import { Button, Segment, Select } from "semantic-ui-react";
 import { UserModel } from "../../interfaces/users";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { Formik,Form } from 'formik';
 import * as yup from 'yup';
-import { UserService } from "../../services/UsersService";
-import { Role } from "../../interfaces/role";
 import MyTextInput from "../../FormElements/MyTextInput";
-import MySelectInput from "../../FormElements/DropDown";
 import { BranchModel } from "../../interfaces/branch-model";
 import { BranchService } from "../../services/BranchService";
-import '../EditBranch.css';
+import Header from "../Header";
 
 export default function EditBranch() {
   const { id } = useParams<{ id: string}>();
@@ -70,7 +67,7 @@ export default function EditBranch() {
   
   return (
     <>
-    
+     <Header/>
       <h1 style={{ marginLeft: "15px" }}>{ values.branchId != null ?'Edit': 'Add'} Branch</h1>
       <Segment clearing style={{ marginRight: "30px", marginTop: "30px", marginLeft: "10px" }}>
       <Formik validationSchema={validation}

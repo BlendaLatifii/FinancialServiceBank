@@ -20,6 +20,7 @@ export class AuthService {
         return null!;
       }
       localStorage.setItem("jwt", response.data.token);
+      localStorage.setItem("refreshToken", response.data.refreshToken);
       AuthService.token = response.data?.token;
       localStorage.setItem("userModel", JSON.stringify(response.data.userData));
       localStorage.setItem("role", response.data.userRole);

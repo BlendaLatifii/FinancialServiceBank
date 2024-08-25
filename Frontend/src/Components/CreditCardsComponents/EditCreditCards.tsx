@@ -15,7 +15,7 @@ export default function EditCreditCards() {
   const [values, setValues] = useState<CreditCardsModel>({
     id:id!,
     clientAccountNumber: '',
-    typesOfCreditCardsID: 0,
+    typesOfCreditCardsID: '',
     limite:null,
   } as CreditCardsModel);
 
@@ -53,7 +53,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       model
     );
     setCreditCards(true);
-      navigate('/HomePage');
+      navigate('/CreditCardsTable');
   } catch (error) {
     console.error("Error creating creditCards:", error);
   }
@@ -120,6 +120,7 @@ const handleChange = (
             onChange={handleChange}
             value={values.typesOfCreditCardsID!}
           >
+            <option value="" disabled>Select type of credit card</option>
             {typesOfCreditCards.map((x)=>
               (<option key={x.key} value={x.value}>{x.text}</option>))}
           </select>

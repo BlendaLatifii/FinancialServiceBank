@@ -11,14 +11,14 @@ namespace Domain.Entities
         public Guid Id { get; set; }
         public Guid UserId { get; set; } = default!;
         public string AccountNumberGeneratedID { get; set; } = GenerateAccountNumber();
-        public Guid ClientId { get; set; } 
         public Guid BankAccountId { get; set; }
         public Guid BranchId { get; set; }
         public decimal CurrentBalance { get; set; } = default!;
         public DateTime DateCreated { get; set; } = default!;
         public DateTime DateLastUpdated { get; set; } = default!;
+        public Guid CreatedByUserId { get; set; }
+        public Guid LastUpdatedByUserId { get; set; }
         public User User { get; set; } = default!;
-        public Client Client { get; set; } = default!;
         public BankAccount BankAccount { get; set; } = default!;
         public Branch Branch { get; set; } = default!;
         public CreditCards CreditCards { get; set; } = default!;

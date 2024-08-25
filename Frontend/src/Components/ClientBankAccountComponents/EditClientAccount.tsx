@@ -11,6 +11,7 @@ import { SelectListItem } from "../../interfaces/select-list-item";
 import { BankAccountService } from "../../services/BankAccountService";
 import { BranchService } from "../../services/BranchService";
 
+
 export default function EditClientAccount() {
  const { id } = useParams<{ id: string}>();
  const [accountTypeSelectList, setAccountTypeSelectList] = useState<SelectListItem[]>([]);
@@ -19,8 +20,8 @@ export default function EditClientAccount() {
     id: id!,
     personalNumber: '',
     currentBalance: null,
-    bankAccountId: null,
-    branchId:null
+    bankAccountId: '',
+    branchId:''
   } as ClientBankAccountModel);
  
   useEffect(() => {
@@ -132,9 +133,10 @@ export default function EditClientAccount() {
             className="form-control"
             id="bankAccountId"
             name="bankAccountId"
-            value={values.bankAccountId!}
+            value={values.bankAccountId || ""}
             onChange={handleChange}
           >
+             <option value="" disabled>Select a bankaccount type</option>
             {accountTypeSelectList.map((x)=>
               (<option key={x.key} value={x.value}>{x.text}</option>))}
           </select>
@@ -146,6 +148,7 @@ export default function EditClientAccount() {
             value={values.branchId!}
             onChange={handleChange}
           >
+             <option value="" disabled>Select branch</option>
             {branchSelectList.map((x)=>
               (<option key={x.key} value={x.value}>{x.text}</option>))}
           </select>

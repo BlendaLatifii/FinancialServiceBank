@@ -24,7 +24,7 @@ namespace Application.Services
         }
         public async Task<List<ClientBankAccountModel>> GetAllClientBankAccountAsync(CancellationToken cancellationToken)
         {
-            var clientAcc = await _context.ClientBankAccounts.Include(x => x.User).Include(x=> x.Client).ToListAsync(cancellationToken);
+            var clientAcc = await _context.ClientBankAccounts.Include(x => x.User).ToListAsync(cancellationToken);
 
             var clientAccmodel = mapper.Map<List<ClientBankAccountModel>>(clientAcc);
             return clientAccmodel;
@@ -37,7 +37,6 @@ namespace Application.Services
         {
             var client = await _context.ClientBankAccounts
               .Where(x => x.Id == Id)
-              .Include(x=> x.Client)
               .Include(x => x.User)
               .FirstOrDefaultAsync(cancellationToken);
             if (client == null)
@@ -52,28 +51,31 @@ namespace Application.Services
         }
         public async Task<ClientBankAccountModel> CreateOrUpdateClientBankAccount(ClientBankAccountModel model, CancellationToken cancellationToken)
         {
-            Guid? userId = _authorizationManager.GetUserId();
-
-            if (userId is null)
-            {
-                throw new UnauthorizedAccessException("User is not authenticated.");
-            }
-            var client = await _context.Clients.FirstOrDefaultAsync(x => x.PersonalNumberId == model.PersonalNumber, cancellationToken);
+            var client = await _context.Users.FirstOrDefaultAsync(x => x.PersonalNumberId == model.PersonalNumber, cancellationToken);
             if (client == null)
             {
                 throw new Exception("Client not found with the provided Personal Number.");
+            }
+            var clientUserId = client.Id;
+            Guid? userId = _authorizationManager.GetUserId();
+           
+            if (userId is null)
+            {
+                throw new UnauthorizedAccessException("User is not authenticated.");
             }
             if (!model.Id .HasValue)
             {
                 var newBankAcc = new ClientBankAccount()
                 {
-                    ClientId = client.Id,
                     BankAccountId = model.BankAccountId,
                     BranchId = model.BranchId,
                     CurrentBalance = model.CurrentBalance,
                     DateCreated = DateTime.UtcNow,
                     DateLastUpdated = DateTime.UtcNow,
-                    UserId = userId ?? Guid.Empty
+                   // UserId = userId??  Guid.Empty
+                    UserId = clientUserId,
+                    CreatedByUserId = userId ?? Guid.Empty,
+                    LastUpdatedByUserId = userId ?? Guid.Empty
                 };
 
                 await _context.ClientBankAccounts.AddAsync(newBankAcc, cancellationToken);
@@ -88,11 +90,11 @@ namespace Application.Services
                 {
                     throw new AppBadDataException();
                 }
-                existingBankAcc.ClientId = client.Id;
                 existingBankAcc.BankAccountId = model.BankAccountId;
                 existingBankAcc.BranchId = model.BranchId;
                 existingBankAcc.CurrentBalance = model.CurrentBalance;
                 existingBankAcc.DateLastUpdated = DateTime.UtcNow;
+                existingBankAcc.LastUpdatedByUserId = userId ?? Guid.Empty;
 
 
                 await _context.SaveChangesAsync(cancellationToken);
@@ -100,19 +102,19 @@ namespace Application.Services
                 return new ClientBankAccountModel
                 {
                     Id = existingBankAcc.Id,
-                    ClientId = existingBankAcc.ClientId,
+                    UserId = existingBankAcc.UserId,
                     BankAccountId = existingBankAcc.BankAccountId,
                     BranchId=existingBankAcc.BranchId,
                     CurrentBalance = existingBankAcc.CurrentBalance,
                     DateCreated = existingBankAcc.DateCreated,
-                    DateLastUpdated = existingBankAcc.DateLastUpdated
-                };
+                    DateLastUpdated = existingBankAcc.DateLastUpdated,
+            };
             }
         }
         public async Task<List<ClientBankAccountModel>> GetByPersonalNumberAsync(string personalNumber, CancellationToken cancellationToken)
         {
             var clientAccounts = await _context.ClientBankAccounts
-                .Where(x => x.Client.PersonalNumberId == personalNumber)
+                .Where(x => x.User.PersonalNumberId == personalNumber)
                 .ToListAsync(cancellationToken);
 
             if (clientAccounts == null || clientAccounts.Count == 0)
@@ -173,16 +175,66 @@ namespace Application.Services
         public async Task<List<string>> GetStudentAccountClientsAsync(CancellationToken cancellationToken)
         {
             var studentAccounts = await _context.ClientBankAccounts
-                .Include(cba => cba.Client)
+                .Include(cba => cba.User)
                 .Include(cba => cba.BankAccount)
                 .Where(cba => cba.BankAccount.AccountType == "Llogari studentore")
                 .ToListAsync(cancellationToken);
 
             var clientNames = studentAccounts
-                .Select(cba => $"{cba.Client.FirstName} {cba.Client.LastName}")
+                .Select(cba => $"{cba.User.UserName} {cba.User.LastName}")
                 .ToList();
 
             return clientNames;
+        }
+        public async Task<List<ListItemModel>> GetClientAccountsSelectListAsync(CancellationToken cancellationToken)
+        {
+            List<ListItemModel> model;
+            const string AdminRole = "Admin";
+            const string MemberRole = "Member";
+            Guid? userId = _authorizationManager.GetUserId();
+
+            if (userId is null)
+            {
+                throw new UnauthorizedAccessException("User is not authenticated.");
+            }
+
+            var user = await _context.Users
+                  .Include(u => u.UserRoles)
+                  .FirstOrDefaultAsync(u => u.Id == userId.Value, cancellationToken);
+
+            if (user == null)
+            {
+                throw new UnauthorizedAccessException("User not found.");
+            }
+            var userRole = user.UserRoles.FirstOrDefault()?.Role;
+
+            if (userRole != null && userRole.Name == AdminRole)
+            {
+                model = await _context.ClientBankAccounts
+                    .Select(x => new ListItemModel
+                    {
+                        Id = x.Id,
+                        Name = x.AccountNumberGeneratedID
+                    })
+                    .ToListAsync(cancellationToken);
+            }
+            else if (userRole != null && userRole.Name == MemberRole)
+            {
+                model = await _context.ClientBankAccounts
+                    .Where(x => x.UserId == userId.Value)
+                    .Select(x => new ListItemModel
+                    {
+                        Id = x.Id,
+                        Name = x.AccountNumberGeneratedID
+                    })
+                    .ToListAsync(cancellationToken);
+            }
+            else
+            {
+                model = new List<ListItemModel>();
+            }
+            return model;
+
         }
     }
 }

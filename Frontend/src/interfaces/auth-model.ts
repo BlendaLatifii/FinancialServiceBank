@@ -6,4 +6,5 @@ export interface AuthenticationModel{
     expiresAt: Date,
     userData:UserModel,
     userRole: string,
+    
 }

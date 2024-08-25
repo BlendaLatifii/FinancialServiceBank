@@ -1,6 +1,7 @@
 import axios from "axios";
 import { ClientBankAccountModel } from "../interfaces/clientaccount-model";
 import { toast } from "react-toastify";
+import { ListItemModel } from "../interfaces/list-item-model";
 
 export class ClientBankAccountService {
     private static baseUrl = "https://localhost:7254/api/ClientBankAccount";
@@ -31,6 +32,10 @@ export class ClientBankAccountService {
       pauseOnHover: true,
       draggable: true,
     });
+  }
+  public static async GetSelectList(): Promise<ListItemModel[]>{
+    const result = await axios.get<ListItemModel[]>(`${ClientBankAccountService.baseUrl}/GetClientAccountSelectList`);
+    return result.data;
   }
   public static async GetStudentAccountClients(): Promise<string[]> {
     const result = await axios.get(`${ClientBankAccountService.baseUrl}/student-accounts/clients`);

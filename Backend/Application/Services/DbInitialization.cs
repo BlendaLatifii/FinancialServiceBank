@@ -42,14 +42,18 @@ namespace Application.Services
                     
                  LastName ="Manager",
                  Email ="admin@gmail.com",
-                 UserName ="Admin"
+                 UserName ="Admin",
+                 MiddleName="Filan",
+                 PersonalNumberId="12222222",
                 };
 
                 var simpleUser = new User()
                 {
                     LastName = "User",
                     Email = "member@gmail.com",
-                    UserName = "Simple"
+                    UserName = "Simple",
+                    MiddleName = "Filan",
+                    PersonalNumberId = "1333333",
                 };
 
                 await userManager.CreateAsync(adminUser, "Pa$$w0rd");

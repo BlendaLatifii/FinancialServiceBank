@@ -18,7 +18,6 @@ type Props = {};
 
 export default function LoanForm({}: Props) {
   const { id } = useParams<{ id: string }>();
-  const [typesOfLoans, setTypesOfLoans] = useState<SelectListItem[]>([]);
   const [values, setValues] = useState<LoanModel>({
     id: id!,
     clientAccountNumber: '',
@@ -39,8 +38,6 @@ export default function LoanForm({}: Props) {
           clientAccountNumber: userData.clientAccountNumber,
           loanAmount: userData.loanAmount,
           loansTypesId: userData.loansTypesId,
-          loanPeriod: userData.loanPeriod,
-          monthlyPayment: userData.monthlyPayment,
           income: userData.income,
           employmentStatus: +userData.employmentStatus,
         } as LoanModel);
@@ -55,9 +52,7 @@ export default function LoanForm({}: Props) {
     setValues({ ...values, [name]: value });
   };
 
-  const handleSubmit = async () => {
-    let model = values as LoanModel;
-    console.log(model);
+  const handleSubmit = async (model:LoanModel) => {
     await LoanService.EditOrAddLoan(model);
     navigate("/LoanTable");
   };
@@ -98,7 +93,7 @@ export default function LoanForm({}: Props) {
           validationSchema={validation}
           enableReinitialize
           initialValues={values}
-          onSubmit={(values) => handleSubmit()}
+          onSubmit={(values) => handleSubmit(values)}
         >
           {({ handleSubmit, isSubmitting, dirty, isValid }) => (
             <Form
@@ -123,7 +118,7 @@ export default function LoanForm({}: Props) {
                 name="income"
                 onChange={handleChange}
               />
-               <select
+          <select
             style={{ padding: "5px", margin: "5px" }}
             className="form-control"
             id="loansTypesId"

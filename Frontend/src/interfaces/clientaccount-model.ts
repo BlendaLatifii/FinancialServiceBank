@@ -9,9 +9,10 @@ export interface ClientBankAccountModel {
     currentBalance: number | null ;
     dateCreated: Date | null;
     dateLastUpdated : Date | null;
-    clientId : string | null;
     bankAccountId: string | null;
     branchId:string | null;
     userName: string | null;
+    createdByUserId: string | null;        
+    lastUpdatedByUserId: string | null;
 
 }

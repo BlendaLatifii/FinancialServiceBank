@@ -8,15 +8,15 @@ namespace Domain.Entities
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; } = default!;
-        public Guid ClientBankAccountId { get; set; }
-        public LoanType LoansTypesId { get; set; }
-        public string LoanAmount { get; set; }
-        public string Income { get; set; }
+        public Guid ClientBankAccountId { get; set; } = default!;
+        public LoanType LoansTypesId { get; set; } = default!;
+        public string LoanAmount { get; set; } = default!;
+        public string Income { get; set; } = default!;
         public EmploymentStatus EmploymentStatus { get; set; }
-        public string LoanPeriod { get; set; } 
-        public double InterestRate { get; set; } 
-        public string MonthlyPayment { get; set; }
-        public LoanType LoanType { get; set; }
+        public string LoanPeriod { get; set; } = default!;
+        public double InterestRate { get; set; } = default!;
+        public string MonthlyPayment { get; set; } = default!;
+        public LoanType LoanType { get; set; } = default!;
         public User User { get; set; } = default!;
         public ClientBankAccount ClientBankAccount { get; set; } = default!;
         public Loan()

@@ -138,7 +138,6 @@ namespace Application.Services
                 case TranType.Deposit:
                     if (destinationAccount == null)
                         throw new Exception("Destination account is required for a deposit.");
-
                     destinationAccount.CurrentBalance += model.TransactionAmount;
                     destinationAccount.DateLastUpdated = DateTime.UtcNow;
                     _context.ClientBankAccounts.Update(destinationAccount);

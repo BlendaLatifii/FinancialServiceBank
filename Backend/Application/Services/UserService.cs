@@ -4,6 +4,7 @@ using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
 using Infrastructure.Data;
+using Infrastructure.Security;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,11 +15,13 @@ namespace Application.Services
         public readonly AppDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
-        public UserService(AppDbContext context,IMapper mapper, UserManager<User> userManager)
+        private readonly IAuthorizationManager _authorizationManager;
+        public UserService(AppDbContext context,IMapper mapper, UserManager<User> userManager, IAuthorizationManager authorizationManager)
         {
             _dbContext = context;
             _mapper = mapper;
             _userManager = userManager;
+            _authorizationManager = authorizationManager;
         }
 
         public async Task<List<UserModel>> GetAllUsersAsync(CancellationToken cancellationToken)
@@ -37,7 +40,13 @@ namespace Application.Services
 
             if (!model.Id.HasValue)
             {
-                 user = new User { UserName = model.UserName, LastName = model.LastName, Email = model.Email };
+                 user = new User {
+                     UserName = model.UserName,
+                     LastName = model.LastName, 
+                     Email = model.Email ,
+                     MiddleName=model.MiddleName, 
+                     PersonalNumberId=model.PersonalNumberId
+                 };
 
                 var result = await _userManager.CreateAsync(user, model.Password);
 
@@ -73,6 +82,8 @@ namespace Application.Services
             user.Email = model.Email;
             user.LastName = model.LastName;
             user.UserName = model.UserName;
+            user.MiddleName = model.MiddleName;
+            user.PersonalNumberId = model.PersonalNumberId;
 
             if (model.Role == Domain.Enums.Role.Admin)
             {

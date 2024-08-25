@@ -6,7 +6,7 @@ export interface CreditCardsModel {
     limite:number| null;
     clientBankAccountId: string |null;
     clientAccountNumber:string | null;
-    typesOfCreditCardsID: number;
+    typesOfCreditCardsID: string | null;
     validThru: string | null;
     userName:string|null;
 }

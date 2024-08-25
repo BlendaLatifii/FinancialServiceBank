@@ -13,6 +13,7 @@ using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Application.Services
@@ -86,10 +87,12 @@ namespace Application.Services
 
             return response;
         }
-
         public async Task<IdentityResult> Register(RegisterModel registerModel, CancellationToken cancellationToken)
         {
-            var user = new User { UserName = registerModel.UserName, LastName = registerModel.LastName, Email = registerModel.Email };
+            var user = new User { UserName = registerModel.UserName, LastName = registerModel.LastName,
+                Email = registerModel.Email,
+                MiddleName= registerModel.MiddleName,
+                PersonalNumberId= registerModel.PersonalNumberId};
 
             var result = await userManager.CreateAsync(user, registerModel.Password);
             if (!result.Succeeded)

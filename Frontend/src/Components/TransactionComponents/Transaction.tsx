@@ -6,6 +6,8 @@ import { TransactionModel } from "../../interfaces/transaction-model";
 import Header from "../Header";
 import Footer from "../Footer";
 import { TransactionService } from "../../services/TransactionService";
+import { SelectListItem } from "../../interfaces/select-list-item";
+import { ClientBankAccountService } from "../../services/ClientBankAccountService";
 
 export default function Transaction() {
   const { id } = useParams<{ id: string}>();
@@ -24,13 +26,31 @@ export default function Transaction() {
 
   const navigate = useNavigate();
   const [transaction, setTransaction] = useState(false);
-  const [transationTypes,setTransactionTypes] = useState([])
+  const [accountTypeSelectList, setAccountTypeSelectList] = useState<SelectListItem[]>([]);
 
   const typeSelectList =  Object.keys(TranType).map((key,i) => ({
     key: i,
     value: +i,
     text: TranType[+key]
   })).filter(x=> x.text != '' && x.text != null);
+
+  const fetchAccountTypes = async () => {
+    try {
+      const response = await ClientBankAccountService.GetSelectList(); 
+
+      setAccountTypeSelectList(response.map((item,i) => ({
+        key: i,
+        value: item.id,
+        text: item.name
+      } as SelectListItem)).filter(x=> x.text != '' && x.text != null));
+
+    } catch (error) {
+      console.error('Error fetching account types:', error);
+    }
+  };
+  useEffect(()=>{
+    fetchAccountTypes()
+  },[])
 
   useEffect(() => {
     fetchData();
@@ -86,7 +106,31 @@ export default function Transaction() {
         <h2 style={{ padding: "5px", margin: "5px" }}>Transactions</h2>
         <div className="form-group">
           <label htmlFor="sourceClientBankAccount">Source Account:</label>
-          <input
+          <select
+            style={{ padding: "5px", margin: "5px" }}
+            className="form-control"
+            id="sourceClientBankAccount"
+            name="sourceClientBankAccount"
+            value={formData.sourceClientBankAccount!}
+            onChange={handleChange}
+          >
+            {accountTypeSelectList.map((x)=>
+              (<option key={x.key} value={x.value}>{x.text}</option>))}
+          </select>
+
+          <label htmlFor="destinationClientBankAccount">Receive Account:</label>
+          <select
+            style={{ padding: "5px", margin: "5px" }}
+            className="form-control"
+            id="destinationClientBankAccount"
+            name="destinationClientBankAccount"
+            value={formData.destinationClientBankAccount!}
+            onChange={handleChange}
+          >
+            {accountTypeSelectList.map((x)=>
+              (<option key={x.key} value={x.value}>{x.text}</option>))}
+          </select>
+          {/* <input
             style={{ padding: "5px", margin: "5px" }}
             type="text"
             placeholder="Not needed for Deposit transactions"
@@ -108,7 +152,7 @@ export default function Transaction() {
               name="destinationClientBankAccount"
               value={formData.destinationClientBankAccount || ""}
               onChange={handleChange}
-            />
+            />*/}
           </div>
         <div className="form-group">
           <label htmlFor="transactionAmount">Transaction Amount:</label>

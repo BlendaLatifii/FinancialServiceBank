@@ -67,6 +67,7 @@ export default function ClientAccountTable() {
         <TableHeader>
           <TableRow>
             <TableHeaderCell>Account Number</TableHeaderCell>
+            <TableHeaderCell>Username</TableHeaderCell>
             <TableHeaderCell>Personal Number</TableHeaderCell>
             <TableHeaderCell>Current Balance</TableHeaderCell>
             <TableHeaderCell>Date Created</TableHeaderCell>
@@ -74,6 +75,7 @@ export default function ClientAccountTable() {
             <TableHeaderCell>BankAccount Type</TableHeaderCell>
             <TableHeaderCell>Branch</TableHeaderCell>
             <TableHeaderCell>AddedBy</TableHeaderCell>
+            <TableHeaderCell>UpdatedBy</TableHeaderCell>
             <TableHeaderCell>Actions</TableHeaderCell>
           </TableRow>
         </TableHeader>
@@ -82,6 +84,7 @@ export default function ClientAccountTable() {
           {users.map((item) => (
             <TableRow key={item.id}>
               <TableCell>{item.accountNumberGeneratedID}</TableCell>
+              <TableCell>{item.userName}</TableCell>
               <TableCell>{item.personalNumber}</TableCell>
               <TableCell>{item.currentBalance}</TableCell>
               <TableCell>
@@ -100,7 +103,8 @@ export default function ClientAccountTable() {
               <TableCell>
                 {item.branchId}
               </TableCell>
-              <TableCell>{item.userName}</TableCell>
+              <TableCell>{item.createdByUserId}</TableCell>   
+  <TableCell>{item.lastUpdatedByUserId}</TableCell>
               <TableCell>
                 <Button
                   type="button"

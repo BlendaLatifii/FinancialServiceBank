@@ -17,7 +17,7 @@ function Navbar()  {
 
         function LogOut(){
           AuthService.LogOut();
-          navigate("/Login")
+          navigate("/")
         }
         return (
           <>

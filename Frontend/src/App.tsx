@@ -78,6 +78,7 @@ function App() {
     }
   );
   const isAdmin = AuthService.GetUserRole() == 'Admin';
+  const isAuthenticated = !!localStorage.getItem('token');
 
   return (
     <>
@@ -86,7 +87,7 @@ function App() {
       <Route  path="/Dashboard" element={ isAdmin ? <Dashboard /> : <Navigate to="/" replace />}/>
         <Route path="/Header" element={<Header />} />
         <Route path="/Footer" element={<Footer />} />
-        <Route path="/HomePage" element={<HomePage />} />
+        <Route path="/HomePage" element={  <HomePage />} />
         <Route path="/Services" element={<Services />} />
         <Route path="/MyProfile" element={<MyProfile />} />
         <Route path="/AboutUs" element={<AboutUs />} />

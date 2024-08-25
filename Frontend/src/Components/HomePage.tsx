@@ -39,7 +39,7 @@ function HomePage({}: Props) {
                 <div className="col-xl-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
                   <div className="icon-box">
                     <div className="icon"><i className="bi bi-gem"></i></div>
-                    <h4 className="title"><Link to="/RegisterForClients" className="link-info">Account</Link></h4>
+                    <h4 className="title"><Link to="/AddClientAccount" className="link-info">Account</Link></h4>
                   </div>
                 </div>
                 <div className="col-xl-3 col-md-6" data-aos="fade-up" data-aos-delay="300">

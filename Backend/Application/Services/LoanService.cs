@@ -49,12 +49,12 @@ namespace Application.Services
 
         public async Task<LoanModel> CreateOrUpdateLoanAsync(LoanModel model, CancellationToken cancellationToken)
         {
-            Guid? userId = _authorizationManager.GetUserId();
+           Guid? userId = _authorizationManager.GetUserId();
 
             if (userId is null)
             {
-                throw new UnauthorizedAccessException("User is not authenticated.");
-            }
+               throw new UnauthorizedAccessException("User is not authenticated.");
+          }
             var clientAccount = await _context.ClientBankAccounts.FirstOrDefaultAsync(x => x.AccountNumberGeneratedID == model.ClientAccountNumber, cancellationToken);
             if (clientAccount == null)
             {
@@ -62,6 +62,9 @@ namespace Application.Services
             }
             if (model.Id == null || model.Id == Guid.Empty)
             {
+                var loanPeriod = Loan.CalculateLoanPeriod(model.LoanAmount);
+                var interestRate = Loan.CalculateAnnualInterestRate(model.EmploymentStatus, model.Income, loanPeriod);
+                var monthlyPayment = Loan.CalculateMonthlyPayment(model.LoanAmount, interestRate, loanPeriod);
                 var newLoan = new Loan()
                 {
                     ClientBankAccountId = clientAccount.Id,
@@ -69,7 +72,10 @@ namespace Application.Services
                     LoanAmount = model.LoanAmount,
                     Income = model.Income,
                     EmploymentStatus = model.EmploymentStatus,
-                    UserId = userId ?? Guid.Empty
+                    UserId = userId ?? Guid.Empty,
+                    LoanPeriod = loanPeriod,
+                    InterestRate = interestRate,
+                    MonthlyPayment = monthlyPayment
                 };
                 await _context.Loans.AddAsync(newLoan, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
@@ -88,7 +94,11 @@ namespace Application.Services
                 existingLoan.LoanAmount = model.LoanAmount;
                 existingLoan.Income = model.Income;
                 existingLoan.EmploymentStatus = model.EmploymentStatus;
-             
+                existingLoan.LoanPeriod = Loan.CalculateLoanPeriod(model.LoanAmount);
+                existingLoan.InterestRate = Loan.CalculateAnnualInterestRate(model.EmploymentStatus, model.Income, existingLoan.LoanPeriod);
+                existingLoan.MonthlyPayment = Loan.CalculateMonthlyPayment(model.LoanAmount, existingLoan.InterestRate, existingLoan.LoanPeriod);
+
+
 
                 await _context.SaveChangesAsync(cancellationToken);
 
