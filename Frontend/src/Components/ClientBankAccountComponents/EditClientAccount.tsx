@@ -10,6 +10,8 @@ import { ClientBankAccountModel } from "../../interfaces/clientaccount-model";
 import { SelectListItem } from "../../interfaces/select-list-item";
 import { BankAccountService } from "../../services/BankAccountService";
 import { BranchService } from "../../services/BranchService";
+import Header from "../Header";
+import Footer from "../Footer";
 
 
 export default function EditClientAccount() {
@@ -109,56 +111,82 @@ export default function EditClientAccount() {
 
   return (
     <>
-    
-      <h1 style={{ marginLeft: "15px" }}>{ values.id != null ?'Edit': 'Add'} ClientBankAccount</h1>
-      <Segment clearing style={{ marginRight: "30px", marginTop: "30px", marginLeft: "10px" }}>
-      <Formik validationSchema={validation}
-           enableReinitialize 
-           initialValues={values} 
-           onSubmit={values => handleSubmit(values)}>
-           {({handleSubmit,isSubmitting,dirty,isValid})=>(
-        <Form  className='ui form'style={{backgroundColor:"#f5f6f7"}}  onSubmit={handleSubmit} autoComplete="off">
-          <MyTextInput fluid
-            placeholder="Personal Number"
-            name="personalNumber"
-            onChange={handleChange}
-          />
-          <MyTextInput
-            placeholder="Current Balance"
-            name="currentBalance"
-            onChange={handleChange}
-          />
-           <select
-            style={{ padding: "5px", margin: "5px" }}
-            className="form-control"
-            id="bankAccountId"
-            name="bankAccountId"
-            value={values.bankAccountId || ""}
-            onChange={handleChange}
-          >
-             <option value="" disabled>Select a bankaccount type</option>
-            {accountTypeSelectList.map((x)=>
-              (<option key={x.key} value={x.value}>{x.text}</option>))}
-          </select>
-          <select
-            style={{ padding: "5px", margin: "5px" }}
-            className="form-control"
-            id="branchId"
-            name="branchId"
-            value={values.branchId!}
-            onChange={handleChange}
-          >
-             <option value="" disabled>Select branch</option>
-            {branchSelectList.map((x)=>
-              (<option key={x.key} value={x.value}>{x.text}</option>))}
-          </select>
-
-           <Button floated="right" disabled={!isValid}  positive type="submit" content="Submit" />
-          <Button floated="right" onClick={sendToOverview} className="ui blue basic button">Cancel</Button>
-        </Form>
-         )}
-         </Formik>
+    <Header/>
+      <h1 style={{ marginLeft: "15px", fontFamily: "Georgia", color: "black" }}>
+        {values.id != null ? 'Edit' : 'Add'} Client Bank Account
+      </h1>
+      <p style={{ marginLeft: "15px", color: "#555", fontSize: "14px" }}>
+        Please fill out the form below to {values.id != null ? 'edit' : 'create'} a client bank account.
+      </p>
+      <Segment clearing style={{ margin: "30px 30px 0 10px", boxShadow: "0px 4px 6px rgba(0,0,0,0.1)", border: "1px solid rgb(15 179 126 / 87%)" }}>
+        <Formik
+          validationSchema={validation}
+          enableReinitialize
+          initialValues={values}
+          onSubmit={values => handleSubmit(values)}
+        >
+          {({ handleSubmit, isValid }) => (
+            <Form className='ui form' style={{ backgroundColor: "#f9f9f9", padding: "20px" }} onSubmit={handleSubmit} autoComplete="off">
+              
+                <div className="col-md-6-w-100%">
+                  <MyTextInput
+                  label={<label><i className="fas fa-user"></i> Personal Number</label>}
+                    placeholder="Personal Number"
+                    name="personalNumber"
+                    onChange={handleChange}
+                    style={{ marginBottom: "15px" }}
+                  />
+                </div>
+                <div className="col-md-6-w-100%">
+                  <MyTextInput
+                  label={<label><i className="fas fa-dollar-sign"></i> Current Balance</label>}
+                    placeholder="Current Balance"
+                    name="currentBalance"
+                    onChange={handleChange}
+                    style={{ marginBottom: "15px" }}
+                  />
+                </div>
+             
+                <div className="col-md-6-w-100%">
+                  <select
+                    className="form-control"
+                    id="bankAccountId"
+                    name="bankAccountId"
+                    value={values.bankAccountId || ""}
+                    onChange={handleChange}
+                    style={{ marginBottom: "15px" }}
+                  >
+                    <option value="" disabled>Select a bank account type</option>
+                    {accountTypeSelectList.map((x) => (
+                      <option key={x.key} value={x.value}>{x.text}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="col-md-6-w-100%">
+                  <select
+                    className="form-control"
+                    id="branchId"
+                    name="branchId"
+                    value={values.branchId!}
+                    onChange={handleChange}
+                    style={{ marginBottom: "15px" }}
+                  >
+                    <option value="" disabled>Select branch</option>
+                    {branchSelectList.map((x) => (
+                      <option key={x.key} value={x.value}>{x.text}</option>
+                    ))}
+                  </select>
+                </div>
+  
+              <Button floated="right" disabled={!isValid} positive type="submit" content="Submit" style={{ backgroundColor: "rgb(32 76 60)", color: "#fff" }} />
+              <Button floated="right" onClick={sendToOverview} className="ui basic button" style={{ borderColor: "#003366", color: "#003366" }}>Cancel</Button>
+            </Form>
+          )}
+        </Formik>
       </Segment>
+      <br/>
+      <br/>
+      <Footer/>
     </>
   );
  }

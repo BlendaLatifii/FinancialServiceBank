@@ -5,6 +5,7 @@ using Domain.Interfaces;
 using Domain.Models;
 using Infrastructure.Data;
 using Infrastructure.Security;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services
@@ -15,11 +16,13 @@ namespace Application.Services
         public readonly AppDbContext _context;
         private readonly IMapper mapper;
         private readonly IAuthorizationManager _authorizationManager;
+        private readonly UserManager<User> userManager;
 
-        public ClientBankAccountService(AppDbContext _context,  IMapper mapper, IAuthorizationManager authorizationManager)
+        public ClientBankAccountService(AppDbContext _context,UserManager<User> userManager,  IMapper mapper, IAuthorizationManager authorizationManager)
         {
             this._context = _context;
             this.mapper = mapper;
+            this.userManager = userManager;
             _authorizationManager = authorizationManager;
         }
         public async Task<List<ClientBankAccountModel>> GetAllClientBankAccountAsync(CancellationToken cancellationToken)
@@ -197,18 +200,21 @@ namespace Application.Services
             {
                 throw new UnauthorizedAccessException("User is not authenticated.");
             }
-
-            var user = await _context.Users
-                  .Include(u => u.UserRoles)
-                  .FirstOrDefaultAsync(u => u.Id == userId.Value, cancellationToken);
+            var user = await userManager.FindByIdAsync(userId.Value.ToString());
 
             if (user == null)
             {
                 throw new UnauthorizedAccessException("User not found.");
             }
-            var userRole = user.UserRoles.FirstOrDefault()?.Role;
+            // Merr rolet e përdoruesit nga userManager
+            var userRoles = await userManager.GetRolesAsync(user);
 
-            if (userRole != null && userRole.Name == AdminRole)
+            if (userRoles == null || !userRoles.Any())
+            {
+                throw new UnauthorizedAccessException("User has no roles assigned.");
+            }
+
+            if (userRoles.Contains(AdminRole))
             {
                 model = await _context.ClientBankAccounts
                     .Select(x => new ListItemModel
@@ -218,7 +224,7 @@ namespace Application.Services
                     })
                     .ToListAsync(cancellationToken);
             }
-            else if (userRole != null && userRole.Name == MemberRole)
+            else if (userRoles.Contains(MemberRole))
             {
                 model = await _context.ClientBankAccounts
                     .Where(x => x.UserId == userId.Value)
@@ -233,8 +239,8 @@ namespace Application.Services
             {
                 model = new List<ListItemModel>();
             }
-            return model;
 
+            return model;
         }
     }
 }

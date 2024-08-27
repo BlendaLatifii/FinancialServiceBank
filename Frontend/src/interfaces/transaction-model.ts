@@ -3,6 +3,8 @@ import { TranType } from "./TranType";
 
 export interface TransactionModel {
     id:string | null;
+    userName:string | null;
+    userId:string | null;
     transactionAmount: number | null;
     sourceClientBankAccountId: string | null;
     destinationClientBankAccountId: string | null;

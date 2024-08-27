@@ -18,17 +18,26 @@ import Header from "../Header";
 
 export default function CreditCardsTable() {
   const [creditCards, setCreditCards] = useState<CreditCardsModel[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<CreditCardsModel[]>([]);
   const [openConfirm, setOpenConfirm] = useState<boolean>(false);
   const [deleteCreditCardsId, setDeleteCreditCardsId] = useState<string>("");
-  const [errors, setErrors] = useState({});
+  const [searchTerm, setSearchTerm] = useState<string>(""); 
+  
   const navigate = useNavigate();
+ 
   useEffect(() => {
     fetchData();
-  }, []);
+    setFilteredUsers(
+      creditCards.filter((user) =>
+        user.clientAccountNumber!.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+  }, [searchTerm, creditCards]);
 
   const fetchData = async () => {
     const result = await CreditCardsService.GetAllCreditCards();
     setCreditCards(result);
+    setFilteredUsers(result);
   };
   function deleteCreditCards(id: string) {
     setOpenConfirm(true);
@@ -62,6 +71,14 @@ export default function CreditCardsTable() {
         >
           Add New Credit Cards
         </Button>
+        <div className="col-12 col-sm-8 col-md-6 col-lg-4 col-xl-3">
+        <input className="form-control me-2 "
+        type="search" 
+        placeholder="Search by AccountNumber"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        aria-label="Search"></input>
+      </div>
       </div>
       <Table striped>
         <TableHeader>
@@ -78,7 +95,7 @@ export default function CreditCardsTable() {
         </TableHeader>
 
         <TableBody>
-          {creditCards.map((item) => (
+          {filteredUsers.map((item) => (
             <TableRow key={item.id}>
               <TableCell>{item.cvv}</TableCell>
               <TableCell>{item.clientAccountNumber}</TableCell>

@@ -291,6 +291,12 @@ namespace Infrastructure.Migrations
                     b.Property<Guid?>("DestinationClientBankAccountId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("LastUpdatedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("LastUpdatedByUserName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid?>("SourceClientBankAccountId")
                         .HasColumnType("uniqueidentifier");
 
@@ -309,8 +315,12 @@ namespace Infrastructure.Migrations
                     b.Property<int>("TransactionType")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid?>("UserId")
+                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

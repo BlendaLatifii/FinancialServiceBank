@@ -1,42 +1,41 @@
-import React from "react";
-import Header from "./Components/Header";
-import Footer from "./Components/Footer";
-import Services from "./Components/Services";
-import AboutUs from "./Components/AboutUs";
-import ContactUs from "./Components/ContactUs";
-import Login from "./Components/Login";
-import Register from "./Components/Register";
+import React ,{lazy , Suspense} from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import RegisterTable from "./Components/UserComponents/RegisterTable";
-import HomePage from "./Components/HomePage";
-import RegisterForClients from "./Components/RegisterForClients";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { AuthService } from "./services/AuthService";
 import "react-toastify/dist/ReactToastify.css";
-import Navbar from "./Components/Navbar/Navbar";
-import EditUser from "./Components/UserComponents/EditUser";
-import ContactTable from "./Components/ContactComponents/ContactTable";
-import BranchTable from "./Components/BranchComponents/BranchTable";
-import EditBranch from "./Components/BranchComponents/EditBranch";
-import EditBankAccount from "./Components/BankAccountComponents/EditBankAccount";
-import AccountTable from "./Components/BankAccountComponents/AccountTable";
-import ClientTable from "./Components/ClientComponents/ClientTable";
-import ClientAccountTable from "./Components/ClientBankAccountComponents/ClientAccountTable";
-import EditClientAccount from "./Components/ClientBankAccountComponents/EditClientAccount";
-import TypesOfCreditCardsTable from "./Components/TypesOfCreditCardsComponents/TypesOfCreditCardsTable";
-import EditTypesOfCreditCards from "./Components/TypesOfCreditCardsComponents/EditTypesOfCreditCards";
-import Transaction from "./Components/TransactionComponents/Transaction";
-import TransactionTable from "./Components/TransactionComponents/TransactionTable";
-import LoanForm from "./Components/LoanComponents/LoanForm";
-import CreditCardsTable from "./Components/CreditCardsComponents/CreditCardsTable";
-import EditCreditCards from "./Components/CreditCardsComponents/EditCreditCards";
-import LoanTable from "./Components/LoanComponents/LoanTable";
-import ForgotPassword from "./Components/ForgotPassword";
-import ResetPassword from "./Components/ResetPassword";
-import MyProfile from "./Components/MyProfile";
-import Dashboard from "./Components/Dashboard";
-import PrivateRoute from "./Components/PrivateRoute"; 
+import Navbar  from "./Components/Navbar/Navbar";
+import Header from "./Components/Header";
+import Footer from "./Components/Footer";
+const HomePage= lazy(()=>import("./Components/HomePage"));
+const Services= lazy(()=>import("./Components/Services"));
+const AboutUs= lazy(()=>import("./Components/AboutUs"));
+const ContactUs= lazy(()=>import("./Components/ContactUs"));
+const Login= lazy(()=>import("./Components/Login"));
+const Register= lazy(()=>import("./Components/Register"));
+const MyProfile = lazy(() => import("./Components/MyProfile"));
+const Dashboard = lazy(() => import("./Components/Dashboard"));
+const EditUser = lazy(() => import("./Components/UserComponents/EditUser"));
+const RegisterTable = lazy(() => import("./Components/UserComponents/RegisterTable"));
+const BranchTable = lazy(() => import("./Components/BranchComponents/BranchTable"));
+const ContactTable = lazy(() => import("./Components/ContactComponents/ContactTable"));
+const EditBranch = lazy(() => import("./Components/BranchComponents/EditBranch"));
+const EditBankAccount = lazy(() => import("./Components/BankAccountComponents/EditBankAccount"));
+const AccountTable = lazy(() => import("./Components/BankAccountComponents/AccountTable"));
+//const RegisterForClients = lazy(() => import("./Components/RegisterForClients"));
+const ClientTable = lazy(() => import("./Components/ClientComponents/ClientTable"));
+const ClientAccountTable = lazy(() => import("./Components/ClientBankAccountComponents/ClientAccountTable"));
+const EditClientAccount = lazy(() => import("./Components/ClientBankAccountComponents/EditClientAccount"));
+const TypesOfCreditCardsTable = lazy(() => import("./Components/TypesOfCreditCardsComponents/TypesOfCreditCardsTable"));
+const EditTypesOfCreditCards = lazy(() => import("./Components/TypesOfCreditCardsComponents/EditTypesOfCreditCards"));
+const CreditCardsTable = lazy(() => import("./Components/CreditCardsComponents/CreditCardsTable"));
+const EditCreditCards = lazy(() => import("./Components/CreditCardsComponents/EditCreditCards"));
+const Transaction = lazy(() => import("./Components/TransactionComponents/Transaction"));
+const TransactionTable = lazy(() => import("./Components/TransactionComponents/TransactionTable"));
+const LoanForm = lazy(() => import("./Components/LoanComponents/LoanForm"));
+const LoanTable = lazy(() => import("./Components/LoanComponents/LoanTable"));
+const ForgotPassword = lazy(() => import("./Components/ForgotPassword"));
+const ResetPassword = lazy(() => import("./Components/ResetPassword"));
 
 function App() {
   axios.interceptors.request.use((config) => {
@@ -49,7 +48,7 @@ function App() {
       return response;
     },
     (error) => {
-      const { data, status, config } = error.response ?? null;
+      const { data, status } = error.response ?? null;
       switch (status) {
         case 200:
           toast.success("OK");
@@ -77,14 +76,16 @@ function App() {
       return Promise.reject(error);
     }
   );
-  const isAdmin = AuthService.GetUserRole() == 'Admin';
-  const isAuthenticated = !!localStorage.getItem('token');
+  const isAdmin = AuthService.GetUserRole() === 'Admin';
 
   return (
     <>
+    
     { <Navbar/>}
+
+    <Suspense fallback={<h1>Loading...</h1>}>
       <Routes>
-      <Route  path="/Dashboard" element={ isAdmin ? <Dashboard /> : <Navigate to="/" replace />}/>
+        <Route  path="/Dashboard" element={ isAdmin ? <Dashboard /> : <Navigate to="/" replace />}/>
         <Route path="/Header" element={<Header />} />
         <Route path="/Footer" element={<Footer />} />
         <Route path="/HomePage" element={  <HomePage />} />
@@ -104,9 +105,9 @@ function App() {
         <Route path="/AddBankAccount" element={isAdmin ? <EditBankAccount/> : <Navigate to="/" replace />} />
         <Route path="/EditBankAccount/:id" element={ isAdmin ? <EditBankAccount/> : <Navigate to="/" replace />} />
        <Route path="/AccountTable" element={isAdmin ? <AccountTable /> : <Navigate to="/" replace/>}/>
-        <Route path="/RegisterForClients" element={<RegisterForClients />} />
-        <Route path="/AddClient" element={isAdmin ?<RegisterForClients/> : <Navigate to="/" replace />} />
-        <Route path="/RegisterForClients/:id" element={isAdmin ? <RegisterForClients/> : <Navigate to="/" replace />} />
+       {/* // <Route path="/RegisterForClients" element={<RegisterForClients />} /> */}
+        {/* <Route path="/AddClient" element={isAdmin ?<RegisterForClients/> : <Navigate to="/" replace />} /> */}
+        {/* <Route path="/RegisterForClients/:id" element={isAdmin ? <RegisterForClients/> : <Navigate to="/" replace />} /> */}
         <Route path="/ClientTable" element={isAdmin ? <ClientTable/>: <Navigate to="/" replace/>}/>
         <Route path="/AddClientAccount" element={<EditClientAccount />} />
         <Route path="/EditClientAccount/:id" element={isAdmin ? <EditClientAccount/> : <Navigate to="/" replace />} /> 
@@ -129,6 +130,7 @@ function App() {
         <Route path="/ForgotPassword" element={<ForgotPassword/>} />
         <Route path="/ResetPassword" element={<ResetPassword/>} />
       </Routes>
+      </Suspense>
       <ToastContainer />
     </>
   );

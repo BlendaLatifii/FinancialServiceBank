@@ -132,10 +132,13 @@
   }
   @media (max-width: 768px) {
     .navbar ul {
+        display:flex;
         flex-direction: column;
         align-items: center;
     }
     .navbar ul li {
+      display: flex;
+      flex-direction: column;
         margin: 10px 0;
     }
 }
@@ -143,6 +146,10 @@
 @media (max-width: 480px) {
     .navbar ul li {
         margin: 5px 0;
+    }
+    .navbar ul li{
+      display: flex;
+      flex-direction: column;
     }
 }
 .navbar-mobile {

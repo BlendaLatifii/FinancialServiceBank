@@ -79,6 +79,13 @@ namespace Application.Services
         public async Task<TransactionModel> CreateOrEditTransaction(TransactionModel model, CancellationToken cancellationToken)
         {
 
+            Guid? userId = _authorizationManager.GetUserId();
+
+            if (userId is null)
+            {
+                throw new UnauthorizedAccessException("User is not authenticated.");
+            }
+
             ClientBankAccount? sourceAccount = null;
             ClientBankAccount? destinationAccount = null;
 
@@ -129,6 +136,7 @@ namespace Application.Services
                 transaction.SourceClientBankAccountId = sourceAccount?.Id;
                 transaction.DestinationClientBankAccountId = destinationAccount?.Id;
                 transaction.TransactionStatus = TranStatus.Success;
+                transaction.UserId = userId ?? Guid.Empty;
                 _context.Transactions.Add(transaction);
                 model = mapper.Map<TransactionModel>(transaction);
             }
@@ -158,6 +166,9 @@ namespace Application.Services
                 case TranType.Transfer:
                     if (sourceAccount == null || destinationAccount == null)
                         throw new Exception("Both source and destination accounts are required for a transfer.");
+
+                    if (sourceAccount.AccountNumberGeneratedID == destinationAccount.AccountNumberGeneratedID)
+                        throw new Exception("Source and destination accounts cannot be the same.");
 
                     if (sourceAccount.CurrentBalance < model.TransactionAmount)
                         throw new Exception("Insufficient funds for transfer.");

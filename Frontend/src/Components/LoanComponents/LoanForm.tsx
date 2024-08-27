@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
-import $ from "jquery"; // Import jQuery
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 import * as yup from "yup";
 import Header from "../Header";
 import Footer from "../Footer";
-import { SelectListItem } from "../../interfaces/select-list-item";
 import { Form, Formik } from "formik";
 import { Button, Segment } from "semantic-ui-react";
 import MyTextInput from "../../FormElements/MyTextInput";
@@ -16,7 +14,7 @@ import { LoanType } from "../../interfaces/LoanType";
 
 type Props = {};
 
-export default function LoanForm({}: Props) {
+export default function LoanForm() {
   const { id } = useParams<{ id: string }>();
   const [values, setValues] = useState<LoanModel>({
     id: id!,
@@ -54,8 +52,11 @@ export default function LoanForm({}: Props) {
 
   const handleSubmit = async (model:LoanModel) => {
     await LoanService.EditOrAddLoan(model);
-    navigate("/LoanTable");
+    sendToOverview();
   };
+  function sendToOverview(){
+    navigate("/HomePage");
+  }
   const typeSelectList = Object.keys(employmentStatus)
     .map((key, i) => ({
       key: i,
@@ -63,6 +64,7 @@ export default function LoanForm({}: Props) {
       text: employmentStatus[+key],
     }))
     .filter((x) => x.text != "" && x.text != null);
+    
     const loantypeSelectList = Object.keys(LoanType)
     .map((key, i) => ({
       key: i,
@@ -74,22 +76,23 @@ export default function LoanForm({}: Props) {
   const validation = yup.object<LoanModel>({
     clientAccountNumber: yup.string().required(),
     loanAmount: yup.string().required(),
-    income: yup.string().required(),
-    loansTypesId:yup.string().required(),
-    employmentStatus: yup.string().required(),
+    income: yup.string().required()
   });
 
   return (
     <>
       <Header />
-      <h1 style={{ marginLeft: "15px" }}>
-        {values.id != null ? "Edit" : "Add"} Loan
+      <h1 style={{ marginLeft: "15px", fontFamily: "Georgia", color: "black" }}>
+        {values.id != null ? 'Edit' : 'Add'} Loan
       </h1>
+      <p style={{ marginLeft: "15px", color: "#555", fontSize: "14px" }}>
+        Please fill out the form below to {values.id != null ? 'edit' : 'create'} a Loan.
+      </p>
       <Segment
-        clearing
-        style={{ marginRight: "30px", marginTop: "30px", marginLeft: "10px" }}
+         clearing style={{ margin: "30px 30px 0 10px", boxShadow: "0px 4px 6px rgba(0,0,0,0.1)", border: "1px solid rgb(15 179 126 / 87%)" }}
       >
         <Formik
+
           validationSchema={validation}
           enableReinitialize
           initialValues={values}
@@ -97,27 +100,28 @@ export default function LoanForm({}: Props) {
         >
           {({ handleSubmit, isSubmitting, dirty, isValid }) => (
             <Form
-              className="ui form"
-              style={{ backgroundColor: "#f5f6f7" }}
-              onSubmit={handleSubmit}
-              autoComplete="off"
+             className='ui form' style={{ backgroundColor: "#f9f9f9", padding: "20px" }} onSubmit={handleSubmit} autoComplete="off"
             >
               <MyTextInput
                 fluid
+                label={<label> AccountNumber</label>}
                 placeholder="Account Number"
                 name="clientAccountNumber"
                 onChange={handleChange}
               />
               <MyTextInput
+                label={<label><i className="fas fa-dollar-sign"></i> Loan Amount</label>}
                 placeholder="Loan Amount"
                 name="loanAmount"
                 onChange={handleChange}
               />
               <MyTextInput
+                label={<label><i className="fas fa-dollar-sign"></i> Income</label>}
                 placeholder="Income"
                 name="income"
                 onChange={handleChange}
               />
+              <div className="col-md-6-w-100%">
           <select
             style={{ padding: "5px", margin: "5px" }}
             className="form-control"
@@ -129,6 +133,8 @@ export default function LoanForm({}: Props) {
             {loantypeSelectList.map((x)=>
               (<option key={x.key} value={x.value}>{x.text}</option>))}
           </select>
+          </div>
+          <div className="col-md-6-w-100%">
           <select
             style={{ padding: "5px", margin: "5px" }}
             className="form-control"
@@ -140,17 +146,15 @@ export default function LoanForm({}: Props) {
             {typeSelectList.map((x)=>
               (<option key={x.key} value={x.value}>{x.text}</option>))}
           </select>
-              <Button
-                floated="right"
-                disabled={!isValid}
-                positive
-                type="submit"
-                content="Submit"
-              />
+          </div>
+          <Button floated="right" disabled={!isValid}  positive type="submit" content="Submit" style={{ backgroundColor: "rgb(32 76 60)", color: "#fff" }} />
+          <Button floated="right" onClick={sendToOverview} className="ui blue basic button">Cancel</Button>
             </Form>
           )}
         </Formik>
       </Segment>
+      <br/>
+      <br/>
       <Footer />
     </>
   );

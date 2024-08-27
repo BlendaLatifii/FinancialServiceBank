@@ -49,12 +49,12 @@ namespace Application.Services
 
         public async Task<LoanModel> CreateOrUpdateLoanAsync(LoanModel model, CancellationToken cancellationToken)
         {
-           Guid? userId = _authorizationManager.GetUserId();
+         //  Guid? userId = _authorizationManager.GetUserId();
 
-            if (userId is null)
-            {
-               throw new UnauthorizedAccessException("User is not authenticated.");
-          }
+           // if (userId is null)
+           // {
+             //  throw new UnauthorizedAccessException("User is not authenticated.");
+         // }
             var clientAccount = await _context.ClientBankAccounts.FirstOrDefaultAsync(x => x.AccountNumberGeneratedID == model.ClientAccountNumber, cancellationToken);
             if (clientAccount == null)
             {
@@ -72,7 +72,7 @@ namespace Application.Services
                     LoanAmount = model.LoanAmount,
                     Income = model.Income,
                     EmploymentStatus = model.EmploymentStatus,
-                    UserId = userId ?? Guid.Empty,
+                    UserId =  Guid.Empty,
                     LoanPeriod = loanPeriod,
                     InterestRate = interestRate,
                     MonthlyPayment = monthlyPayment

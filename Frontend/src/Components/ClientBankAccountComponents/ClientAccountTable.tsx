@@ -18,17 +18,29 @@ import Header from "../Header";
 
 export default function ClientAccountTable() {
   const [users, setUsers] = useState<ClientBankAccountModel[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<ClientBankAccountModel[]>([]);
   const [openConfirm, setOpenConfirm] = useState<boolean>(false);
   const [deleteUserId, setDeleteUserId] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>(""); 
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
   useEffect(() => {
     fetchData();
   }, []);
+ 
+  useEffect(() => {
+    setFilteredUsers(
+      users.filter((user) =>
+        user.personalNumber!.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+  }, [searchTerm, users]);
+  
 
   const fetchData = async () => {
     const result = await ClientBankAccountService.GetAllBankAcc();
     setUsers(result);
+    setFilteredUsers(result);
   };
   function deleteUser(id: string) {
     setOpenConfirm(true);
@@ -62,6 +74,14 @@ export default function ClientAccountTable() {
         >
           Add New ClientBankAccount
         </Button>
+        <div className="col-12 col-sm-8 col-md-6 col-lg-4 col-xl-3">
+        <input className="form-control me-2 "
+        type="search" 
+        placeholder="Search by PersonalNumber"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        aria-label="Search"></input>
+      </div>
       </div>
       <Table striped>
         <TableHeader>
@@ -81,7 +101,7 @@ export default function ClientAccountTable() {
         </TableHeader>
 
         <TableBody>
-          {users.map((item) => (
+        {filteredUsers.map((item) => (
             <TableRow key={item.id}>
               <TableCell>{item.accountNumberGeneratedID}</TableCell>
               <TableCell>{item.userName}</TableCell>
@@ -97,14 +117,10 @@ export default function ClientAccountTable() {
                   ? new Date(item.dateLastUpdated).toLocaleString()
                   : ""}
               </TableCell>
-              <TableCell>
-                {item.bankAccountId}
-              </TableCell>
-              <TableCell>
-                {item.branchId}
-              </TableCell>
-              <TableCell>{item.createdByUserId}</TableCell>   
-  <TableCell>{item.lastUpdatedByUserId}</TableCell>
+              <TableCell>{item.bankAccountId}</TableCell>
+              <TableCell>{item.branchId}</TableCell>
+              <TableCell>{item.createdByUserId}</TableCell>
+              <TableCell>{item.lastUpdatedByUserId}</TableCell>
               <TableCell>
                 <Button
                   type="button"
@@ -129,7 +145,7 @@ export default function ClientAccountTable() {
             onCancel={() => setOpenConfirm(false)}
             onConfirm={() => confirmedDeleteUser(deleteUserId)}
           />
-        </TableBody>
+          </TableBody>
       </Table>
     </Fragment>
   );

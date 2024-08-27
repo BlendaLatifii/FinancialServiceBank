@@ -18,17 +18,25 @@ import { TranType } from "../../interfaces/TranType";
 
 export default function TransactionTable() {
   const [transactions, setTransactions] = useState<TransactionModel[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<TransactionModel[]>([]);
   const [openConfirm,setOpenConfirm] = useState<boolean>(false);
   const [deleteTransactionId, setDeleteTransactionId] = useState<string>("");
   const [errors, setErrors] = useState({});
+  const [searchTerm, setSearchTerm] = useState<string>(""); 
   const navigate =  useNavigate();
   useEffect(() => {
     fetchData();
-  }, []);
+      setFilteredUsers(
+        transactions.filter((user) =>
+          user.sourceClientBankAccount!.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      );
+    }, [searchTerm, transactions]);
 
   const fetchData = async () => {
       const result = await TransactionService.GetAllTransactions();
       setTransactions(result);
+      setFilteredUsers(result);
   };
 
   function deleteTransaction(id: string) {
@@ -66,6 +74,14 @@ export default function TransactionTable() {
                 >
                   Add New Transaction
                 </Button>
+                <div className="col-12 col-sm-8 col-md-6 col-lg-4 col-xl-3">
+        <input className="form-control me-2 "
+        type="search" 
+        placeholder="Search by SourceAccountNumber"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        aria-label="Search"></input>
+      </div>
         </div>
       <Table striped>
         <TableHeader>
@@ -76,12 +92,13 @@ export default function TransactionTable() {
             <TableHeaderCell>transactionType</TableHeaderCell>
             <TableHeaderCell>transactionDate</TableHeaderCell>
             <TableHeaderCell>transactionDateUpdated</TableHeaderCell>
+            <TableHeaderCell>userName</TableHeaderCell>
             <TableHeaderCell>Actions</TableHeaderCell>
           </TableRow>
         </TableHeader>
 
         <TableBody>
-          {transactions.map((item) => (
+          {filteredUsers.map((item) => (
             <TableRow key={item.id}>
               <TableCell>{item.sourceClientBankAccount}</TableCell>
               <TableCell>{item.destinationClientBankAccount}</TableCell>
@@ -100,6 +117,9 @@ export default function TransactionTable() {
                 {item.transactionDateUpdated != null
                   ? new Date(item.transactionDateUpdated).toLocaleString()
                   : ""}
+              </TableCell>
+              <TableCell>
+                {item.userName}
               </TableCell>
               <TableCell>
                 <Button  type="button"  className="btn ui green basic button" onClick={()=>sendToDetails(item.id!)}>Edit</Button>

@@ -9,6 +9,7 @@ import MyTextInput from "../../FormElements/MyTextInput";
 import { BranchModel } from "../../interfaces/branch-model";
 import { BranchService } from "../../services/BranchService";
 import Header from "../Header";
+import Footer from "../Footer";
 
 export default function EditBranch() {
   const { id } = useParams<{ id: string}>();
@@ -68,40 +69,52 @@ export default function EditBranch() {
   return (
     <>
      <Header/>
-      <h1 style={{ marginLeft: "15px" }}>{ values.branchId != null ?'Edit': 'Add'} Branch</h1>
-      <Segment clearing style={{ marginRight: "30px", marginTop: "30px", marginLeft: "10px" }}>
+      <h1 style={{ marginLeft: "15px", fontFamily: "Georgia", color: "black" }}>
+        {values.branchId != null ? 'Edit' : 'Add'} Branch
+      </h1>
+      <p style={{ marginLeft: "15px", color: "#555", fontSize: "14px" }}>
+        Please fill out the form below to {values.branchId != null ? 'edit' : 'create'} a branch.
+      </p>
+      <Segment clearing style={{ margin: "30px 30px 0 10px", boxShadow: "0px 4px 6px rgba(0,0,0,0.1)", border: "1px solid rgb(15 179 126 / 87%)" }}>
       <Formik validationSchema={validation}
            enableReinitialize 
            initialValues={values} 
            onSubmit={values => handleSubmit(values)}>
            {({handleSubmit,isSubmitting,dirty,isValid})=>(
-        <Form  className='ui form'style={{backgroundColor:"#f5f6f7"}}  onSubmit={handleSubmit} autoComplete="off">
+        <Form  className='ui form' style={{ backgroundColor: "#f9f9f9", padding: "20px" }} onSubmit={handleSubmit} autoComplete="off">
           <MyTextInput fluid
+           label={<label> Branch Name</label>}
             placeholder="Branch Name"
             name="branchName"
             onChange={handleChange}
           />
           <MyTextInput
+           label={<label> Address</label>}
             placeholder="Address"
             name="address"
             onChange={handleChange}
           />
           <MyTextInput
+           label={<label> Phone Number</label>}
             placeholder="Phone Number"
             name="phoneNumber"
             onChange={handleChange}
           />
           <MyTextInput
+           label={<label> Opened</label>}
             placeholder="Opened"
             name="opened"
             onChange={handleChange}
           />
-           <Button floated="right" disabled={!isValid}  positive type="submit" content="Submit" />
+           <Button floated="right" disabled={!isValid}  positive type="submit" content="Submit" style={{ backgroundColor: "rgb(32 76 60)", color: "#fff" }} />
           <Button floated="right" onClick={sendToOverview} className="ui blue basic button">Cancel</Button>
         </Form>
          )}
          </Formik>
       </Segment>
+      <br/>
+      <br/>
+      <Footer/>
     </>
   );
  }
