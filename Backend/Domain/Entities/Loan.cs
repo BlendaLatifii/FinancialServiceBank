@@ -16,7 +16,6 @@ namespace Domain.Entities
         public string LoanPeriod { get; set; } = default!;
         public double InterestRate { get; set; } = default!;
         public string MonthlyPayment { get; set; } = default!;
-        public LoanType LoanType { get; set; } = default!;
         public User User { get; set; } = default!;
         public ClientBankAccount ClientBankAccount { get; set; } = default!;
         public Loan()

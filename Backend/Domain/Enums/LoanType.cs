@@ -2,8 +2,8 @@
 {
     public enum LoanType
     {
-        Kredi_Konsumuese,
-        Kredi_per_automjet,
-        Kredi_per_shtepi,
+        Kredi_Konsumuese=0,
+        Kredi_per_automjet=1,
+        Kredi_per_shtepi=2,
     }
 }

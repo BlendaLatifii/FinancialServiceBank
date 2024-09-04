@@ -85,7 +85,7 @@ export default function TransactionTable() {
         <TableBody>
           {loans.map((item) => (
             <TableRow key={item.id}>
-              <TableCell>{item.clientAccountNumber!}</TableCell>
+              <TableCell>{item.clientAccountNumber}</TableCell>
               <TableCell>{item.loansTypesId}</TableCell>
               <TableCell>{item.monthlyPayment}</TableCell>
               <TableCell>{item.loanAmount}</TableCell>

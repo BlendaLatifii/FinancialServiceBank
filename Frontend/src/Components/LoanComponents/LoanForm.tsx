@@ -10,19 +10,16 @@ import MyTextInput from "../../FormElements/MyTextInput";
 import { LoanModel } from "../../interfaces/loan-model";
 import { LoanService } from "../../services/LoanService";
 import { employmentStatus } from "../../interfaces/employmentStatus";
-import { LoanType } from "../../interfaces/LoanType";
-
-type Props = {};
-
+import { loanType } from "../../interfaces/LoanType";
 export default function LoanForm() {
   const { id } = useParams<{ id: string }>();
   const [values, setValues] = useState<LoanModel>({
     id: id!,
     clientAccountNumber: '',
-    loansTypesId: 0,
+    loansTypesId: loanType.Kredi_Konsumuese,
     loanAmount: null,
     income: '',
-    employmentStatus: 0,
+    employmentStatus: employmentStatus.i_pa_pune,
   } as LoanModel);
 
   const navigate = useNavigate();
@@ -35,9 +32,9 @@ export default function LoanForm() {
           id: userData.id!,
           clientAccountNumber: userData.clientAccountNumber,
           loanAmount: userData.loanAmount,
-          loansTypesId: userData.loansTypesId,
+          loansTypesId: userData.loansTypesId?? loanType.Kredi_Konsumuese,
           income: userData.income,
-          employmentStatus: +userData.employmentStatus,
+          employmentStatus: userData.employmentStatus?? employmentStatus.i_pa_pune,
         } as LoanModel);
       }
     };
@@ -47,7 +44,7 @@ export default function LoanForm() {
 
   const handleChange = (e:React.ChangeEvent<HTMLInputElement | HTMLSelectElement >) => {
     const { name, value } = e.target;
-    setValues({ ...values, [name]: value });
+    setValues({ ...values, [name]: name === "loansTypesId" || name === "employmentStatus" ? parseInt(value) : value });
   };
 
   const handleSubmit = async (model:LoanModel) => {
@@ -60,19 +57,20 @@ export default function LoanForm() {
   const typeSelectList = Object.keys(employmentStatus)
     .map((key, i) => ({
       key: i,
-      value: +i,
+      value: i,
       text: employmentStatus[+key],
     }))
     .filter((x) => x.text != "" && x.text != null);
     
-    const loantypeSelectList = Object.keys(LoanType)
+    const loantypeSelectList = Object.keys(loanType)
     .map((key, i) => ({
       key: i,
-      value: +i,
-      text: LoanType[+key],
+      value: i,
+      text: loanType[+key],
     }))
     .filter((x) => x.text != "" && x.text != null);
 
+    
   const validation = yup.object<LoanModel>({
     clientAccountNumber: yup.string().required(),
     loanAmount: yup.string().required(),

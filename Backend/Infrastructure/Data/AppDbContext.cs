@@ -14,6 +14,7 @@ namespace Infrastructure.Data
         public  DbSet<User> Users { get; set; } = default!;
         public  DbSet<Role> Roles { get; set; } = default!;
         public  DbSet<UserRole> UserRoles { get; set; } = default!;
+        public DbSet<RefreshToken> RefreshTokens { get; set; } = default!;
         public DbSet<Branch> Branches { get; set; } = default!;
         public DbSet<Loan> Loans { get; set; } = default!;
         public DbSet<BankAccount> BankAccounts { get; set; } = default!;

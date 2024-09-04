@@ -75,17 +75,31 @@ namespace Application.Services
             var userData = _mapper.Map<UserModel>(user);
 
             var jwtTOken = new JwtSecurityTokenHandler().WriteToken(token);
+  
+            var refreshToken = GenerateRefreshToken(user);
+            user.RefreshTokens.Add(refreshToken);
+            await _dbContext.SaveChangesAsync(cancellationToken);
             var response = new AuthenticationModel()
             {
                 Token = jwtTOken,
-                RefreshToken = null!,
+                RefreshToken = refreshToken.Token,
                 ExpiresAt = token.ValidTo,
-                UserData = userData!,
-                UserRole = userRoles.FirstOrDefault()!
-
+                RefreshTokenExpiresAt = refreshToken.ExpiresAt,
+                UserData = userData,
+                UserRole = userRoles.FirstOrDefault()
             };
 
             return response;
+        }
+        private RefreshToken GenerateRefreshToken(User user)
+        {
+            var refreshToken = new RefreshToken
+            {
+                Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+                ExpiresAt = DateTime.Now.AddDays(7),
+                User = user
+            };
+            return refreshToken;
         }
         public async Task<IdentityResult> Register(RegisterModel registerModel, CancellationToken cancellationToken)
         {

@@ -40,7 +40,7 @@ namespace Api.Controllers
         }
        
         [HttpPost]
-        public async Task<IActionResult> AddOrEditUserAsync(UserModel model , CancellationToken cancellationToken)
+        public async Task<IActionResult> AddOrEditUserAsync([FromBody]UserModel model , CancellationToken cancellationToken)
         {
             var updateUser = await _userService.AddOrEditUserAsync(model, cancellationToken);
             return Ok(updateUser);

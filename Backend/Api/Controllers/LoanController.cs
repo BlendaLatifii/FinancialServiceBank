@@ -36,7 +36,7 @@ namespace Api.Controllers
         }
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> CreateOrUpdateLoanAsync(LoanModel model, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateOrUpdateLoanAsync([FromBody]LoanModel model, CancellationToken cancellationToken)
         {
             var updateLoan = await _loanService.CreateOrUpdateLoanAsync(model, cancellationToken);
             return Ok(updateLoan);

@@ -67,8 +67,9 @@ namespace Application.Services
                 {
                     throw new AppBadDataException();
                 }
+
                 var roles =await _userManager.GetRolesAsync(user);
-                await _userManager.RemoveFromRolesAsync(user, roles);
+               await _userManager.RemoveFromRolesAsync(user, roles);
 
                 if (model.Password != null)
                 {

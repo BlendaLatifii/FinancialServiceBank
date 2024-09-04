@@ -1,4 +1,4 @@
-import { LoanType } from "./LoanType";
+import { loanType } from "./LoanType";
 import { employmentStatus } from "./employmentStatus";
 
 export interface LoanModel {
@@ -12,6 +12,6 @@ export interface LoanModel {
     employmentStatus:employmentStatus;
     clientBankAccountId: string |null;
     clientAccountNumber:string | null;
-    loansTypesId: LoanType ;
+    loansTypesId: loanType ;
     userName:string|null;
 }

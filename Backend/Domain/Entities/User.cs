@@ -13,6 +13,10 @@ namespace Domain.Entities
         public string LastName { get; set; } = default!;
         public string MiddleName { get; set; } = default!;
         public string PersonalNumberId { get; set; } = default!;
+        public string RefreshToken { get; set; } = default!;
+        public DateTime TokenCreated { get; set; } 
+        public DateTime TokenExpires { get; set; }
+        public List<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
         public List<UserRole> UserRoles { get; set; } = default!;
         public List<ContactUs> ContactUs { get; set; } = new List<ContactUs>();
         public List<BankAccount> BankAccount { get; set; } = new List<BankAccount>();

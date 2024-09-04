@@ -1,5 +1,5 @@
-export enum LoanType{
-    kredi_konsumuese,
-    kredi_per_atuomjet,
-    kredi_per_shtepi
+export enum loanType{
+    Kredi_Konsumuese,
+    Kredi_per_automjet,
+    Kredi_per_shtepi,
 }

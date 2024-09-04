@@ -45,11 +45,11 @@ export default function Transaction() {
         text: item.name
       } as SelectListItem)).filter(x=> x.text != '' && x.text != null));
 
-      setFormData({
-        ...formData,
-        sourceClientBankAccount : response[0]?.name,
-        destinationClientBankAccount : response[0]?.name
-      })
+      // setFormData({
+      //   ...formData,
+      //   sourceClientBankAccount : response[0]?.name,
+      //   destinationClientBankAccount : response[0]?.name
+      // })
 
       
     } catch (error) {
@@ -111,6 +111,7 @@ export default function Transaction() {
         model
       );
       setTransaction(true);
+      sendToOverview();
     } catch (error) {
       console.error("Error creating transaction:", error);
     }
@@ -141,6 +142,7 @@ export default function Transaction() {
             value={formData.sourceClientBankAccount!}
             onChange={handleChange}
           >
+            <option value="" disabled>Select Source Account</option>
             {accountTypeSelectList.map((x)=>
               (<option key={x.key} value={x.value}>{x.text}</option>))}
           </select>
@@ -154,6 +156,7 @@ export default function Transaction() {
             value={formData.destinationClientBankAccount!}
             onChange={handleChange}
           >
+            <option value="" disabled>Select Receive Account</option>
             {accountTypeSelectList.map((x)=>
               (<option key={x.key} value={x.value}>{x.text}</option>))}
           </select>}

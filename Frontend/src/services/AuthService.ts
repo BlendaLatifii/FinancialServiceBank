@@ -1,4 +1,5 @@
 import axios from "axios";
+import Cookies from "js-cookie";
 import { LogInModel } from "../interfaces/login-model";
 import { UserModel } from "../interfaces/users";
 import { AuthenticationModel } from "../interfaces/auth-model";
@@ -25,6 +26,12 @@ export class AuthService {
       localStorage.setItem("userModel", JSON.stringify(response.data.userData));
       localStorage.setItem("role", response.data.userRole);
       AuthService.role = response.data?.userRole;
+     // Cookies.set("jwt", response.data.token, { expires: 7 }); // Expires in 7 days
+     // Cookies.set("refreshToken", response.data.refreshToken, { expires: 7 });
+     // AuthService.token = response.data.token;
+     // Cookies.set("userModel", JSON.stringify(response.data.userData), { expires: 7 });
+     // Cookies.set("role", response.data.userRole, { expires: 7 });
+     // AuthService.role = response.data?.userRole;
       toast.success("Logged in Successfully");
       return response.data;
     }
@@ -34,11 +41,16 @@ export class AuthService {
   }
 
   public static LogOut(): void {
-    localStorage.removeItem("jwt");
-    AuthService.token = null;
-    localStorage.removeItem("userModel");
-    localStorage.removeItem("role");
-    AuthService.role = null;
+  localStorage.removeItem("jwt");
+  AuthService.token = null;
+   localStorage.removeItem("userModel");
+   localStorage.removeItem("role");
+   AuthService.role = null;
+   // Cookies.remove("jwt");
+   // AuthService.token = null;
+   // Cookies.remove("userModel");
+   // Cookies.remove("role");
+    //AuthService.role = null;
   }
 
   public static async Register(model: RegisterModel): Promise<void> {

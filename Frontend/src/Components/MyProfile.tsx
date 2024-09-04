@@ -1,153 +1,255 @@
-import React, { useState } from 'react';
 import axios from 'axios';
-import { ClientModel } from '../interfaces/client-model';
+import React, { useState, useEffect } from 'react';
+import { FaUser, FaCreditCard, FaWallet, FaExchangeAlt } from 'react-icons/fa';
+import Header from './Header';
 import { ClientBankAccountModel } from '../interfaces/clientaccount-model';
 import { CreditCardsModel } from '../interfaces/creditCards-model';
 import { TransactionModel } from '../interfaces/transaction-model';
-import Header from './Header';
+import { UserModel } from '../interfaces/users';
+import { LoanModel } from '../interfaces/loan-model';
 
 export default function MyProfile() {
-    const [personalNumber, setPersonalNumber] = useState('');
-    const [accountNumber, setAccountNumber] = useState('');
-    const [client, setClient] = useState<ClientModel | null>(null);
+    const [user, setUser] = useState<UserModel[]>([]);
     const [clientBankAccounts, setClientBankAccounts] = useState<ClientBankAccountModel[]>([]);
-    const[creditCards, setCreditCards]= useState<CreditCardsModel |null>(null);
-
-    const handleInputChange = (e : React.ChangeEvent<HTMLInputElement>) => {
-        setPersonalNumber(e.target.value);
-    };
-    const handleInputChange1 = (e : React.ChangeEvent<HTMLInputElement>) => {
-        setAccountNumber(e.target.value);
-    }
-    
-
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        try {
-            if(personalNumber!=null){
-            const response = await axios.get(`https://localhost:7254/api/Client/personalNumber/${personalNumber}`);
-            const bankAccountsResponse = await axios.get(`https://localhost:7254/api/ClientBankAccount/personalNumber/${personalNumber}`);
-            setClient(response.data);
-            setClientBankAccounts(bankAccountsResponse.data);
+    const [creditCards, setCreditCards] = useState<CreditCardsModel[]>([]);
+    const [transactions, setTransactions] = useState<TransactionModel[]>([]);
+    const [loans, setLoans] = useState<LoanModel[]>([]);
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const response = await axios.get('https://localhost:7254/api/UserProfile/User');
+                setUser(response.data);
+            } catch (error) {
+                console.error('Error fetching user details:', error);
             }
-        } catch (err) {
-            setClient(null);
-            setClientBankAccounts([]);
-        }
-    };
-    const handleSubmit1= async(e:React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        try {
-            if(accountNumber!=null){
-            const creditCardsResponse = await axios.get(`https://localhost:7254/api/CreditCards/accountNumber/${accountNumber}`);
-            setCreditCards(creditCardsResponse.data);
+        };
+        const fetchClientBankAccounts = async () => {
+            try {
+                const response = await axios.get('https://localhost:7254/api/UserProfile/ClientBankAccount');
+                setClientBankAccounts(response.data);
+            } catch (error) {
+                console.error('Error fetching bank accounts:', error);
             }
-        } catch (err) {
-            setCreditCards(null);
-        }
-        }
+        };
+
+        const fetchCreditCards = async () => {
+            try {
+                const response = await axios.get('https://localhost:7254/api/UserProfile/CreditCards');
+                setCreditCards(response.data);
+            } catch (error) {
+                console.error('Error fetching credit cards:', error);
+            }
+        };
+
+        const fetchTransactions = async () => {
+            try {
+                const response = await axios.get('https://localhost:7254/api/UserProfile/Transactions');
+                setTransactions(response.data);
+            } catch (err) {
+                console.error('Failed to fetch transactions:', err);
+            }
+        };
+        const fetchLoans = async () => {
+            try {
+                const response = await axios.get('https://localhost:7254/api/UserProfile/Loans');
+                setLoans(response.data);
+            } catch (err) {
+                console.error('Failed to fetch loans:', err);
+            }
+        };
+
+        fetchCreditCards();
+        fetchClientBankAccounts();
+        fetchTransactions();
+      //  fetchLoans();
+        fetchUsers();
+    }, []);
 
     return (
         <>
-        <Header/>
-        <br/>
-        <br/>
-        <div style={styles.container}>
-            <h1 style={{ textAlign: 'center',
-        color: '#333'}}>My Profile</h1>
-            <form style={{ display: 'flex',
-        flexDirection: 'column',
-        gap: '15px'}} onSubmit={handleSubmit}>
-                <div>
-                    <label style={styles.label}>Personal Number:</label>
-                    <input type="text" value={personalNumber} onChange={handleInputChange} style={styles.input} required />
-                </div>
-                <button type="submit" style={styles.button}>Get Profile</button>
-            </form>
-           {client && (
-                <div style={styles.clientDetails}>
-                    <h2>Client Details</h2>
-                    <p><strong>First Name:</strong> {client.firstName}</p>
-                    <p><strong>Middle Name:</strong> {client.middleName}</p>
-                    <p><strong>Last Name:</strong> {client.lastName}</p>
-                    <p><strong>Phone Number:</strong> {client.phoneNumber}</p>
-                    <p><strong>Email Address:</strong> {client.emailAddress}</p>
-                </div>
-            )}
-              {clientBankAccounts.length > 0 && clientBankAccounts.map(account => (
-                    <div key={account.id} style={styles.clientDetails}>
-                        <h2>Bank Account Details</h2>
-                        <p><strong>Account Number:</strong> {account.accountNumberGeneratedID}</p>
-                        <p><strong>Current Balance:</strong> {account.currentBalance}</p>
-                    </div>
-                ))}
-         </div>
-         <br/>
-         <br/>
+            <Header />
+            <div style={styles.container}>
+                <h1 style={{textAlign:'left',
+        color: 'rgb(41 113 77)',
+        marginBottom: '30px',
+        fontSize: '2.5em'}}>My Profile</h1>
+                <div className="row" style={{display: 'flex',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap'}}>
+                    {user.length > 0 && (
+                        <div style={{backgroundColor: '#fff',
+                            borderRadius: '8px',
+                            padding: '20px',
+                            marginBottom: '20px',
+                            width: 'calc(50% - 10px)',
+                            boxShadow: '0 0 10px rgba(0, 0, 0, 0.05)',
+                            position: 'relative'}}>
+                            <FaUser style={{position: 'absolute',
+        top: '20px',
+        right: '20px',
+        fontSize: '1.5em',
+        color: '#004080'}} />
+                            <h2 style={styles.cardTitle}>User Details</h2>
+                            {user.map(account => (
+                                <div key={account.id} style={styles.details}>
+                                    <p><strong>Username:</strong> {account.userName}</p>
+                                    <p><strong>Middle Name:</strong> {account.middleName}</p>
+                                    <p><strong>Last Name:</strong> {account.lastName}</p>
+                                    <p><strong>Email:</strong> {account.email}</p>
+                                </div>
+                            ))}
+                        </div>
+                    )}
 
-         <div style={styles.container}>
-          <form style={{ display: 'flex',
-          flexDirection: 'column',
-          gap: '15px'}} onSubmit={handleSubmit1}>
-        <div>
-            <label style={styles.label}>Account Number:</label>
-            <input type="text" value={accountNumber} onChange={handleInputChange1} style={styles.input} required />
-        </div>
-        <button type="submit" style={styles.button}>Get BankAccount Details</button>
-        {creditCards && (
-                <div style={styles.clientDetails}>
-                    <h2>Credit Cards Details</h2>
-                    <p><strong>ValidThru:</strong> {creditCards.validThru}</p>
+                    {clientBankAccounts.length > 0 && (
+                        <div style={{backgroundColor: '#fff',
+                            borderRadius: '8px',
+                            padding: '20px',
+                            marginBottom: '20px',
+                            width: 'calc(50% - 10px)',
+                            boxShadow: '0 0 10px rgba(0, 0, 0, 0.05)',
+                            position: 'relative'}}>
+                            <FaWallet style={{position: 'absolute',
+        top: '20px',
+        right: '20px',
+        fontSize: '1.5em',
+        color: '#004080'}} />
+                            <h2 style={styles.cardTitle}>Bank Account Details</h2>
+                            {clientBankAccounts.map(account => (
+                                <div key={account.id} style={styles.details}>
+                                    <p><strong>Account Number:</strong> {account.accountNumberGeneratedID}</p>
+                                    <p><strong>Current Balance:</strong> ${account.currentBalance}</p>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
-            )}
-    </form>
-    </div>
-    </>
- )
+
+                <div className="row" style={{display: 'flex',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap'}}>
+                    {creditCards.length > 0 && (
+                        <div style={{backgroundColor: '#fff',
+                            borderRadius: '8px',
+                            padding: '20px',
+                            marginBottom: '20px',
+                            width: 'calc(50% - 10px)',
+                            boxShadow: '0 0 10px rgba(0, 0, 0, 0.05)',
+                            position: 'relative'}}>
+                            <FaCreditCard style={{position: 'absolute',
+        top: '20px',
+        right: '20px',
+        fontSize: '1.5em',
+        color: '#004080'}} />
+                            <h2 style={styles.cardTitle}>Credit Card Details</h2>
+                            {creditCards.map(card => (
+                                <div key={card.id} style={styles.details}>
+                                    <p><strong>Valid Thru:</strong> {card.validThru}</p>
+                                    <p><strong>CVV:</strong> {card.cvv}</p>
+                                    <p><strong>Limit:</strong> ${card.limite}</p>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                    {transactions.length > 0 && (
+                        <div style={{backgroundColor: '#fff',
+                            borderRadius: '8px',
+                            padding: '20px',
+                            marginBottom: '20px',
+                            width: 'calc(50% - 10px)',
+                            boxShadow: '0 0 10px rgba(0, 0, 0, 0.05)',
+                            position: 'relative'}}>
+                            <FaExchangeAlt style={{position: 'absolute',
+        top: '20px',
+        right: '20px',
+        fontSize: '1.5em',
+        color: '#004080'}} />
+                            <h2 style={styles.cardTitle}>Transaction Details</h2>
+                            {transactions.map(transaction => (
+                                <div key={transaction.id} style={styles.details}>
+                                    <p><strong>Transaction Type:</strong> {transaction.transactionType}</p>
+                                    <p><strong>Amount:</strong> ${transaction.transactionAmount}</p>
+                                    <p><strong>Destination Account:</strong> {transaction.destinationClientBankAccount}</p>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+                {/* {loans.length > 0 && (
+                        <div style={{backgroundColor: '#fff',
+                            borderRadius: '8px',
+                            padding: '20px',
+                            marginBottom: '20px',
+                            width: 'calc(50% - 10px)',
+                            boxShadow: '0 0 10px rgba(0, 0, 0, 0.05)',
+                            position: 'relative'}}>
+                            <FaExchangeAlt style={{position: 'absolute',
+        top: '20px',
+        right: '20px',
+        fontSize: '1.5em',
+        color: '#004080'}} />
+                            <h2 style={styles.cardTitle}>Loans Details</h2>
+                            {loans.map(loan => (
+                                <div key={loan.id} style={styles.details}>
+                                    <p><strong>Amount:</strong> ${loan.loanAmount}</p>
+                                    <p><strong>Interes Rate:</strong> {loan.interestRate}</p>
+                                    <p><strong>Loan Period:</strong> {loan.loanPeriod}</p>
+                                    <p><strong>Monthly Payment:</strong> {loan.monthlyPayment}</p>
+                                </div>
+                            ))}
+                        </div>
+                    )} */}
+            </div>
+        </>
+    );
 }
 
 const styles = {
     container: {
-        maxWidth: '600px',
-        margin: '0 auto',
+        width: '100%',
         padding: '20px',
-        border: '1px solid #ccc',
+        backgroundColor: '#f4f4f4',
         borderRadius: '10px',
-        backgroundColor: '#f9f9f9',
+        boxShadow: '0 0 15px rgba(0, 0, 0, 0.1)',
     },
     heading: {
         textAlign: 'center',
-        color: '#333',
+        color: '#004080',
+        marginBottom: '30px',
+        fontSize: '2.5em',
     },
-    form: {
+    row: {
         display: 'flex',
-        flexDirection: 'column',
-        gap: '15px',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
     },
-    label: {
-        fontWeight: 'bold',
-        marginBottom: '5px',
-    },
-    input: {
-        padding: '10px',
-        border: '1px solid #ccc',
-        borderRadius: '5px',
-        width: '100%',
-    },
-    button: {
-        padding: '10px',
-        backgroundColor: '#007bff',
-        color: 'white',
-        border: 'none',
-        borderRadius: '5px',
-        cursor: 'pointer',
-        transition: 'background-color 0.3s ease',
-    },
-    clientDetails: {
-        marginTop: '20px',
-        padding: '15px',
-        border: '1px solid #ddd',
-        borderRadius: '5px',
+    card: {
         backgroundColor: '#fff',
+        borderRadius: '8px',
+        padding: '20px',
+        marginBottom: '20px',
+        width: 'calc(50% - 10px)',
+        boxShadow: '0 0 10px rgba(0, 0, 0, 0.05)',
+        position: 'relative',
+    },
+    cardTitle: {
+        fontSize: '1.8em',
+        color: '#333',
+        marginBottom: '10px',
+        borderBottom: '2px solid #004080',
+        paddingBottom: '5px',
+    },
+    details: {
+        marginTop: '10px',
+        fontSize: '1em',
+        color: '#555',
+    },
+    icon: {
+        position: 'absolute',
+        top: '20px',
+        right: '20px',
+        fontSize: '1.5em',
+        color: '#004080',
     },
 };

@@ -18,17 +18,24 @@ import Header from "../Header";
 
 export default function RegisterTable() {
   const [users, setUsers] = useState<UserModel[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<UserModel[]>([]);
   const [openConfirm,setOpenConfirm] = useState<boolean>(false);
   const [deleteUserId, setDeleteUserId] = useState<string>("");
-  const [errors, setErrors] = useState({});
+  const [searchTerm, setSearchTerm] = useState<string>(""); 
   const navigate =  useNavigate();
   useEffect(() => {
     fetchData();
-  }, []);
+    setFilteredUsers(
+      users.filter((user) =>
+        user.personalNumberId!.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+  }, [searchTerm, users]);
 
   const fetchData = async () => {
       const result = await UserService.GetAllUsers();
       setUsers(result);
+      setFilteredUsers(result);
   };
 
   function deleteUser(id: string) {
@@ -66,6 +73,14 @@ export default function RegisterTable() {
                 >
                   Add New User
                 </Button>
+                <div className="col-12 col-sm-8 col-md-6 col-lg-4 col-xl-3">
+        <input className="form-control me-2 "
+        type="search" 
+        placeholder="Search by PersonalNumber"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        aria-label="Search"></input>
+      </div>
         </div>
       <Table striped>
         <TableHeader>
@@ -80,7 +95,7 @@ export default function RegisterTable() {
         </TableHeader>
 
         <TableBody>
-          {users.map((item) => (
+          {filteredUsers.map((item) => (
             <TableRow key={item.id}>
               <TableCell>{item.userName}</TableCell>
               <TableCell>{item.lastName}</TableCell>

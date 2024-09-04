@@ -3,12 +3,8 @@
  import { UserModel } from "../../interfaces/users";
  import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { Formik,Form } from 'formik';
-import * as yup from 'yup';
 import { UserService } from "../../services/UsersService";
 import { Role } from "../../interfaces/role";
-import MyTextInput from "../../FormElements/MyTextInput";
-import MySelectInput from "../../FormElements/DropDown";
 import Header from "../Header";
 import Footer from "../Footer";
 
@@ -29,6 +25,7 @@ export default function EditUser() {
    useEffect(() => {
     fetchData();
   }, []);
+
   const roleSelectList =  Object.keys(Role).map((key,i) => ({
     key: i,
     value: i,
@@ -62,6 +59,7 @@ export default function EditUser() {
    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
+      console.log(values.role);
       let model = {
         id: values.id,
         personalNumberId: values.personalNumberId,
@@ -69,9 +67,10 @@ export default function EditUser() {
         middleName: values.middleName,
         lastName: values.lastName,
         email: values.email,
-        password:values.password
+        password:values.password,
+        role: +(values.role?? Role.Member)
       }
-      const response = await axios.post(`https://localhost:7254/api/Account/register`,model);
+      const response = await axios.post(`https://localhost:7254/api/Users`,model);
       setRegistred(true);
       navigate("/RegisterTable");
     } catch (error) {
@@ -137,6 +136,19 @@ export default function EditUser() {
             id="lastName"
             name="lastName"
             value={values.lastName!}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="form-group">
+          <label>PersonalNumber</label>
+          <input
+            style={{ padding: "5px", margin: "5px" }}
+            type="text"
+            placeholder=" Personal Number"
+            className="form-control"
+            id="personalNumberId"
+            name="personalNumberId"
+            value={values.personalNumberId!}
             onChange={handleChange}
           />
         </div>
