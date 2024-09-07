@@ -30,7 +30,7 @@ export default function RegisterTable() {
         user.personalNumberId!.toLowerCase().includes(searchTerm.toLowerCase())
       )
     );
-  }, [searchTerm, users]);
+  }, [searchTerm]);
 
   const fetchData = async () => {
       const result = await UserService.GetAllUsers();

@@ -8,26 +8,30 @@ import {
   TableBody,
   TableCell,
   Confirm,
+  Input,
 } from "semantic-ui-react";
-import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Header from "../Header";
 import { LoanModel } from "../../interfaces/loan-model";
 import { LoanService } from "../../services/LoanService";
 
 export default function TransactionTable() {
   const [loans, setLoans] = useState<LoanModel[]>([]);
-  const [openConfirm,setOpenConfirm] = useState<boolean>(false);
+  const [filteredLoans, setFilteredLoans] = useState<LoanModel[]>([]);
+  const [openConfirm, setOpenConfirm] = useState<boolean>(false);
   const [deleteLoanId, setDeleteLoanId] = useState<string>("");
-  const [errors, setErrors] = useState({});
-  const navigate =  useNavigate();
+  const [clientAccountFilter, setClientAccountFilter] = useState<string>("");
+  const [loanAmountFilter, setLoanAmountFilter] = useState<number | "">("");
+  const navigate = useNavigate();
+
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
-      const result = await LoanService.GetAllLoans();
-      setLoans(result);
+    const result = await LoanService.GetAllLoans();
+    setLoans(result);
+    setFilteredLoans(result);
   };
 
   function deleteLoan(id: string) {
@@ -35,37 +39,65 @@ export default function TransactionTable() {
     setDeleteLoanId(id);
   }
 
-    async function confirmedDeleteLoan(id:string)
-    {
-      var result = await LoanService.DeleteLoan(id);
-      setLoans(loans.filter((loan) => loan.id !== id))
-      setOpenConfirm(false);
-      setDeleteLoanId("");
-    }
-
-  function sendToDetails(id:string | null){
-    navigate(`/EditLoan/${id}`)
+  async function confirmedDeleteLoan(id: string) {
+    await LoanService.DeleteLoan(id);
+    setLoans(loans.filter((loan) => loan.id !== id));
+    setFilteredLoans(filteredLoans.filter((loan) => loan.id !== id));
+    setOpenConfirm(false);
+    setDeleteLoanId("");
   }
 
-  function AddLoan(){
-    navigate(`/AddLoan`)
+  function sendToDetails(id: string | null) {
+    navigate(`/EditLoan/${id}`);
   }
 
+  function AddLoan() {
+    navigate(`/AddLoan`);
+  }
 
+  // Function to filter loans
+  useEffect(() => {
+    const filtered = loans.filter(
+      (loan) =>
+        loan.clientAccountNumber
+          .toLowerCase()
+          .includes(clientAccountFilter.toLowerCase()) &&
+        (loanAmountFilter === "" ||
+          loan.loanAmount!.toString().includes(loanAmountFilter.toString()))
+    );
+    setFilteredLoans(filtered);
+  }, [clientAccountFilter, loanAmountFilter, loans]);
 
   return (
     <Fragment>
-       <Header/>
+      <Header />
       <div className="mt-5 d-flex align-items-center">
-      <h1 style={{ marginLeft: "30px" }}>Loans</h1>
-      <Button
-                  type="button"
-                  className="ui positive basic button ms-4"
-                  onClick={() => AddLoan()}
-                >
-                  Add New Loan
-                </Button>
-        </div>
+        <h1 style={{ marginLeft: "30px" }}>Loans</h1>
+        <Button
+          type="button"
+          className="ui positive basic button ms-4"
+          onClick={() => AddLoan()}
+        >
+          Add New Loan
+        </Button>
+      </div>
+
+      {/* Filter inputs */}
+      <div className="filters" style={{ margin: "20px" }}>
+        <Input
+          placeholder="Filter by Client Account Number"
+          value={clientAccountFilter}
+          onChange={(e) => setClientAccountFilter(e.target.value)}
+          style={{ marginRight: "10px" }}
+        />
+        <Input
+          placeholder="Filter by Loan Amount"
+          type="number"
+          value={loanAmountFilter}
+          onChange={(e) => setLoanAmountFilter(e.target.value ? Number(e.target.value) : "")}
+        />
+      </div>
+
       <Table striped>
         <TableHeader>
           <TableRow>
@@ -83,7 +115,7 @@ export default function TransactionTable() {
         </TableHeader>
 
         <TableBody>
-          {loans.map((item) => (
+          {filteredLoans.map((item) => (
             <TableRow key={item.id}>
               <TableCell>{item.clientAccountNumber}</TableCell>
               <TableCell>{item.loansTypesId}</TableCell>
@@ -95,7 +127,13 @@ export default function TransactionTable() {
               <TableCell>{item.employmentStatus}</TableCell>
               <TableCell>{item.userName}</TableCell>
               <TableCell>
-                <Button  type="button"  className="btn ui green basic button" onClick={()=>sendToDetails(item.id!)}>Edit</Button>
+                <Button
+                  type="button"
+                  className="btn ui green basic button"
+                  onClick={() => sendToDetails(item.id!)}
+                >
+                  Edit
+                </Button>
                 <Button
                   type="button"
                   className="btn btn-danger"
@@ -107,11 +145,11 @@ export default function TransactionTable() {
               </TableCell>
             </TableRow>
           ))}
-             <Confirm
-          open={openConfirm}
-          onCancel={()=> setOpenConfirm(false)}
-          onConfirm={()=> confirmedDeleteLoan(deleteLoanId)}
-        />
+          <Confirm
+            open={openConfirm}
+            onCancel={() => setOpenConfirm(false)}
+            onConfirm={() => confirmedDeleteLoan(deleteLoanId)}
+          />
         </TableBody>
       </Table>
     </Fragment>

@@ -16,6 +16,10 @@ export class LoanService {
         const result = await axios.get(`${LoanService.baseUrl}/${id}`);
         return result.data;
     }
+    public static async CountLoans(): Promise<number> {
+      const result = await axios.get(`${this.baseUrl}/count`);
+      return result.data;
+  }
 
    public static async EditOrAddLoan(model: LoanModel): Promise<void> {
     const result = await axios.post(`${LoanService.baseUrl}`, model);

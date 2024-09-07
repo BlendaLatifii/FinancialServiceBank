@@ -12,6 +12,7 @@ namespace Domain.Entities
         public string Token { get; set; } = default!;
         public DateTime ExpiresAt { get; set; }
         public DateTime Created { get; set; } = DateTime.Now;
+        public Guid UserId { get; set; }
         public User User { get; set; } = default!;
     }
 }

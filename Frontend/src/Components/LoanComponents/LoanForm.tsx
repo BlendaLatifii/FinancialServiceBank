@@ -11,6 +11,7 @@ import { LoanModel } from "../../interfaces/loan-model";
 import { LoanService } from "../../services/LoanService";
 import { employmentStatus } from "../../interfaces/employmentStatus";
 import { loanType } from "../../interfaces/LoanType";
+import { AuthService } from "../../services/AuthService";
 export default function LoanForm() {
   const { id } = useParams<{ id: string }>();
   const [values, setValues] = useState<LoanModel>({
@@ -51,8 +52,13 @@ export default function LoanForm() {
     await LoanService.EditOrAddLoan(model);
     sendToOverview();
   };
+  const isAdmin = AuthService.GetUserRole() === 'Admin';
   function sendToOverview(){
-    navigate("/HomePage");
+    if(isAdmin){
+      navigate('/LoanTable');
+    } else{
+      navigate('/HomePage');
+    }
   }
   const typeSelectList = Object.keys(employmentStatus)
     .map((key, i) => ({

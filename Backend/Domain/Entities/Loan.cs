@@ -20,26 +20,59 @@ namespace Domain.Entities
         public ClientBankAccount ClientBankAccount { get; set; } = default!;
         public Loan()
         {
-            LoanPeriod = CalculateLoanPeriod(LoanAmount);
+            LoanPeriod = CalculateLoanPeriod(LoanAmount , Income, EmploymentStatus);
             InterestRate = CalculateAnnualInterestRate(EmploymentStatus, Income, LoanPeriod);
             MonthlyPayment = CalculateMonthlyPayment(LoanAmount, InterestRate, LoanPeriod);
         }
 
-        public static string CalculateLoanPeriod(string loanAmountStr)
+        public static string CalculateLoanPeriod(string loanAmountStr, string incomestr, EmploymentStatus employmentStatus)
         {
             if (decimal.TryParse(loanAmountStr, out decimal loanAmount))
             {
                 if (loanAmount < 1000)
                 {
+                    if (employmentStatus == EmploymentStatus.i_pa_pune)
+                    {
+                        return "6"; 
+                    }
                     return "12";
                 }
-                else if (loanAmount > 1000 && loanAmount < 10000)
+                else if (loanAmount >= 1000 && loanAmount <= 10000)
                 {
+                    if (decimal.TryParse(incomestr, out decimal income))
+                    {
+                        if (income < 1000 || employmentStatus == EmploymentStatus.i_pa_pune)
+                        {
+                            return "36"; 
+                        }
+                    }
                     return "24";
+                }
+                else if (loanAmount > 10000 && loanAmount <= 20000)
+                {
+                    if (decimal.TryParse(incomestr, out decimal income))
+                    {
+                        if (income < 1000)
+                        {
+                            return "48";
+                        }
+                    }
+                    return "36"; 
+                }
+                else if (loanAmount > 20000 && loanAmount < 50000)
+                {
+                    if (decimal.TryParse(incomestr, out decimal income))
+                    {
+                        if (income < 1000)
+                        {
+                            return "60";
+                        }
+                    }
+                    return "48"; 
                 }
                 else
                 {
-                    return "60";
+                    return "60"; 
                 }
             }
 

@@ -11,7 +11,7 @@ export interface LoanModel {
     income:string|null;
     employmentStatus:employmentStatus;
     clientBankAccountId: string |null;
-    clientAccountNumber:string | null;
+    clientAccountNumber:string ;
     loansTypesId: loanType ;
     userName:string|null;
 }

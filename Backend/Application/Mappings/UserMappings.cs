@@ -28,6 +28,7 @@ namespace Application.Mappings
                 .ForMember(x => x.Email, y => y.MapFrom(x => x.Email))
                 .ForMember(x => x.MiddleName, y => y.MapFrom(x => x.MiddleName))
                 .ForMember(x => x.PersonalNumberId, y => y.MapFrom(x => x.PersonalNumberId));
+
         }
     }
 }

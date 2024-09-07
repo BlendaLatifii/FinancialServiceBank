@@ -8,9 +8,10 @@ import {
   TableBody,
   TableCell,
   Confirm,
+  Dropdown,
+  Input,
 } from "semantic-ui-react";
-import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Header from "../Header";
 import { TransactionModel } from "../../interfaces/transaction-model";
 import { TransactionService } from "../../services/TransactionService";
@@ -18,25 +19,16 @@ import { TranType } from "../../interfaces/TranType";
 
 export default function TransactionTable() {
   const [transactions, setTransactions] = useState<TransactionModel[]>([]);
-  const [filteredUsers, setFilteredUsers] = useState<TransactionModel[]>([]);
-  const [openConfirm,setOpenConfirm] = useState<boolean>(false);
+  const [filteredTransactions, setFilteredTransactions] = useState<TransactionModel[]>([]);
+  const [openConfirm, setOpenConfirm] = useState<boolean>(false);
   const [deleteTransactionId, setDeleteTransactionId] = useState<string>("");
-  const [errors, setErrors] = useState({});
-  const [searchTerm, setSearchTerm] = useState<string>(""); 
-  const navigate =  useNavigate();
-  useEffect(() => {
-    fetchData();
-      setFilteredUsers(
-        transactions.filter((user) =>
-          user.sourceClientBankAccount!.toLowerCase().includes(searchTerm.toLowerCase())
-        )
-      );
-    }, [searchTerm, transactions]);
-
+  const [sourceAccountFilter, setSourceAccountFilter] = useState<string>("");
+  const [transactionTypeFilter, setTransactionTypeFilter] = useState<TranType | "">("");
+  const navigate = useNavigate();
   const fetchData = async () => {
-      const result = await TransactionService.GetAllTransactions();
-      setTransactions(result);
-      setFilteredUsers(result);
+    const result = await TransactionService.GetAllTransactions();
+    setTransactions(result);
+    setFilteredTransactions(result);
   };
 
   function deleteTransaction(id: string) {
@@ -44,45 +36,74 @@ export default function TransactionTable() {
     setDeleteTransactionId(id);
   }
 
-    async function confirmedDeleteTransaction(id:string)
-    {
-      var result = await TransactionService.DeleteTransaction(id);
-      setTransactions(transactions.filter((transaction) => transaction.id !== id))
-      setOpenConfirm(false);
-      setDeleteTransactionId("");
-    }
-
-  function sendToDetails(id:string | null){
-    navigate(`/EditTransaction/${id}`)
+  async function confirmedDeleteTransaction(id: string) {
+    await TransactionService.DeleteTransaction(id);
+    setTransactions(transactions.filter((transaction) => transaction.id !== id));
+    setFilteredTransactions(filteredTransactions.filter((transaction) => transaction.id !== id));
+    setOpenConfirm(false);
+    setDeleteTransactionId("");
   }
 
-  function AddTransaction(){
-    navigate(`/AddTransaction`)
+  function sendToDetails(id: string | null) {
+    navigate(`/EditTransaction/${id}`);
   }
 
+  function AddTransaction() {
+    navigate(`/AddTransaction`);
+  }
 
+  useEffect(() => {
+    fetchData();
+    const filtered = transactions.filter(
+      (transaction) =>
+        transaction.sourceClientBankAccount && 
+      transaction.sourceClientBankAccount
+          .toLowerCase()
+          .includes(sourceAccountFilter.toLowerCase()) &&
+        (transactionTypeFilter === "" ||
+          transaction.transactionType === transactionTypeFilter)
+    );
+    setFilteredTransactions(filtered);
+  }, [sourceAccountFilter, transactionTypeFilter, transactions]);
+
+  
+  const transactionTypeOptions = [
+    { key: "transfer", text: "Transfer", value: TranType.Transfer },
+    { key: "deposit", text: "Deposit", value: TranType.Deposit },
+    { key: "withdrawal", text: "Withdrawal", value: TranType.WithDrawal },
+  ];
 
   return (
     <Fragment>
-       <Header/>
+      <Header />
       <div className="mt-5 d-flex align-items-center">
-      <h1 style={{ marginLeft: "30px" }}>Transactions</h1>
-      <Button
-                  type="button"
-                  className="ui positive basic button ms-4"
-                  onClick={() => AddTransaction()}
-                >
-                  Add New Transaction
-                </Button>
-                <div className="col-12 col-sm-8 col-md-6 col-lg-4 col-xl-3">
-        <input className="form-control me-2 "
-        type="search" 
-        placeholder="Search by SourceAccountNumber"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        aria-label="Search"></input>
+        <h1 style={{ marginLeft: "30px" }}>Transactions</h1>
+        <Button
+          type="button"
+          className="ui positive basic button ms-4"
+          onClick={() => AddTransaction()}
+        >
+          Add New Transaction
+        </Button>
       </div>
-        </div>
+
+      <div className="filters" style={{ margin: "20px" }}>
+        <Input
+          placeholder="Filter by Source Account Number"
+          value={sourceAccountFilter}
+          onChange={(e) => setSourceAccountFilter(e.target.value)}
+          style={{ marginRight: "10px" }}
+        />
+        <Dropdown
+          placeholder="Filter by Transaction Type"
+          selection
+          clearable
+          options={transactionTypeOptions}
+          value={transactionTypeFilter}
+          onChange={(e, { value }) => setTransactionTypeFilter(value as TranType)}
+        />
+      </div>
+
       <Table striped>
         <TableHeader>
           <TableRow>
@@ -98,15 +119,19 @@ export default function TransactionTable() {
         </TableHeader>
 
         <TableBody>
-          {filteredUsers.map((item) => (
+          {filteredTransactions.map((item) => (
             <TableRow key={item.id}>
               <TableCell>{item.sourceClientBankAccount}</TableCell>
               <TableCell>{item.destinationClientBankAccount}</TableCell>
               <TableCell>{item.transactionAmount}</TableCell>
               <TableCell>
-                  {item.transactionType === TranType.Deposit ? "Deposit" : 
-                   item.transactionType === TranType.WithDrawal ? "Withdrawal" :
-                   item.transactionType === TranType.Transfer ? "Transfer" : ""}
+                {item.transactionType === TranType.Deposit
+                  ? "Deposit"
+                  : item.transactionType === TranType.WithDrawal
+                  ? "Withdrawal"
+                  : item.transactionType === TranType.Transfer
+                  ? "Transfer"
+                  : ""}
               </TableCell>
               <TableCell>
                 {item.transactionDate != null
@@ -118,11 +143,15 @@ export default function TransactionTable() {
                   ? new Date(item.transactionDateUpdated).toLocaleString()
                   : ""}
               </TableCell>
+              <TableCell>{item.userName}</TableCell>
               <TableCell>
-                {item.userName}
-              </TableCell>
-              <TableCell>
-                <Button  type="button"  className="btn ui green basic button" onClick={()=>sendToDetails(item.id!)}>Edit</Button>
+                <Button
+                  type="button"
+                  className="btn ui green basic button"
+                  onClick={() => sendToDetails(item.id!)}
+                >
+                  Edit
+                </Button>
                 <Button
                   type="button"
                   className="btn btn-danger"
@@ -134,11 +163,11 @@ export default function TransactionTable() {
               </TableCell>
             </TableRow>
           ))}
-             <Confirm
-          open={openConfirm}
-          onCancel={()=> setOpenConfirm(false)}
-          onConfirm={()=> confirmedDeleteTransaction(deleteTransactionId)}
-        />
+          <Confirm
+            open={openConfirm}
+            onCancel={() => setOpenConfirm(false)}
+            onConfirm={() => confirmedDeleteTransaction(deleteTransactionId)}
+          />
         </TableBody>
       </Table>
     </Fragment>

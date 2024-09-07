@@ -5,13 +5,13 @@ import { Formik,Form } from 'formik';
 import * as yup from 'yup';
 import { ClientBankAccountService } from "../../services/ClientBankAccountService";
 import MyTextInput from "../../FormElements/MyTextInput";
-import MySelectInput from "../../FormElements/DropDown";
 import { ClientBankAccountModel } from "../../interfaces/clientaccount-model";
 import { SelectListItem } from "../../interfaces/select-list-item";
 import { BankAccountService } from "../../services/BankAccountService";
 import { BranchService } from "../../services/BranchService";
 import Header from "../Header";
 import Footer from "../Footer";
+import { AuthService } from "../../services/AuthService";
 
 
 export default function EditClientAccount() {
@@ -44,7 +44,8 @@ export default function EditClientAccount() {
         console.error("Error fetching client details:", error);
       }
     };
-
+    fetchBranch();
+    fetchAccountTypes();
     fetchData();
     if (id) {
       ClientBankAccountService.DeductMaintenanceFeesAfterAMonth();
@@ -62,8 +63,13 @@ export default function EditClientAccount() {
    sendToOverview();
   };
 
+  const isAdmin = AuthService.GetUserRole() === 'Admin';
   function sendToOverview(){
-   navigate('/HomePage')
+    if(isAdmin){
+      navigate('/ClientAccountTable');
+    } else{
+      navigate('/HomePage');
+    }
   }
 
   const handleChange = (e:React.ChangeEvent<HTMLInputElement | HTMLSelectElement >) => {
@@ -85,11 +91,6 @@ export default function EditClientAccount() {
       console.error('Error fetching account types:', error);
     }
   };
-
-  useEffect(()=>{
-    fetchAccountTypes()
-  },[])
-
   const fetchBranch = async () => {
     try {
       const response = await BranchService.GetSelectList(); 
@@ -104,10 +105,6 @@ export default function EditClientAccount() {
       console.error('Error fetching branch:', error);
     }
   };
-
-  useEffect(()=>{
-    fetchBranch()
-  },[])
 
   return (
     <>

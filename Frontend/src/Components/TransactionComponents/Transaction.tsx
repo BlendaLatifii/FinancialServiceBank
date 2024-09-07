@@ -116,10 +116,14 @@ export default function Transaction() {
       console.error("Error creating transaction:", error);
     }
   };
-   function sendToOverview(){
-    navigate('/HomePage');
-   }
-   const isAdmin = AuthService.GetUserRole() === 'Admin';
+  const isAdmin = AuthService.GetUserRole() === 'Admin';
+  function sendToOverview(){
+    if(isAdmin){
+      navigate('/TransactionTable');
+    } else{
+      navigate('/HomePage');
+    }
+  }
   return (
     <>
       <Header />

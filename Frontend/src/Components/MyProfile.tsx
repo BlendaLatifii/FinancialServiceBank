@@ -61,7 +61,7 @@ export default function MyProfile() {
         fetchCreditCards();
         fetchClientBankAccounts();
         fetchTransactions();
-      //  fetchLoans();
+       fetchLoans();
         fetchUsers();
     }, []);
 
@@ -170,13 +170,14 @@ export default function MyProfile() {
                                 <div key={transaction.id} style={styles.details}>
                                     <p><strong>Transaction Type:</strong> {transaction.transactionType}</p>
                                     <p><strong>Amount:</strong> ${transaction.transactionAmount}</p>
-                                    <p><strong>Destination Account:</strong> {transaction.destinationClientBankAccount}</p>
+                                    <p><strong>Destination Account:</strong> {transaction.destinationClientBankAccount!}</p>
+                                    <hr/>
                                 </div>
                             ))}
                         </div>
                     )}
                 </div>
-                {/* {loans.length > 0 && (
+                 {loans.length > 0 && (
                         <div style={{backgroundColor: '#fff',
                             borderRadius: '8px',
                             padding: '20px',
@@ -199,7 +200,7 @@ export default function MyProfile() {
                                 </div>
                             ))}
                         </div>
-                    )} */}
+                    )} 
             </div>
         </>
     );

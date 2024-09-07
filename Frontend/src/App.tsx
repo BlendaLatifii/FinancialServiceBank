@@ -4,9 +4,9 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { AuthService } from "./services/AuthService";
 import "react-toastify/dist/ReactToastify.css";
-import Navbar  from "./Components/Navbar/Navbar";
-import Header from "./Components/Header";
-import Footer from "./Components/Footer";
+const Header=lazy(()=>import("./Components/Header")); 
+const Footer =lazy(()=>import("./Components/Navbar/Navbar"));
+const Navbar=lazy(()=>import("./Components/Navbar/Navbar"));
 const HomePage= lazy(()=>import("./Components/HomePage"));
 const Services= lazy(()=>import("./Components/Services"));
 const AboutUs= lazy(()=>import("./Components/AboutUs"));
@@ -23,7 +23,7 @@ const EditBranch = lazy(() => import("./Components/BranchComponents/EditBranch")
 const EditBankAccount = lazy(() => import("./Components/BankAccountComponents/EditBankAccount"));
 const AccountTable = lazy(() => import("./Components/BankAccountComponents/AccountTable"));
 //const RegisterForClients = lazy(() => import("./Components/RegisterForClients"));
-const ClientTable = lazy(() => import("./Components/ClientComponents/ClientTable"));
+//const ClientTable = lazy(() => import("./Components/ClientComponents/ClientTable"));
 const ClientAccountTable = lazy(() => import("./Components/ClientBankAccountComponents/ClientAccountTable"));
 const EditClientAccount = lazy(() => import("./Components/ClientBankAccountComponents/EditClientAccount"));
 const TypesOfCreditCardsTable = lazy(() => import("./Components/TypesOfCreditCardsComponents/TypesOfCreditCardsTable"));
@@ -34,12 +34,10 @@ const Transaction = lazy(() => import("./Components/TransactionComponents/Transa
 const TransactionTable = lazy(() => import("./Components/TransactionComponents/TransactionTable"));
 const LoanForm = lazy(() => import("./Components/LoanComponents/LoanForm"));
 const LoanTable = lazy(() => import("./Components/LoanComponents/LoanTable"));
-const ForgotPassword = lazy(() => import("./Components/ForgotPassword"));
-const ResetPassword = lazy(() => import("./Components/ResetPassword"));
 
 function App() {
-  axios.interceptors.request.use((config) => {
-    config.headers.Authorization = `Bearer ${AuthService.token}`;
+  axios.interceptors.request.use(async(config) => {
+    config.headers.Authorization = `Bearer ${await AuthService.GetToken()}`;
     return config;
   });
 
@@ -80,9 +78,9 @@ function App() {
 
   return (
     <>
-    
+    <Suspense>
     { <Navbar/>}
-
+    </Suspense>
     <Suspense fallback={<h1>Loading...</h1>}>
       <Routes>
         <Route  path="/Dashboard" element={ isAdmin ? <Dashboard /> : <Navigate to="/" replace />}/>
@@ -108,7 +106,7 @@ function App() {
        {/* // <Route path="/RegisterForClients" element={<RegisterForClients />} /> */}
         {/* <Route path="/AddClient" element={isAdmin ?<RegisterForClients/> : <Navigate to="/" replace />} /> */}
         {/* <Route path="/RegisterForClients/:id" element={isAdmin ? <RegisterForClients/> : <Navigate to="/" replace />} /> */}
-        <Route path="/ClientTable" element={isAdmin ? <ClientTable/>: <Navigate to="/" replace/>}/>
+        {/* <Route path="/ClientTable" element={isAdmin ? <ClientTable/>: <Navigate to="/" replace/>}/> */}
         <Route path="/AddClientAccount" element={<EditClientAccount />} />
         <Route path="/EditClientAccount/:id" element={isAdmin ? <EditClientAccount/> : <Navigate to="/" replace />} /> 
         <Route path="/EditClientAccount" element={isAdmin ? <EditClientAccount /> : <Navigate to="/" replace />} />
@@ -127,8 +125,6 @@ function App() {
         <Route path="/AddLoan" element={<LoanForm/>}/>
         <Route path="/EditLoan/:id" element={isAdmin ? <LoanForm/> : <Navigate to="/" replace />} />
         <Route path="/LoanTable" element={ isAdmin ? <LoanTable /> : <Navigate to="/" replace/>}/>
-        <Route path="/ForgotPassword" element={<ForgotPassword/>} />
-        <Route path="/ResetPassword" element={<ResetPassword/>} />
       </Routes>
       </Suspense>
       <ToastContainer />

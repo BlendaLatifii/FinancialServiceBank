@@ -5,14 +5,14 @@ import Header from './Header';
 import { TransactionService } from '../services/TransactionService';
 import { TransactionTypePercentageModel } from '../interfaces/TransactionTypePercentageModel';
 import { ClientBankAccountService } from '../services/ClientBankAccountService';
-import { ClientService } from '../services/ClientService';
 import { CreditCardsService } from '../services/CreditCardsService';
+import { LoanService } from '../services/LoanService';
 
 export default function Dashboard() {
   const [pieData, setPieData] = useState<TransactionTypePercentageModel[]>([]);
   const [accountCount, setAccountCount] = useState<number>(0);
-  const [clientCount, setClientCount] = useState<number>(0);
   const [creditCardsCount, setCreditCardsCount] = useState<number>(0);
+  const [loansCount, setLoansCount] = useState<number>(0);
   const [studentClients, setStudentClients] = useState<string[]>([]);
 
   useEffect(() => {
@@ -44,18 +44,6 @@ export default function Dashboard() {
   useEffect(() => {
     fetchAccountCount();
   }, []);
-
-  const fetchClientCount = async () => {
-    try {
-      const count = await ClientService.CountAccount();
-      setClientCount(count);
-    } catch (error) {
-      console.error('Error fetching account count:', error);
-    }
-  };
-  useEffect(() => {
-    fetchClientCount();
-  }, []);
   const fetchCreditCardsCount = async () => {
     try {
       const count = await CreditCardsService.CountCreditCards();
@@ -66,6 +54,17 @@ export default function Dashboard() {
   };
   useEffect(() => {
     fetchCreditCardsCount();
+  }, []);
+  const fetchLoansCount = async () => {
+    try {
+      const count = await LoanService.CountLoans();
+      setLoansCount(count);
+    } catch (error) {
+      console.error('Error fetching account count:', error);
+    }
+  };
+  useEffect(() => {
+    fetchLoansCount();
   }, []);
   const fetchStudentClients = async () => {
     try {
@@ -109,7 +108,6 @@ export default function Dashboard() {
       transform: 'scale(1.05)'
     },
     register: { backgroundColor: '#ff6347', backgroundImage: 'linear-gradient(135deg, #ff6347 0%, #ff4500 100%)' },  // Tomato to Orange Red
-    client: { backgroundColor: '#4682b4', backgroundImage: 'linear-gradient(135deg, #4682b4 0%, #1e90ff 100%)' },   // Steel Blue to Dodger Blue
     bankAccount: { backgroundColor: '#32cd32', backgroundImage: 'linear-gradient(135deg, #32cd32 0%, #228b22 100%)' }, // Lime Green to Forest Green
     clientAccount: { backgroundColor: '#ff4500', backgroundImage: 'linear-gradient(135deg, #ff4500 0%, #ff6347 100%)' }, // Orange Red to Tomato
     transaction: { backgroundColor: '#1e90ff', backgroundImage: 'linear-gradient(135deg, #1e90ff 0%, #4682b4 100%)' }, // Dodger Blue to Steel Blue
@@ -176,7 +174,6 @@ export default function Dashboard() {
       backgroundColor: '#f0f2f5',
       fontFamily: 'Arial, sans-serif'}}>
         <Link to="/RegisterTable" style={{ ...styles.link, ...styles.register }}>Register</Link>
-        <Link to="/ClientTable" style={{ ...styles.link, ...styles.client }}>Client</Link>
         <Link to="/BankAccountTable" style={{ ...styles.link, ...styles.bankAccount }}>Bank Account</Link>
         <Link to="/ClientAccountTable" style={{ ...styles.link, ...styles.clientAccount }}>Client Account</Link>
         <Link to="/TransactionTable" style={{ ...styles.link, ...styles.transaction }}>Transaction</Link>
@@ -198,17 +195,6 @@ export default function Dashboard() {
       backgroundColor: '#ffffff',
       boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
       textAlign: 'center'}}>
-          <h2>Clients</h2>
-          <p>{clientCount}</p>
-        </div>
-        <div style={{flex: '1 1 300px',
-      margin: '10px',
-      padding: '20px',
-      border: '1px solid #e0e0e0',
-      borderRadius: '12px',
-      backgroundColor: '#ffffff',
-      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-      textAlign: 'center'}}>
           <h2>Client Bank Accounts</h2>
           <p>{accountCount}</p>
         </div>
@@ -222,6 +208,17 @@ export default function Dashboard() {
       textAlign: 'center'}}>
           <h2>Credit Cards</h2>
           <p>{creditCardsCount}</p>
+        </div>
+        <div style={{flex: '1 1 300px',
+      margin: '10px',
+      padding: '20px',
+      border: '1px solid #e0e0e0',
+      borderRadius: '12px',
+      backgroundColor: '#ffffff',
+      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+      textAlign: 'center'}}>
+          <h2>Loans</h2>
+          <p>{loansCount}</p>
         </div>
       </div>
 <div style={{display: "flex"}}>

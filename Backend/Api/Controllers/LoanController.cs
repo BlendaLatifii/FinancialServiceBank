@@ -34,6 +34,13 @@ namespace Api.Controllers
             var model = await _loanService.GetLoanByIdAsync(id, cancellationToken);
             return Ok(model);
         }
+        [Authorize(Roles = "Admin")]
+        [HttpGet("count")]
+        public async Task<ActionResult<int>> GetLoanssCount(CancellationToken cancellationToken)
+        {
+            var count = await _loanService.CountAllLoansAsync(cancellationToken);
+            return Ok(count);
+        }
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> CreateOrUpdateLoanAsync([FromBody]LoanModel model, CancellationToken cancellationToken)

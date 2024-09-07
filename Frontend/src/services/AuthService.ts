@@ -10,6 +10,8 @@ export class AuthService {
   private static BaseUrl = "https://localhost:7254/api/Account/";
   public static token: string | null = null;
   public static role: string | null = null;
+  public static refreshToken: string | null = null;
+  public static isRefreshing:boolean = false;
 
   public static async Login(user: LogInModel): Promise<AuthenticationModel> {
     try{
@@ -22,6 +24,7 @@ export class AuthService {
       }
       localStorage.setItem("jwt", response.data.token);
       localStorage.setItem("refreshToken", response.data.refreshToken);
+      localStorage.setItem("expiresAt", response.data.expiresAt.toString());
       AuthService.token = response.data?.token;
       localStorage.setItem("userModel", JSON.stringify(response.data.userData));
       localStorage.setItem("role", response.data.userRole);
@@ -38,6 +41,59 @@ export class AuthService {
     catch(e){
       return null!;
     }
+  }
+  public static async RefreshToken(): Promise<boolean> {
+    if(this.isRefreshing){
+      console.log('idk');
+      return true;
+    }
+    this.isRefreshing = true;
+    const refreshToken = localStorage.getItem("refreshToken");
+    const token = localStorage.getItem("jwt");
+    
+    if (!refreshToken || !token) {
+      return false;
+    }
+  
+    try {
+      const response = await axios.post<AuthenticationModel>(
+        `${AuthService.BaseUrl}RefreshToken`,
+        { token, refreshToken }
+      );
+      console.log(response);
+      if (!response.data) {
+        return false;
+      }
+  
+      localStorage.setItem("jwt", response.data.token);
+      localStorage.setItem("refreshToken", response.data.refreshToken);
+      localStorage.setItem("expiresAt", response.data.expiresAt.toString());
+  
+      AuthService.token = response.data?.token;
+      AuthService.role = response.data?.userRole;
+      
+      
+      return true;
+    } catch (e) {
+      console.log(e);
+      AuthService.LogOut();
+      return false;
+    }
+    finally{
+      this.isRefreshing= false;
+    }
+  }
+  public static async GetToken(): Promise<string | null> {
+    const expiresAt = localStorage.getItem("expiresAt");
+    if (expiresAt && new Date(expiresAt) < new Date()) {
+      const refreshed = await this.RefreshToken();
+      if(!refreshed){
+        return null;
+      }
+    }
+
+    AuthService.token = localStorage.getItem("jwt");
+    return AuthService.token;
   }
 
   public static LogOut(): void {

@@ -21,7 +21,8 @@ function Navbar()  {
         }
         return (
           <>
-            <IconContext.Provider value={{ color: '#fff' }}>
+          <div style={{ backgroundColor: '#008374' }}>
+            <IconContext.Provider  value={{ color: '#fff' }} >
             { AuthService.LoggedInUser() != null && <div className='navbar'>
                 <Link to='#' className='menu-bars'>
                   <FaIcons.FaBars className="ngjyra-sidebarhover" onClick={() => AuthService.GetUserRole() == "Admin" ? showSidebar() : null} />
@@ -61,6 +62,7 @@ function Navbar()  {
             
               
             </IconContext.Provider>
+            </div>
           </>
         );
       }

@@ -24,10 +24,14 @@ namespace Application.Services
         }
         public async Task<List<LoanModel>> GetAllLoansAsync(CancellationToken cancellationToken)
         {
-            var loans = await _context.Loans.Include(x => x.User).ToListAsync(cancellationToken);
+            var loans = await _context.Loans.Include(x => x.User).Include(x=>x.ClientBankAccount).ToListAsync(cancellationToken);
 
             var loanmodel = mapper.Map<List<LoanModel>>(loans);
             return loanmodel;
+        }
+        public async Task<int> CountAllLoansAsync(CancellationToken cancellationToken)
+        {
+            return await _context.Loans.CountAsync(cancellationToken);
         }
         public async Task<LoanModel> GetLoanByIdAsync(Guid id, CancellationToken cancellationToken)
         {
@@ -62,7 +66,7 @@ namespace Application.Services
             }
             if (model.Id == null || model.Id == Guid.Empty)
             {
-                var loanPeriod = Loan.CalculateLoanPeriod(model.LoanAmount);
+                var loanPeriod = Loan.CalculateLoanPeriod(model.LoanAmount , model.Income , model.EmploymentStatus);
                 var interestRate = Loan.CalculateAnnualInterestRate(model.EmploymentStatus, model.Income, loanPeriod);
                 var monthlyPayment = Loan.CalculateMonthlyPayment(model.LoanAmount, interestRate, loanPeriod);
                 var newLoan = new Loan()
@@ -95,7 +99,7 @@ namespace Application.Services
                 existingLoan.LoanAmount = model.LoanAmount;
                 existingLoan.Income = model.Income;
                 existingLoan.EmploymentStatus = model.EmploymentStatus;
-                existingLoan.LoanPeriod = Loan.CalculateLoanPeriod(model.LoanAmount);
+                existingLoan.LoanPeriod = Loan.CalculateLoanPeriod(model.LoanAmount , model.Income, model.EmploymentStatus);
                 existingLoan.InterestRate = Loan.CalculateAnnualInterestRate(model.EmploymentStatus, model.Income, existingLoan.LoanPeriod);
                 existingLoan.MonthlyPayment = Loan.CalculateMonthlyPayment(model.LoanAmount, existingLoan.InterestRate, existingLoan.LoanPeriod);
 

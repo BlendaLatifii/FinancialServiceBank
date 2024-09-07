@@ -84,7 +84,6 @@ function Services() {
     </div>
     <br/>
   <div className="account-list">
-    <Link to="/RegisterForClients" className="link-info">
         <div className="accounts-container">
             {creditCards.map(creditCard => (
                 <div key={creditCard.id} className="account-card">
@@ -93,10 +92,9 @@ function Services() {
                 </div>
             ))}
         </div>
-    </Link>
 </div>
 <div className="account-list">
-    <Link to="/RegisterForClients" className="link-info">
+    <Link to="/ClientBankAccount" className="link-info">
         <div className="accounts-container">
             {accounts.map(account => (
                 <div key={account.id} className="account-card">

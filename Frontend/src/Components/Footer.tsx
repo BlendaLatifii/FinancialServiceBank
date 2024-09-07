@@ -22,19 +22,18 @@ function Footer(){
                 <div className="col-lg-2 col-6 footer-links">
                   <h4>Useful Links</h4>
                   <ul>
-                  <li><Link to="/">Home</Link></li>
-                    <li><Link to="/about">About us</Link></li>
-                    <li><Link to="/services">Services</Link></li>
-
+                  <li><Link to="/HomePage">Home</Link></li>
+                    <li><Link to="/AboutUs">About us</Link></li>
+                    <li><Link to="/Services">Services</Link></li>
                   </ul>
                 </div>
     
                 <div className="col-lg-2 col-6 footer-links">
                   <h4>Our Services</h4>
                   <ul>
-                    <li><a href="#">Loans</a></li>
-                    <li><a href="#">Transaction</a></li>
-                    <li><a href="#">Bank Accountt</a></li>
+                   <li><Link to="/EditClientAccount">Account</Link></li>
+                    <li><Link to="/LoanForm">Loan</Link></li>
+                    <li><Link to="/Transaction">Transaction</Link></li>
                   </ul>
                 </div>
     
@@ -44,6 +43,7 @@ function Footer(){
                     A108 Adam Street <br />
                     New York, NY 535022<br />
                     United States <br /><br />
+                    <p><Link to="/ContactUs">ContactUs Page</Link></p>
                     <strong>Phone:</strong> +1 5589 55488 55<br />
                     <strong>Email:</strong> info@example.com<br />
                   </p>

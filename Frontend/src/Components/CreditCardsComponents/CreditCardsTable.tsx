@@ -32,7 +32,7 @@ export default function CreditCardsTable() {
         user.clientAccountNumber!.toLowerCase().includes(searchTerm.toLowerCase())
       )
     );
-  }, [searchTerm, creditCards]);
+  }, [searchTerm]);
 
   const fetchData = async () => {
     const result = await CreditCardsService.GetAllCreditCards();

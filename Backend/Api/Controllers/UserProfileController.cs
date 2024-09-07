@@ -59,11 +59,6 @@ namespace Api.Controllers
                 .Where(c => c.UserId == userId)
                 .ToListAsync();
 
-            if (clientBankAccounts == null || !clientBankAccounts.Any())
-            {
-                return NotFound("No bank accounts found for the user.");
-            }
-
             return Ok(clientBankAccounts);
         }
         [Authorize]
@@ -87,12 +82,6 @@ namespace Api.Controllers
             var creditCards = await _context.CreditCards
                 .Where(c => clientBankAccountIds.Contains(c.ClientBankAccountId))
                 .ToListAsync();
-
-            if (creditCards == null || !creditCards.Any())
-            {
-                return NotFound("No credit cards found for the user.");
-            }
-
             return Ok(creditCards);
         }
         [Authorize]
@@ -112,43 +101,38 @@ namespace Api.Controllers
                 .ToListAsync();
 
             var transactions = await _context.Transactions
-                .Where(t => clientBankAccountIds.Contains(t.SourceClientBankAccountId.Value))
-                .ToListAsync();
-
-            if (transactions == null || !transactions.Any())
-            {
-                return NotFound("No transactions found for the user.");
-            }
-
+           .Where(t => clientBankAccountIds.Contains(t.SourceClientBankAccountId.Value) ||
+                 clientBankAccountIds.Contains(t.DestinationClientBankAccountId.Value))
+          .ToListAsync();
             return Ok(transactions);
         }
 
-       // [Authorize]
-       // [HttpGet("Loans")]
-       // public async Task<IActionResult> GetLoans()
-      //  {
-        //    Guid? userId = _authorizationManager.GetUserId();
+        [Authorize]
+        [HttpGet("Loans")]
+       public async Task<IActionResult> GetLoans()
+       {
+            Guid? userId = _authorizationManager.GetUserId();
 
-          //  if (userId is null)
-          //  {
-            //    return Unauthorized("User is not authenticated.");
-         //   }
+            if (userId is null)
+            {
+               return Unauthorized("User is not authenticated.");
+           }
 
-           // var clientBankAccountIds = await _context.ClientBankAccounts
-             //   .Where(x => x.UserId == userId)
-               // .Select(x => x.Id)
-             //   .ToListAsync();
+            var clientBankAccountIds = await _context.ClientBankAccounts
+                .Where(x => x.UserId == userId)
+                .Select(x => x.Id)
+                .ToListAsync();
 
-          //  var loans = await _context.Loans
-            //    .Where(c => clientBankAccountIds.Contains(c.ClientBankAccountId))
-              //  .ToListAsync();
+           var loans = await _context.Loans
+             .Where(c => clientBankAccountIds.Contains(c.ClientBankAccountId))
+               .ToListAsync();
 
-          //  if (loans == null || !loans.Any())
-          //  {
-            //    return NotFound("No transactions found for the user.");
+           //if (loans == null || !loans.Any())
+         //   {
+           //   return NotFound("No transactions found for the user.");
            // }
 
-            //return Ok(loans);
-        //}
+            return Ok(loans);
+        }
     }
 }

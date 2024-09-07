@@ -7,6 +7,13 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Application.Services;
 using Domain.Interfaces;
+using AutoMapper;
+using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using Domain.Exceptions;
 
 namespace Api.Controllers
 {
@@ -17,13 +24,20 @@ namespace Api.Controllers
         private readonly UserManager<User> userManager;
 
         private readonly TokenService tokenService;
+        private readonly IConfiguration _configuration;
         private readonly IAccountService accountService;
+        private readonly IMapper _mapper;
+        private readonly AppDbContext _dbContext;
         public AccountController(UserManager<User> userMenager, 
-            TokenService tokenService , IAccountService accountService)
+            TokenService tokenService,IAccountService accountService, 
+            IMapper _mapper, AppDbContext dbContext, IConfiguration configuration)
         {
             this.userManager = userMenager;
             this.tokenService = tokenService;
             this.accountService = accountService;
+            this._mapper = _mapper;
+            _dbContext = dbContext;
+            _configuration = configuration;
         }
 
         [AllowAnonymous]
@@ -34,6 +48,20 @@ namespace Api.Controllers
    
             return Ok(userModel);
         }
+        [HttpPost("RefreshToken")]
+        public async Task<IActionResult> RefreshToken([FromBody] TokenRequestModel tokenRequest)
+        {
+            try
+            {
+                var authModel = await accountService.RefreshTokenAsync(tokenRequest);
+                return Ok(authModel);
+            }
+            catch (AppBadDataException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
+        }
+
 
         [AllowAnonymous]
         [HttpPost("register")]

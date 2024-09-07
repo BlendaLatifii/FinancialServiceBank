@@ -1,5 +1,3 @@
-import { BankAccountModel } from "./bankAcc-model";
-import {ClientModel} from "./client-model";
 
 export interface ClientBankAccountModel {
     id:string | null;

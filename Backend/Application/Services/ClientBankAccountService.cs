@@ -148,31 +148,33 @@ namespace Application.Services
 
         public async Task DeductMaintenanceFeesAfterAMonth(CancellationToken cancellationToken)
         {
-            // Merr të gjitha llogaritë bankare të klientëve
             var clientBankAccounts = await _context.ClientBankAccounts
                 .Include(cba => cba.BankAccount)
                 .ToListAsync(cancellationToken);
 
-            // Përcakto datën e sotme
             var currentDate = DateTime.UtcNow;
 
             foreach (var clientBankAccount in clientBankAccounts)
             {
-                // Kontrollo nëse ka kaluar një muaj nga data e fundit e përditësimit të llogarisë
+                
                 if (currentDate > clientBankAccount.DateLastUpdated.AddMonths(1))
                 {
-                    // Merr tarifën e mirëmbajtjes së llogarisë së zgjedhur nga klienti
+                   
                     var maintenanceFee = Decimal.Parse(clientBankAccount.BankAccount.TarifaMirembajtese);
 
-                    // Zbres balancën e llogarisë së klientit
-                    clientBankAccount.CurrentBalance -= maintenanceFee;
+                    if (clientBankAccount.CurrentBalance >= maintenanceFee)
+                    {
+                        clientBankAccount.CurrentBalance -= maintenanceFee;
 
-                    // Përditëso datën e fundit të përditësimit të llogarisë
-                    clientBankAccount.DateLastUpdated = currentDate;
+                        clientBankAccount.DateLastUpdated = currentDate;
+                    }
+                    else
+                    {
+                        
+                        Console.WriteLine($"Insufficient funds for account: {clientBankAccount.AccountNumberGeneratedID}");
+                    }
                 }
             }
-
-            // Ruaj ndryshimet në bazën e të dhënave
             await _context.SaveChangesAsync(cancellationToken);
         }
         public async Task<List<string>> GetStudentAccountClientsAsync(CancellationToken cancellationToken)

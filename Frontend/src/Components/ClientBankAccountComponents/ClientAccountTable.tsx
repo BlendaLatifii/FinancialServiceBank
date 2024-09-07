@@ -26,9 +26,6 @@ export default function ClientAccountTable() {
   const navigate = useNavigate();
   useEffect(() => {
     fetchData();
-  }, []);
- 
-  useEffect(() => {
     setFilteredUsers(
       users.filter((user) =>
         user.personalNumber!.toLowerCase().includes(searchTerm.toLowerCase())
