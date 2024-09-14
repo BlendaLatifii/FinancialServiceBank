@@ -94,3 +94,36 @@
     text-shadow: none!important;
     margin-left: 10px;
 }
+
+@media (max-width: 768px) {
+  .navbar ul {
+    flex-direction: column;
+    align-items: center;
+  }
+  .navbar ul li {
+    margin: 5px 0;
+  }
+  .menu-bars {
+    display: block;
+    margin-right: 20px;
+    color: white;
+  }
+  .navbar {
+    height: auto;
+    padding: 10px;
+  }
+  .ui.menu {
+    flex-direction: column;
+  }
+}
+@media (max-width: 480px) {
+  .dropdown {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .dropdown-menu {
+    position: relative;
+    width: 100%;
+  }
+}

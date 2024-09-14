@@ -1,5 +1,5 @@
 .nav-link:active {
-    color: green;
+    color: green !important;
 }
 
 .btn:hover{
@@ -58,9 +58,10 @@
 }
 
 .account-card {
-  background-color: #28753a; 
-  color: white; 
-    padding: 20px;
+  background-color: #28753a !important; 
+  color: white !important;
+  text-decoration: none !important; 
+  padding: 20px;
   border-radius: 8px;
   width: 200px; 
   margin: 10px;
@@ -80,10 +81,12 @@
 
 .account-card h3 {
   margin: 0 0 10px 0;
+  text-decoration: none !important;
 }
 
 .account-card p {
   margin: 0;
+  text-decoration: none !important;
 }
 
 .account-card:hover {
@@ -112,11 +115,6 @@
     top: 50%; 
     transform: translateY(-50%); 
 }
-.account-card {
-  background-color: var(--color-primary);
-  color: white;
-}
-
 .account-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
@@ -124,8 +122,8 @@
 
 /* Stilizimi për kartat e kredive */
 .credit-card {
-  background-color: var(--color-primary);
-  color: white;
+  background-color: #28753a !important;
+  color: white !important;
 }
 
 .credit-card:hover {

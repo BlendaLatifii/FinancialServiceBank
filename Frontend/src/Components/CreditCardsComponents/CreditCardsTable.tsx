@@ -11,7 +11,6 @@ import {
   Confirm,
 } from "semantic-ui-react";
 import { CreditCardsModel } from "../../interfaces/creditCards-model";
-import axios from "axios";
 import { CreditCardsService } from "../../services/CreditCardsService";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "../Header";
@@ -24,21 +23,22 @@ export default function CreditCardsTable() {
   const [searchTerm, setSearchTerm] = useState<string>(""); 
   
   const navigate = useNavigate();
+  useEffect(()=>{
+    const fetchData = async () => {
+      const result = await CreditCardsService.GetAllCreditCards();
+      setCreditCards(result);
+      setFilteredUsers(result);
+    };
+    fetchData();
+  }, []);
  
   useEffect(() => {
-    fetchData();
     setFilteredUsers(
       creditCards.filter((user) =>
         user.clientAccountNumber!.toLowerCase().includes(searchTerm.toLowerCase())
       )
     );
-  }, [searchTerm]);
-
-  const fetchData = async () => {
-    const result = await CreditCardsService.GetAllCreditCards();
-    setCreditCards(result);
-    setFilteredUsers(result);
-  };
+  }, [searchTerm , creditCards]);
   function deleteCreditCards(id: string) {
     setOpenConfirm(true);
     setDeleteCreditCardsId(id);

@@ -1,5 +1,4 @@
-﻿using API.Servicees;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -23,21 +22,12 @@ namespace Api.Controllers
     {
         private readonly UserManager<User> userManager;
 
-        private readonly TokenService tokenService;
-        private readonly IConfiguration _configuration;
         private readonly IAccountService accountService;
-        private readonly IMapper _mapper;
-        private readonly AppDbContext _dbContext;
         public AccountController(UserManager<User> userMenager, 
-            TokenService tokenService,IAccountService accountService, 
-            IMapper _mapper, AppDbContext dbContext, IConfiguration configuration)
+             IAccountService accountService)
         {
             this.userManager = userMenager;
-            this.tokenService = tokenService;
             this.accountService = accountService;
-            this._mapper = _mapper;
-            _dbContext = dbContext;
-            _configuration = configuration;
         }
 
         [AllowAnonymous]
@@ -87,42 +77,5 @@ namespace Api.Controllers
             };
 
         }
-
-        [HttpPost("forgotPassword")]
-        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var result = await accountService.ForgotPasswordAsync(model.Email);
-
-            if (result.Succeeded)
-            {
-                return Ok(new { Message = "Password reset link has been sent to your email." });
-            }
-
-            return BadRequest(result.Errors);
-        }
-
-        [HttpPost("resetPassword")]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var result = await accountService.ResetPasswordAsync(model);
-
-            if (result.Succeeded)
-            {
-                return Ok(new { Message = "Password has been reset successfully." });
-            }
-
-            return BadRequest(result.Errors);
-        }
-
     }
 }

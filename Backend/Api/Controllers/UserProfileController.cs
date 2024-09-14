@@ -17,7 +17,7 @@ namespace Api.Controllers
         private readonly IAuthorizationManager _authorizationManager;
 
 
-        public UserProfileController( AppDbContext _context , IAuthorizationManager authorizationManager)
+        public UserProfileController(AppDbContext _context, IAuthorizationManager authorizationManager)
         {
             this._context = _context;
             _authorizationManager = authorizationManager;
@@ -72,13 +72,11 @@ namespace Api.Controllers
                 return Unauthorized("User is not authenticated.");
             }
 
-            // Retrieve all ClientBankAccount IDs for the logged-in user
             var clientBankAccountIds = await _context.ClientBankAccounts
                 .Where(x => x.UserId == userId)
                 .Select(x => x.Id)
                 .ToListAsync();
 
-            // Fetch the credit cards linked to those ClientBankAccounts
             var creditCards = await _context.CreditCards
                 .Where(c => clientBankAccountIds.Contains(c.ClientBankAccountId))
                 .ToListAsync();
@@ -109,28 +107,23 @@ namespace Api.Controllers
 
         [Authorize]
         [HttpGet("Loans")]
-       public async Task<IActionResult> GetLoans()
-       {
+        public async Task<IActionResult> GetLoans()
+        {
             Guid? userId = _authorizationManager.GetUserId();
 
             if (userId is null)
             {
-               return Unauthorized("User is not authenticated.");
-           }
+                return Unauthorized("User is not authenticated.");
+            }
 
             var clientBankAccountIds = await _context.ClientBankAccounts
                 .Where(x => x.UserId == userId)
                 .Select(x => x.Id)
                 .ToListAsync();
 
-           var loans = await _context.Loans
-             .Where(c => clientBankAccountIds.Contains(c.ClientBankAccountId))
-               .ToListAsync();
-
-           //if (loans == null || !loans.Any())
-         //   {
-           //   return NotFound("No transactions found for the user.");
-           // }
+            var loans = await _context.Loans
+              .Where(c => clientBankAccountIds.Contains(c.ClientBankAccountId))
+                .ToListAsync();
 
             return Ok(loans);
         }

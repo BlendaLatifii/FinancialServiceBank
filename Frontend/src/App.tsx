@@ -4,6 +4,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { AuthService } from "./services/AuthService";
 import "react-toastify/dist/ReactToastify.css";
+import Cookies from "js-cookie";
 const Header=lazy(()=>import("./Components/Header")); 
 const Footer =lazy(()=>import("./Components/Navbar/Navbar"));
 const Navbar=lazy(()=>import("./Components/Navbar/Navbar"));
@@ -22,8 +23,6 @@ const ContactTable = lazy(() => import("./Components/ContactComponents/ContactTa
 const EditBranch = lazy(() => import("./Components/BranchComponents/EditBranch"));
 const EditBankAccount = lazy(() => import("./Components/BankAccountComponents/EditBankAccount"));
 const AccountTable = lazy(() => import("./Components/BankAccountComponents/AccountTable"));
-//const RegisterForClients = lazy(() => import("./Components/RegisterForClients"));
-//const ClientTable = lazy(() => import("./Components/ClientComponents/ClientTable"));
 const ClientAccountTable = lazy(() => import("./Components/ClientBankAccountComponents/ClientAccountTable"));
 const EditClientAccount = lazy(() => import("./Components/ClientBankAccountComponents/EditClientAccount"));
 const TypesOfCreditCardsTable = lazy(() => import("./Components/TypesOfCreditCardsComponents/TypesOfCreditCardsTable"));
@@ -36,6 +35,10 @@ const LoanForm = lazy(() => import("./Components/LoanComponents/LoanForm"));
 const LoanTable = lazy(() => import("./Components/LoanComponents/LoanTable"));
 
 function App() {
+  const isAuthenticated = () => {
+    const token = Cookies.get("jwt"); 
+    return token ? true : false;
+  };
   axios.interceptors.request.use(async(config) => {
     config.headers.Authorization = `Bearer ${await AuthService.GetToken()}`;
     return config;
@@ -86,11 +89,11 @@ function App() {
         <Route  path="/Dashboard" element={ isAdmin ? <Dashboard /> : <Navigate to="/" replace />}/>
         <Route path="/Header" element={<Header />} />
         <Route path="/Footer" element={<Footer />} />
-        <Route path="/HomePage" element={  <HomePage />} />
-        <Route path="/Services" element={<Services />} />
-        <Route path="/MyProfile" element={<MyProfile />} />
-        <Route path="/AboutUs" element={<AboutUs />} />
-        <Route path="/ContactUs" element={<ContactUs />} />
+        <Route path="/HomePage" element={isAuthenticated() ? <HomePage />: <Navigate to="/" replace /> } />
+        <Route path="/Services"element={isAuthenticated() ? <Services />: <Navigate to="/" replace /> } />
+        <Route path="/MyProfile" element={isAuthenticated() ? <MyProfile />: <Navigate to="/" replace /> } />
+        <Route path="/AboutUs" element={isAuthenticated() ? <AboutUs />: <Navigate to="/" replace /> } />
+        <Route path="/ContactUs" element={isAuthenticated() ? <ContactUs />: <Navigate to="/" replace /> } />
         <Route path="/Register" element={<Register />} />
         <Route path="/" element={<Login />} />
         <Route path="/EditUser/:id" element={isAdmin ? <EditUser /> : <Navigate to="/" replace />} />
@@ -103,10 +106,6 @@ function App() {
         <Route path="/AddBankAccount" element={isAdmin ? <EditBankAccount/> : <Navigate to="/" replace />} />
         <Route path="/EditBankAccount/:id" element={ isAdmin ? <EditBankAccount/> : <Navigate to="/" replace />} />
        <Route path="/AccountTable" element={isAdmin ? <AccountTable /> : <Navigate to="/" replace/>}/>
-       {/* // <Route path="/RegisterForClients" element={<RegisterForClients />} /> */}
-        {/* <Route path="/AddClient" element={isAdmin ?<RegisterForClients/> : <Navigate to="/" replace />} /> */}
-        {/* <Route path="/RegisterForClients/:id" element={isAdmin ? <RegisterForClients/> : <Navigate to="/" replace />} /> */}
-        {/* <Route path="/ClientTable" element={isAdmin ? <ClientTable/>: <Navigate to="/" replace/>}/> */}
         <Route path="/AddClientAccount" element={<EditClientAccount />} />
         <Route path="/EditClientAccount/:id" element={isAdmin ? <EditClientAccount/> : <Navigate to="/" replace />} /> 
         <Route path="/EditClientAccount" element={isAdmin ? <EditClientAccount /> : <Navigate to="/" replace />} />

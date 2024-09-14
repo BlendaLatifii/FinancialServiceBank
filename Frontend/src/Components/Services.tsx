@@ -94,7 +94,7 @@ function Services() {
         </div>
 </div>
 <div className="account-list">
-    <Link to="/ClientBankAccount" className="link-info">
+    <Link to="/EditClientAccount" className="link-info">
         <div className="accounts-container">
             {accounts.map(account => (
                 <div key={account.id} className="account-card">

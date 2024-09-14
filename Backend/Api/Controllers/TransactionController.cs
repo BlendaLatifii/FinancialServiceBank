@@ -37,10 +37,9 @@ namespace Api.Controllers
         [HttpGet("type_percentages")]
         public async Task<ActionResult<List<TransactionTypePercentageModel>>> GetTransactionTypePercentages(CancellationToken cancellationToken)
         {
-           
-             var percentages = await transactionService.GetTransactionTypePercentagesAsync(cancellationToken);
-                return Ok(percentages);
-            
+
+            var percentages = await transactionService.GetTransactionTypePercentagesAsync(cancellationToken);
+            return Ok(percentages);
         }
 
         [AllowAnonymous]

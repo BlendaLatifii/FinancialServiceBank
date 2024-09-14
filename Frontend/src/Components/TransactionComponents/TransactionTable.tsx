@@ -25,12 +25,14 @@ export default function TransactionTable() {
   const [sourceAccountFilter, setSourceAccountFilter] = useState<string>("");
   const [transactionTypeFilter, setTransactionTypeFilter] = useState<TranType | "">("");
   const navigate = useNavigate();
-  const fetchData = async () => {
-    const result = await TransactionService.GetAllTransactions();
-    setTransactions(result);
-    setFilteredTransactions(result);
-  };
-
+  useEffect(()=>{
+    const fetchData = async () => {
+      const result = await TransactionService.GetAllTransactions();
+      setTransactions(result);
+      setFilteredTransactions(result);
+    };
+    fetchData();
+  }, []);
   function deleteTransaction(id: string) {
     setOpenConfirm(true);
     setDeleteTransactionId(id);
@@ -53,7 +55,6 @@ export default function TransactionTable() {
   }
 
   useEffect(() => {
-    fetchData();
     const filtered = transactions.filter(
       (transaction) =>
         transaction.sourceClientBankAccount && 

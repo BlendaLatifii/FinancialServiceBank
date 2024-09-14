@@ -24,20 +24,25 @@ export default function RegisterTable() {
   const [searchTerm, setSearchTerm] = useState<string>(""); 
   const navigate =  useNavigate();
   useEffect(() => {
-    fetchData();
+    const fetchData = async () => {
+      const result = await UserService.GetAllUsers();
+      setUsers(result);
+      setFilteredUsers(result);
+  }; fetchData();
+  }, []);
+  useEffect(() => {
+     if(searchTerm){
     setFilteredUsers(
       users.filter((user) =>
         user.personalNumberId!.toLowerCase().includes(searchTerm.toLowerCase())
       )
     );
-  }, [searchTerm]);
+  } else{
+    setFilteredUsers(users);
+  }
+  }, [searchTerm , users]);
 
-  const fetchData = async () => {
-      const result = await UserService.GetAllUsers();
-      setUsers(result);
-      setFilteredUsers(result);
-  };
-
+ 
   function deleteUser(id: string) {
     setOpenConfirm(true);
     setDeleteUserId(id);

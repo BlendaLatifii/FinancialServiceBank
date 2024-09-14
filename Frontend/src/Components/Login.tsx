@@ -97,11 +97,6 @@ function Login() {
                   >
                     {isSubmitting ? "Logging in..." : "Login"}
                   </button>
-                  <p className="small mb-5 pb-lg-2">
-                  <Link to="/ForgotPassword" className="link-info">
-                      Forgot password?
-                      </Link>
-                  </p>
                   <p>
                     Don't have an account?
                     <Link to="/Register" className="link-info">

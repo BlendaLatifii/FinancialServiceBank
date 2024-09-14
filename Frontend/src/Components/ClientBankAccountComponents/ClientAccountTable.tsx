@@ -24,21 +24,26 @@ export default function ClientAccountTable() {
   const [searchTerm, setSearchTerm] = useState<string>(""); 
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
-  useEffect(() => {
+  useEffect(()=>{
+    const fetchData = async () => {
+      const result = await ClientBankAccountService.GetAllBankAcc();
+      setUsers(result);
+      setFilteredUsers(result);
+    }; 
     fetchData();
+  }, []);
+  useEffect(() => {
+    if(searchTerm){
     setFilteredUsers(
       users.filter((user) =>
-        user.personalNumber!.toLowerCase().includes(searchTerm.toLowerCase())
+        user.accountNumberGeneratedID!.toLowerCase().includes(searchTerm.toLowerCase())
       )
     );
+  } else{
+    setFilteredUsers(users);
+  }
   }, [searchTerm, users]);
-  
-
-  const fetchData = async () => {
-    const result = await ClientBankAccountService.GetAllBankAcc();
-    setUsers(result);
-    setFilteredUsers(result);
-  };
+ 
   function deleteUser(id: string) {
     setOpenConfirm(true);
     setDeleteUserId(id);
@@ -74,7 +79,7 @@ export default function ClientAccountTable() {
         <div className="col-12 col-sm-8 col-md-6 col-lg-4 col-xl-3">
         <input className="form-control me-2 "
         type="search" 
-        placeholder="Search by PersonalNumber"
+        placeholder="Search by AccountNumber"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         aria-label="Search"></input>

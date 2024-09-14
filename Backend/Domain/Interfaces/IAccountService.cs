@@ -7,8 +7,6 @@ namespace Domain.Interfaces
     {
         Task<IdentityResult> Register(RegisterModel registerModel , CancellationToken cancellationToken);
         Task<AuthenticationModel> LoginAsync(LoginModel loginModel, CancellationToken cancellationToken);
-        Task<IdentityResult> ResetPasswordAsync(ResetPasswordModel model);
-        Task<IdentityResult> ForgotPasswordAsync(string email);
         Task<AuthenticationModel> RefreshTokenAsync( TokenRequestModel tokenRequest);
     }
 }

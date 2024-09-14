@@ -27,10 +27,8 @@ namespace Application.Services
         private readonly IConfiguration _configuration;
         private readonly IAuthorizationManager authorizationManager;
         private readonly IMapper _mapper;
-        private readonly IEmailSenderService _emailSender;
         public AccountService(UserManager<User> userManager,
             AppDbContext _dbContext,
-            IEmailSenderService emailSender,
             IAuthorizationManager authorizationManager,
             IConfiguration _configuration,
             IMapper mapper)
@@ -40,7 +38,6 @@ namespace Application.Services
             this._dbContext = _dbContext;
             this._configuration = _configuration;
             this._mapper = mapper;
-            _emailSender = emailSender;
         }
 
         public async Task<AuthenticationModel> LoginAsync(LoginModel loginModel, CancellationToken cancellationToken)
@@ -75,7 +72,7 @@ namespace Application.Services
 
             var token = new JwtSecurityToken(
                 claims: authClaims,
-                expires: DateTime.UtcNow.AddMinutes(30),
+                expires: DateTime.UtcNow.AddMinutes(20),
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256));
 
             IdentityModelEventSource.ShowPII = true;
@@ -84,7 +81,7 @@ namespace Application.Services
 
             var jwtTOken = new JwtSecurityTokenHandler().WriteToken(token);
 
-            var refreshToken = await GenerateRefreshToken(user,null);
+            var refreshToken = await GenerateRefreshToken(user, null);
             var response = new AuthenticationModel()
             {
                 Token = jwtTOken,
@@ -102,7 +99,7 @@ namespace Application.Services
 
             var token = new JwtSecurityToken(
                 claims: authClaims,
-                expires: DateTime.UtcNow.AddMinutes(30),
+                expires: DateTime.UtcNow.AddMinutes(20),
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256));
 
             return token;
@@ -131,7 +128,7 @@ namespace Application.Services
 
             var newJwtToken = GenerateJwtToken(claimsPrincipal.Claims.ToList());
             var newJwtTokenString = new JwtSecurityTokenHandler().WriteToken(newJwtToken);
-            var newRefreshToken = await GenerateRefreshToken(user,refreshToken);
+            var newRefreshToken = await GenerateRefreshToken(user, refreshToken);
 
             var userData = _mapper.Map<UserModel>(user);
             var userRoles = await userManager.GetRolesAsync(user);
@@ -146,17 +143,17 @@ namespace Application.Services
                 UserRole = userRole
             };
         }
-        private async Task<RefreshToken> GenerateRefreshToken(User user,RefreshToken? token)
+        private async Task<RefreshToken> GenerateRefreshToken(User user, RefreshToken? token)
         {
             _dbContext.RefreshTokens.RemoveRange(_dbContext.RefreshTokens.Where(x => x.UserId == user.Id));
-           
-              var refreshtoken = new RefreshToken
-                {
-                    Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
-                    ExpiresAt = token?.ExpiresAt ?? DateTime.Now.AddHours(8),
-                    User = user,
-                    UserId = user.Id
-                };
+
+            var refreshtoken = new RefreshToken
+            {
+                Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+                ExpiresAt = token?.ExpiresAt ?? DateTime.Now.AddHours(8),
+                User = user,
+                UserId = user.Id
+            };
 
 
             _dbContext.RefreshTokens.Add(refreshtoken);
@@ -188,10 +185,14 @@ namespace Application.Services
         }
         public async Task<IdentityResult> Register(RegisterModel registerModel, CancellationToken cancellationToken)
         {
-            var user = new User { UserName = registerModel.UserName, LastName = registerModel.LastName,
+            var user = new User
+            {
+                UserName = registerModel.UserName,
+                LastName = registerModel.LastName,
                 Email = registerModel.Email,
-                MiddleName= registerModel.MiddleName,
-                PersonalNumberId= registerModel.PersonalNumberId};
+                MiddleName = registerModel.MiddleName,
+                PersonalNumberId = registerModel.PersonalNumberId
+            };
 
             var result = await userManager.CreateAsync(user, registerModel.Password);
             if (!result.Succeeded)
@@ -199,35 +200,6 @@ namespace Application.Services
                 return result;
             }
             await userManager.AddToRoleAsync(user, "Member");
-            return result;
-        }
-
-        public async Task<IdentityResult> ForgotPasswordAsync(string email)
-        {
-            var user = await userManager.FindByEmailAsync(email);
-            if (user == null)
-            {
-                return IdentityResult.Failed(new IdentityError { Description = "No user associated with email" });
-            }
-
-            var token = await userManager.GeneratePasswordResetTokenAsync(user);
-            var resetLink = $"{_configuration["AppUrl"]}/reset-password?token={token}&email={email}";
-
-            // Dërgo email-in
-            await _emailSender.SendEmailAsync(email, "Reset Password", $"Please reset your password by clicking here: <a href='{resetLink}'>link</a>");
-
-            return IdentityResult.Success;
-        }
-
-        public async Task<IdentityResult> ResetPasswordAsync(ResetPasswordModel model)
-        {
-            var user = await userManager.FindByEmailAsync(model.Email);
-            if (user == null)
-            {
-                return IdentityResult.Failed(new IdentityError { Description = "No user associated with email" });
-            }
-
-            var result = await userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
             return result;
         }
     }

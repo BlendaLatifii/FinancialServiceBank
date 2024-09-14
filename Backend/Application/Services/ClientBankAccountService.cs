@@ -75,7 +75,6 @@ namespace Application.Services
                     CurrentBalance = model.CurrentBalance,
                     DateCreated = DateTime.UtcNow,
                     DateLastUpdated = DateTime.UtcNow,
-                   // UserId = userId??  Guid.Empty
                     UserId = clientUserId,
                     CreatedByUserId = userId ?? Guid.Empty,
                     LastUpdatedByUserId = userId ?? Guid.Empty

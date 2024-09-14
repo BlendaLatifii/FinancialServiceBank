@@ -13,13 +13,11 @@ namespace Api.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly AppDbContext appDbContext;
         private readonly IUserService _userService;
 
 
-        public UsersController(AppDbContext appDbContext, IUserService _userService)
+        public UsersController( IUserService _userService)
         {
-            this.appDbContext = appDbContext;
             this._userService = _userService;
         }
         

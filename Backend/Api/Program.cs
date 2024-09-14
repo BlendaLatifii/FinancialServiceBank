@@ -10,7 +10,6 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using API.Servicees;
 using Api.Middleware;
 using Infrastructure.Security;
 using System.Security.Claims;
@@ -114,7 +113,6 @@ builder.Services.AddTransient(s => s.GetService<IHttpContextAccessor>()?.HttpCon
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IBranchService, BranchService>();
 builder.Services.AddScoped<ILoanService, LoanService>();
-builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<DbInitialization>();
 builder.Services.AddScoped<IBankAccountService, BankAccountService>();
 builder.Services.AddScoped<IClientBankAccountService, ClientBankAccountService>();
@@ -123,7 +121,6 @@ builder.Services.AddScoped<IContactService, ContactUsService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<ITypesOfCreditCardsService, TypesOfCreditCardsService>();
 builder.Services.AddScoped<ICreditCardsService, CreditCardsService>();
-builder.Services.AddScoped<IEmailSenderService, EmailSenderService>();
 
 builder.Services.AddScoped<IAuthorizationManager, AuthorizationManager>();
 builder.Services.AddAutoMapper(typeof(UserMappings));

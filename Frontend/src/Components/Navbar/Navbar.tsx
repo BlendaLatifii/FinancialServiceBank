@@ -28,7 +28,7 @@ function Navbar()  {
                   <FaIcons.FaBars className="ngjyra-sidebarhover" onClick={() => AuthService.GetUserRole() == "Admin" ? showSidebar() : null} />
                 </Link>
                 
-                <Menu.Item position='right'>
+                <Menu.Item position='left'>
                 <Icon name="user"/>
                   <Dropdown style={{color:"white",float:"left"}} pointing='top left' text={AuthService.GetUserRole() ?? ""}>
                     <Dropdown.Menu>

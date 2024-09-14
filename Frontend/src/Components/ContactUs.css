@@ -81,7 +81,7 @@
   .contact .php-email-form .sent-message {
     display: none;
     color: #fff;
-    background: #059652;
+    background: #009282 !important;
     text-align: center;
     padding: 15px;
     font-weight: 600;
@@ -101,7 +101,7 @@
     width: 24px;
     height: 24px;
     margin: 0 10px -6px 0;
-    border: 3px solid #059652;
+    border: 3px solid #009282 !important;
     border-top-color: #fff;
     animation: animate-loading 1s linear infinite;
   }
@@ -130,7 +130,7 @@
   }
   
   .contact .php-email-form button[type=submit] {
-    background: var(--color-primary);
+    background: #009282 !important;
     border: 0;
     padding: 14px 45px;
     color: #fff;

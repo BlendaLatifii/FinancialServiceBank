@@ -34,9 +34,9 @@ namespace Api.Controllers
             return Ok(model);
         }
         [HttpGet("personalNumber/{personalNumber}")]
-        public async Task<ActionResult<List<ClientBankAccountModel>>> GetByPersonalNumberAsync(string personalNumber,CancellationToken cancellationToken)
+        public async Task<ActionResult<List<ClientBankAccountModel>>> GetByPersonalNumberAsync(string personalNumber, CancellationToken cancellationToken)
         {
-            var clientAcc = await clientBankAccService.GetByPersonalNumberAsync(personalNumber,cancellationToken);
+            var clientAcc = await clientBankAccService.GetByPersonalNumberAsync(personalNumber, cancellationToken);
 
             return Ok(clientAcc);
         }
@@ -49,9 +49,9 @@ namespace Api.Controllers
         }
         [AllowAnonymous]
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetClientAccountById([FromRoute]Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetClientAccountById([FromRoute] Guid id, CancellationToken cancellationToken)
         {
-            var model =await clientBankAccService.GetClientAccountById(id, cancellationToken);
+            var model = await clientBankAccService.GetClientAccountById(id, cancellationToken);
             return Ok(model);
         }
 

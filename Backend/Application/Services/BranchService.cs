@@ -73,7 +73,6 @@ namespace Application.Services
 
             if (model.BranchId == null || model.BranchId == Guid.Empty)
             {
-                // Krijoni një degë të re
                 var newBranch = new Branch()
                 {
                     BranchName = model.BranchName,
@@ -86,12 +85,10 @@ namespace Application.Services
                 await _context.Branches.AddAsync(newBranch, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
 
-                // Kthe një përgjigje 201 Created dhe modelin e degës së krijuar
                 return await GetBranchById(newBranch.BranchId, cancellationToken);
             }
             else
             {
-                // Përditëso degën ekzistuese
                 var existingBranch = await _context.Branches.FindAsync(model.BranchId);
                 if (existingBranch == null)
                 {
@@ -105,7 +102,6 @@ namespace Application.Services
 
                 await _context.SaveChangesAsync(cancellationToken);
 
-                // Kthe një përgjigje OK dhe modelin e degës së përditësuar
                 return new BranchModel
                 {
                     BranchId = existingBranch.BranchId,
