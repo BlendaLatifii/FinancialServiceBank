@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 import Header from './Header';
 import { TransactionService } from '../services/TransactionService';
@@ -7,6 +7,7 @@ import { TransactionTypePercentageModel } from '../interfaces/TransactionTypePer
 import { ClientBankAccountService } from '../services/ClientBankAccountService';
 import { CreditCardsService } from '../services/CreditCardsService';
 import { LoanService } from '../services/LoanService';
+import { AuthService } from '../services/AuthService';
 
 export default function Dashboard() {
   const [pieData, setPieData] = useState<TransactionTypePercentageModel[]>([]);

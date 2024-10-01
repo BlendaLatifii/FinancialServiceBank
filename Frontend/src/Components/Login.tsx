@@ -9,6 +9,7 @@ function Login() {
     password: "",
   });
 
+
   const[isSubmitting,setIsSubmitting] = useState<boolean>(false);
   const navigete = useNavigate();
 
@@ -25,13 +26,11 @@ function Login() {
     };
     const response = await AuthService.Login(user);
 
-    if(AuthService.role == "Member"){
-      navigete("/HomePage");
-    }
-    else if(AuthService.role == "Admin")
-      {
+    if(AuthService.role == "Member" || AuthService.role == "Admin"){
+      setTimeout(()=>{
         navigete("/HomePage");
-      }
+      },2000)
+    }
 
     setIsSubmitting(false);
   }

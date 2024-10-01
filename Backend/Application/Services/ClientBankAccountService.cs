@@ -73,8 +73,8 @@ namespace Application.Services
                     BankAccountId = model.BankAccountId,
                     BranchId = model.BranchId,
                     CurrentBalance = model.CurrentBalance,
-                    DateCreated = DateTime.UtcNow,
-                    DateLastUpdated = DateTime.UtcNow,
+                    DateCreated = DateTime.Now,
+                    DateLastUpdated = DateTime.Now,
                     UserId = clientUserId,
                     CreatedByUserId = userId ?? Guid.Empty,
                     LastUpdatedByUserId = userId ?? Guid.Empty
@@ -95,7 +95,7 @@ namespace Application.Services
                 existingBankAcc.BankAccountId = model.BankAccountId;
                 existingBankAcc.BranchId = model.BranchId;
                 existingBankAcc.CurrentBalance = model.CurrentBalance;
-                existingBankAcc.DateLastUpdated = DateTime.UtcNow;
+                existingBankAcc.DateLastUpdated = DateTime.Now;
                 existingBankAcc.LastUpdatedByUserId = userId ?? Guid.Empty;
 
 

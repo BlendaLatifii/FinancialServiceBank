@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Infrastructure.Migrations
 {
-    public partial class userEdited : Migration
+    public partial class editloans : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -30,7 +30,7 @@ namespace Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MiddleName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PersonalNumberId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PersonalNumberId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -201,33 +201,6 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Clients",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PersonalNumberId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MiddleName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EmailAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    State = table.Column<int>(type: "int", nullable: false),
-                    City = table.Column<int>(type: "int", nullable: false),
-                    ZipCode = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Clients", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Clients_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Contacts",
                 columns: table => new
                 {
@@ -244,6 +217,28 @@ namespace Infrastructure.Migrations
                     table.PrimaryKey("PK_Contacts", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Contacts_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RefreshTokens",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Token = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ExpiresAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefreshTokens", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RefreshTokens_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -277,12 +272,13 @@ namespace Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AccountNumberGeneratedID = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ClientId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     BankAccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     BranchId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CurrentBalance = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DateLastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    DateLastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedByUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LastUpdatedByUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -291,8 +287,7 @@ namespace Infrastructure.Migrations
                         name: "FK_ClientBankAccounts_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_ClientBankAccounts_BankAccounts_BankAccountId",
                         column: x => x.BankAccountId,
@@ -303,11 +298,6 @@ namespace Infrastructure.Migrations
                         column: x => x.BranchId,
                         principalTable: "Branches",
                         principalColumn: "BranchId");
-                    table.ForeignKey(
-                        name: "FK_ClientBankAccounts_Clients_ClientId",
-                        column: x => x.ClientId,
-                        principalTable: "Clients",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -357,8 +347,7 @@ namespace Infrastructure.Migrations
                     EmploymentStatus = table.Column<int>(type: "int", nullable: false),
                     LoanPeriod = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     InterestRate = table.Column<double>(type: "float", nullable: false),
-                    MonthlyPayment = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LoanType = table.Column<int>(type: "int", nullable: false)
+                    MonthlyPayment = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -444,6 +433,12 @@ namespace Infrastructure.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_PersonalNumberId",
+                table: "AspNetUsers",
+                column: "PersonalNumberId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
@@ -477,24 +472,8 @@ namespace Infrastructure.Migrations
                 column: "BranchId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClientBankAccounts_ClientId",
-                table: "ClientBankAccounts",
-                column: "ClientId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ClientBankAccounts_UserId",
                 table: "ClientBankAccounts",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Clients_PersonalNumberId",
-                table: "Clients",
-                column: "PersonalNumberId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Clients_UserId",
-                table: "Clients",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -530,6 +509,11 @@ namespace Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_RefreshTokens_UserId",
+                table: "RefreshTokens",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Transactions_DestinationClientBankAccountId",
                 table: "Transactions",
                 column: "DestinationClientBankAccountId");
@@ -538,6 +522,11 @@ namespace Infrastructure.Migrations
                 name: "IX_Transactions_SourceClientBankAccountId",
                 table: "Transactions",
                 column: "SourceClientBankAccountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Transactions_TransactionType",
+                table: "Transactions",
+                column: "TransactionType");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Transactions_UserId",
@@ -577,6 +566,9 @@ namespace Infrastructure.Migrations
                 name: "Loans");
 
             migrationBuilder.DropTable(
+                name: "RefreshTokens");
+
+            migrationBuilder.DropTable(
                 name: "Transactions");
 
             migrationBuilder.DropTable(
@@ -593,9 +585,6 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Branches");
-
-            migrationBuilder.DropTable(
-                name: "Clients");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

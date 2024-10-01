@@ -17,7 +17,9 @@ function Navbar()  {
 
         function LogOut(){
           AuthService.LogOut();
-          navigate("/")
+          setTimeout(()=>{
+            navigate("/")
+          },1000)
         }
         return (
           <>

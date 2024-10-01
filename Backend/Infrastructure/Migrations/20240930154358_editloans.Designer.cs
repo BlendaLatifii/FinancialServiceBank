@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240823094245_clientremove")]
-    partial class clientremove
+    [Migration("20240930154358_editloans")]
+    partial class editloans
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -84,59 +84,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("Branches");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Client", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("City")
-                        .HasColumnType("int");
-
-                    b.Property<string>("EmailAddress")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MiddleName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PersonalNumberId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("State")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ZipCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PersonalNumberId")
-                        .IsUnique();
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Clients");
-                });
-
             modelBuilder.Entity("Domain.Entities.ClientBankAccount", b =>
                 {
                     b.Property<Guid>("Id")
@@ -153,7 +100,7 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("BranchId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ClientId")
+                    b.Property<Guid>("CreatedByUserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("CurrentBalance")
@@ -164,6 +111,9 @@ namespace Infrastructure.Migrations
 
                     b.Property<DateTime>("DateLastUpdated")
                         .HasColumnType("datetime2");
+
+                    b.Property<Guid>("LastUpdatedByUserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -176,8 +126,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("BankAccountId");
 
                     b.HasIndex("BranchId");
-
-                    b.HasIndex("ClientId");
 
                     b.HasIndex("UserId");
 
@@ -285,9 +233,6 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("LoanType")
-                        .HasColumnType("int");
-
                     b.Property<int>("LoansTypesId")
                         .HasColumnType("int");
 
@@ -306,6 +251,34 @@ namespace Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Loans");
+                });
+
+            modelBuilder.Entity("Domain.Entities.RefreshToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("Domain.Entities.Role", b =>
@@ -371,6 +344,8 @@ namespace Infrastructure.Migrations
                     b.HasIndex("DestinationClientBankAccountId");
 
                     b.HasIndex("SourceClientBankAccountId");
+
+                    b.HasIndex("TransactionType");
 
                     b.HasIndex("UserId");
 
@@ -620,17 +595,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Client", b =>
-                {
-                    b.HasOne("Domain.Entities.User", "User")
-                        .WithMany("Clients")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Domain.Entities.ClientBankAccount", b =>
                 {
                     b.HasOne("Domain.Entities.BankAccount", "BankAccount")
@@ -644,10 +608,6 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("BranchId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
-
-                    b.HasOne("Domain.Entities.Client", null)
-                        .WithMany("ClientBankAccounts")
-                        .HasForeignKey("ClientId");
 
                     b.HasOne("Domain.Entities.User", "User")
                         .WithMany("ClientBankAccounts")
@@ -715,6 +675,17 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("ClientBankAccount");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Entities.RefreshToken", b =>
+                {
+                    b.HasOne("Domain.Entities.User", "User")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -820,11 +791,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("ClientBankAccounts");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Client", b =>
-                {
-                    b.Navigation("ClientBankAccounts");
-                });
-
             modelBuilder.Entity("Domain.Entities.ClientBankAccount", b =>
                 {
                     b.Navigation("CreditCards")
@@ -856,13 +822,13 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("ClientBankAccounts");
 
-                    b.Navigation("Clients");
-
                     b.Navigation("ContactUs");
 
                     b.Navigation("CreditCards");
 
                     b.Navigation("Loans");
+
+                    b.Navigation("RefreshTokens");
 
                     b.Navigation("Transactions");
 

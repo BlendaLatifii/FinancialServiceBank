@@ -27,6 +27,7 @@ namespace Api.Controllers
 
             return Ok(clientAcc);
         }
+        [AllowAnonymous]
         [HttpGet("[action]")]
         public async Task<IActionResult> GetClientAccountSelectListAsync(CancellationToken cancellationToken)
         {
@@ -55,7 +56,7 @@ namespace Api.Controllers
             return Ok(model);
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "Admin, Member")]
         [HttpPost]
         public async Task<IActionResult> CreateOrUpdateClientBankAccount(ClientBankAccountModel model, CancellationToken cancellationToken)
         {

@@ -5,6 +5,8 @@ import { ToastContainer, toast } from "react-toastify";
 import { AuthService } from "./services/AuthService";
 import "react-toastify/dist/ReactToastify.css";
 import Cookies from "js-cookie";
+import AdminRoute from "./Components/AdminRoute";
+import AuthenticatedRoute from "./Components/AuthenticatedRoute";
 const Header=lazy(()=>import("./Components/Header")); 
 const Footer =lazy(()=>import("./Components/Navbar/Navbar"));
 const Navbar=lazy(()=>import("./Components/Navbar/Navbar"));
@@ -35,10 +37,6 @@ const LoanForm = lazy(() => import("./Components/LoanComponents/LoanForm"));
 const LoanTable = lazy(() => import("./Components/LoanComponents/LoanTable"));
 
 function App() {
-  const isAuthenticated = () => {
-    const token = Cookies.get("jwt"); 
-    return token ? true : false;
-  };
   axios.interceptors.request.use(async(config) => {
     config.headers.Authorization = `Bearer ${await AuthService.GetToken()}`;
     return config;
@@ -77,8 +75,6 @@ function App() {
       return Promise.reject(error);
     }
   );
-  const isAdmin = AuthService.GetUserRole() === 'Admin';
-
   return (
     <>
     <Suspense>
@@ -86,44 +82,44 @@ function App() {
     </Suspense>
     <Suspense fallback={<h1>Loading...</h1>}>
       <Routes>
-        <Route  path="/Dashboard" element={ isAdmin ? <Dashboard /> : <Navigate to="/" replace />}/>
+        <Route  path="/Dashboard" element={<AdminRoute component={Dashboard}/>}/>
         <Route path="/Header" element={<Header />} />
         <Route path="/Footer" element={<Footer />} />
-        <Route path="/HomePage" element={isAuthenticated() ? <HomePage />: <Navigate to="/" replace /> } />
-        <Route path="/Services"element={isAuthenticated() ? <Services />: <Navigate to="/" replace /> } />
-        <Route path="/MyProfile" element={isAuthenticated() ? <MyProfile />: <Navigate to="/" replace /> } />
-        <Route path="/AboutUs" element={isAuthenticated() ? <AboutUs />: <Navigate to="/" replace /> } />
-        <Route path="/ContactUs" element={isAuthenticated() ? <ContactUs />: <Navigate to="/" replace /> } />
+        <Route path="/HomePage" element={ <AuthenticatedRoute component={HomePage} />  } />
+        <Route path="/Services"element={<AuthenticatedRoute component={Services} />  } />
+        <Route path="/MyProfile" element={ <AuthenticatedRoute component={MyProfile} />  } />
+        <Route path="/AboutUs" element={ <AuthenticatedRoute component={AboutUs} /> } />
+        <Route path="/ContactUs" element={ <AuthenticatedRoute component={ContactUs} /> } />
         <Route path="/Register" element={<Register />} />
-        <Route path="/" element={<Login />} />
-        <Route path="/EditUser/:id" element={isAdmin ? <EditUser /> : <Navigate to="/" replace />} />
+        <Route path="/" element={<Login/>}/>
+        <Route path="/EditUser/:id" element={<AdminRoute component={EditUser}/>} />
         <Route path="/AddUser" element={<EditUser />} />
-       <Route path="/RegisterTable" element={isAdmin ? <RegisterTable />: <Navigate to="/" replace />} />
-       <Route path="/BranchTable" element={isAdmin ? <BranchTable/> : <Navigate to="/" replace />} />
-       <Route path="/ContactTable" element={ isAdmin ? <ContactTable /> : <Navigate to="/" replace />} />
-        <Route path="/AddBranches" element={ isAdmin ? <EditBranch /> : <Navigate to="/" replace />} />
-        <Route path="/EditBranch/:id" element={isAdmin ? <EditBranch /> : <Navigate to="/" replace />} />
-        <Route path="/AddBankAccount" element={isAdmin ? <EditBankAccount/> : <Navigate to="/" replace />} />
-        <Route path="/EditBankAccount/:id" element={ isAdmin ? <EditBankAccount/> : <Navigate to="/" replace />} />
-       <Route path="/AccountTable" element={isAdmin ? <AccountTable /> : <Navigate to="/" replace/>}/>
+       <Route path="/RegisterTable" element={<AdminRoute component={RegisterTable}/>} />
+       <Route path="/BranchTable" element={<AdminRoute component={BranchTable}/>} />
+       <Route path="/ContactTable" element={ <AdminRoute component={ContactTable}/>} />
+        <Route path="/AddBranches" element={<AdminRoute component={EditBranch}/>} />
+        <Route path="/EditBranch/:id" element={<AdminRoute component={EditBranch}/>}/>
+        <Route path="/AddBankAccount" element={<AdminRoute component={EditBankAccount}/>} />
+        <Route path="/EditBankAccount/:id" element={ <AdminRoute component={EditBankAccount}/>} />
+       <Route path="/AccountTable" element={<AdminRoute component={AccountTable}/>}/>
         <Route path="/AddClientAccount" element={<EditClientAccount />} />
-        <Route path="/EditClientAccount/:id" element={isAdmin ? <EditClientAccount/> : <Navigate to="/" replace />} /> 
-        <Route path="/EditClientAccount" element={isAdmin ? <EditClientAccount /> : <Navigate to="/" replace />} />
-        <Route path="/ClientAccountTable" element={isAdmin ? <ClientAccountTable/> : <Navigate to="/" replace/>}/> 
-        <Route path="/EditTypesOfCreditCards/:id" element ={isAdmin ? <EditTypesOfCreditCards/> : <Navigate to="/" replace />} />
-        <Route path="/AddTypesOfCreditCards" element ={isAdmin ? <EditTypesOfCreditCards/> : <Navigate to="/" replace />} />
-        <Route path="/TypesOfCreditCardsTable" element ={isAdmin ? <TypesOfCreditCardsTable/> : <Navigate to="/" replace />} />
-        <Route path ="/CreditCardsTable" element = {isAdmin ? <CreditCardsTable/> : <Navigate to="/" replace/>}/>
-        <Route path="/EditCreditCards/:id" element = {isAdmin ? <EditCreditCards/> : <Navigate to="/" replace />} />
-        <Route path="/AddCreditCards" element = {isAdmin ? <EditCreditCards /> : <Navigate to="/" replace />} />
+        <Route path="/EditClientAccount/:id" element={<AdminRoute component={EditClientAccount}/>} /> 
+        <Route path="/EditClientAccount" element={<AdminRoute component={EditClientAccount}/>} />
+        <Route path="/ClientAccountTable" element={<AdminRoute component={ClientAccountTable}/>}/> 
+        <Route path="/EditTypesOfCreditCards/:id" element ={<AdminRoute component={EditTypesOfCreditCards}/>} />
+        <Route path="/AddTypesOfCreditCards" element ={<AdminRoute component={EditTypesOfCreditCards}/>} />
+        <Route path="/TypesOfCreditCardsTable" element ={<AdminRoute component={TypesOfCreditCardsTable}/>} />
+        <Route path ="/CreditCardsTable" element = {<AdminRoute component={CreditCardsTable}/>}/>
+        <Route path="/EditCreditCards/:id" element = {<AdminRoute component={EditCreditCards}/>} />
+        <Route path="/AddCreditCards" element = {<AdminRoute component={EditCreditCards}/>} />
         <Route path="/Transaction" element={<Transaction/>}/>
         <Route path="/AddTransaction" element={<Transaction/>}/>
-        <Route path="/EditTransaction/:id" element={isAdmin ? <Transaction/> : <Navigate to="/" replace />} />
-        <Route path="/TransactionTable" element={isAdmin ? <TransactionTable /> : <Navigate to="/" replace/>}/>
+        <Route path="/EditTransaction/:id" element={<AdminRoute component={Transaction}/>} />
+        <Route path="/TransactionTable" element={<AdminRoute component={TransactionTable}/>}/>
         <Route path="LoanForm" element={<LoanForm />} />
         <Route path="/AddLoan" element={<LoanForm/>}/>
-        <Route path="/EditLoan/:id" element={isAdmin ? <LoanForm/> : <Navigate to="/" replace />} />
-        <Route path="/LoanTable" element={ isAdmin ? <LoanTable /> : <Navigate to="/" replace/>}/>
+        <Route path="/EditLoan/:id" element={<AdminRoute component={LoanForm}/>} />
+        <Route path="/LoanTable" element={ <AdminRoute component={LoanTable}/>}/>
       </Routes>
       </Suspense>
       <ToastContainer />

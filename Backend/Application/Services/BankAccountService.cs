@@ -1,4 +1,3 @@
-
 using AutoMapper;
 using Domain.Entities;
 using Domain.Exceptions;
@@ -61,7 +60,7 @@ namespace Application.Services
 
         }
         public async Task<BankAccountModel> CreateOrUpdateBankAccount(BankAccountModel model, CancellationToken cancellationToken)
-        {
+        { 
             Guid? userId = _authorizationManager.GetUserId();
 
             if (userId is null)

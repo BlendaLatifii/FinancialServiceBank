@@ -58,7 +58,7 @@ export default function Transaction() {
   };
   useEffect(()=>{
     fetchData();
-    fetchAccountTypes()
+    fetchAccountTypes();
   },[])
   
  function initializeAccountIds(){

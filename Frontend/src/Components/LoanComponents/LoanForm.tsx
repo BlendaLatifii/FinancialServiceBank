@@ -12,8 +12,11 @@ import { LoanService } from "../../services/LoanService";
 import { employmentStatus } from "../../interfaces/employmentStatus";
 import { loanType } from "../../interfaces/LoanType";
 import { AuthService } from "../../services/AuthService";
+import { SelectListItem } from "../../interfaces/select-list-item";
+import { ClientBankAccountService } from "../../services/ClientBankAccountService";
 export default function LoanForm() {
   const { id } = useParams<{ id: string }>();
+  const [accountTypeSelectList, setAccountTypeSelectList] = useState<SelectListItem[]>([]);
   const [values, setValues] = useState<LoanModel>({
     id: id!,
     clientAccountNumber: '',
@@ -41,7 +44,20 @@ export default function LoanForm() {
     };
 
     fetchData();
+    fetchAccountTypes();
   }, [id!]);
+  const fetchAccountTypes = async () => {
+    try {
+      const response = await ClientBankAccountService.GetSelectList(); 
+      setAccountTypeSelectList(response.map((item,i) => ({
+        key: i,
+        value: item.name,
+        text: item.name
+      } as SelectListItem)).filter(x=> x.text != '' && x.text != null)); 
+    } catch (error) {
+      console.error('Error fetching account types:', error);
+    }
+  };
 
   const handleChange = (e:React.ChangeEvent<HTMLInputElement | HTMLSelectElement >) => {
     const { name, value } = e.target;
@@ -106,13 +122,19 @@ export default function LoanForm() {
             <Form
              className='ui form' style={{ backgroundColor: "#f9f9f9", padding: "20px" }} onSubmit={handleSubmit} autoComplete="off"
             >
-              <MyTextInput
-                fluid
-                label={<label> AccountNumber</label>}
-                placeholder="Account Number"
-                name="clientAccountNumber"
-                onChange={handleChange}
-              />
+               <label htmlFor="clientAccountNumber">AccountNumber:</label>
+          <select
+            style={{ padding: "5px", margin: "5px" }}
+            className="form-control"
+            id="clientAccountNumber"
+            name="clientAccountNumber"
+            value={values.clientAccountNumber!}
+            onChange={handleChange}
+          >
+            <option value="" disabled>Select Account</option>
+            {accountTypeSelectList.map((x)=>
+              (<option key={x.key} value={x.value}>{x.text}</option>))}
+          </select>
               <MyTextInput
                 label={<label><i className="fas fa-dollar-sign"></i> Loan Amount</label>}
                 placeholder="Loan Amount"

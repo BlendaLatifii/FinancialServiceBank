@@ -124,15 +124,15 @@ namespace Application.Services
                 existingTransaction.SourceClientBankAccountId = sourceAccount?.Id;
                 existingTransaction.DestinationClientBankAccountId = destinationAccount?.Id;
                 existingTransaction.TransactionStatus = TranStatus.Success;
-                existingTransaction.TransactionDateUpdated = DateTime.UtcNow;
+                existingTransaction.TransactionDateUpdated = DateTime.Now;
 
                 model = mapper.Map<TransactionModel>(existingTransaction);
             }
             else
             {
                 var transaction = mapper.Map<Transaction>(model);
-                transaction.TransactionDate = DateTime.UtcNow;
-                transaction.TransactionDateUpdated = DateTime.UtcNow;
+                transaction.TransactionDate = DateTime.Now;
+                transaction.TransactionDateUpdated = DateTime.Now;
                 transaction.SourceClientBankAccountId = sourceAccount?.Id;
                 transaction.DestinationClientBankAccountId = destinationAccount?.Id;
                 transaction.TransactionStatus = TranStatus.Success;
@@ -147,7 +147,7 @@ namespace Application.Services
                     if (destinationAccount == null)
                         throw new Exception("Destination account is required for a deposit.");
                     destinationAccount.CurrentBalance += model.TransactionAmount;
-                    destinationAccount.DateLastUpdated = DateTime.UtcNow;
+                    destinationAccount.DateLastUpdated = DateTime.Now;
                     _context.ClientBankAccounts.Update(destinationAccount);
                     break;
 
@@ -160,7 +160,7 @@ namespace Application.Services
                         throw new Exception("Insufficient funds for withdrawal.");
 
                     sourceAccount.CurrentBalance -= model.TransactionAmount;
-                    sourceAccount.DateLastUpdated = DateTime.UtcNow;
+                    sourceAccount.DateLastUpdated = DateTime.Now;
                     break;
 
                 case TranType.Transfer:
@@ -175,8 +175,8 @@ namespace Application.Services
 
                     sourceAccount.CurrentBalance -= model.TransactionAmount;
                     destinationAccount.CurrentBalance += model.TransactionAmount;
-                    sourceAccount.DateLastUpdated = DateTime.UtcNow;
-                    destinationAccount.DateLastUpdated = DateTime.UtcNow;
+                    sourceAccount.DateLastUpdated = DateTime.Now;
+                    destinationAccount.DateLastUpdated = DateTime.Now;
                     break;
 
                 default:
@@ -189,21 +189,21 @@ namespace Application.Services
                     case TranType.Deposit:
 
                         destinationAccount.CurrentBalance -= prevousAmount;
-                        destinationAccount.DateLastUpdated = DateTime.UtcNow;
+                        destinationAccount.DateLastUpdated = DateTime.Now;
                         break;
 
                     case TranType.WithDrawal:
 
                         sourceAccount.CurrentBalance += prevousAmount;
-                        sourceAccount.DateLastUpdated = DateTime.UtcNow;
+                        sourceAccount.DateLastUpdated = DateTime.Now;
                         break;
 
                     case TranType.Transfer:
 
                         sourceAccount.CurrentBalance += prevousAmount;
                         destinationAccount.CurrentBalance -= prevousAmount;
-                        sourceAccount.DateLastUpdated = DateTime.UtcNow;
-                        destinationAccount.DateLastUpdated = DateTime.UtcNow;
+                        sourceAccount.DateLastUpdated = DateTime.Now;
+                        destinationAccount.DateLastUpdated = DateTime.Now;
                         break;
                 }
             }

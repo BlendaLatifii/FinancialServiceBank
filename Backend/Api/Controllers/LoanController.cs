@@ -41,7 +41,7 @@ namespace Api.Controllers
             var count = await _loanService.CountAllLoansAsync(cancellationToken);
             return Ok(count);
         }
-        [AllowAnonymous]
+        [Authorize(Roles = "Admin, Member")]
         [HttpPost]
         public async Task<IActionResult> CreateOrUpdateLoanAsync([FromBody]LoanModel model, CancellationToken cancellationToken)
         {

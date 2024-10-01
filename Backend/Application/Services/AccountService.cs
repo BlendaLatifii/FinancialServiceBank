@@ -1,5 +1,4 @@
-﻿
-using AutoMapper;
+﻿using AutoMapper;
 using Domain.Constant;
 using Domain.Entities;
 using Domain.Exceptions;
@@ -7,6 +6,7 @@ using Domain.Interfaces;
 using Domain.Models;
 using Infrastructure.Data;
 using Infrastructure.Security;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -26,18 +26,20 @@ namespace Application.Services
         private readonly AppDbContext _dbContext;
         private readonly IConfiguration _configuration;
         private readonly IAuthorizationManager authorizationManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
         public AccountService(UserManager<User> userManager,
             AppDbContext _dbContext,
             IAuthorizationManager authorizationManager,
             IConfiguration _configuration,
-            IMapper mapper)
+            IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             this.userManager = userManager;
             this.authorizationManager = authorizationManager;
             this._dbContext = _dbContext;
             this._configuration = _configuration;
-            this._mapper = mapper;
+            _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<AuthenticationModel> LoginAsync(LoginModel loginModel, CancellationToken cancellationToken)
@@ -70,9 +72,10 @@ namespace Application.Services
             }
             var authSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["JWTSettings:TokenKey"]));
 
+            var expireAt = DateTime.Now.AddMinutes(20);
             var token = new JwtSecurityToken(
                 claims: authClaims,
-                expires: DateTime.UtcNow.AddMinutes(20),
+                expires: expireAt,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256));
 
             IdentityModelEventSource.ShowPII = true;
@@ -82,14 +85,34 @@ namespace Application.Services
             var jwtTOken = new JwtSecurityTokenHandler().WriteToken(token);
 
             var refreshToken = await GenerateRefreshToken(user, null);
+            var httpContext = _httpContextAccessor.HttpContext;
+            if (httpContext != null)
+            {
+               
+                httpContext.Response.Cookies.Append("jwtTOken", jwtTOken, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true, // Set to true if using HTTPS
+                    Expires = expireAt
+                });
+
+                httpContext.Response.Cookies.Append("refreshToken", refreshToken.Token, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true, // Set to true if using HTTPS
+                    Expires = DateTime.Now.AddHours(8)
+                });
+            }
+
             var response = new AuthenticationModel()
             {
                 Token = jwtTOken,
                 RefreshToken = refreshToken.Token,
-                ExpiresAt = token.ValidTo,
+                ExpiresAt = expireAt,
                 UserData = userData!,
                 UserRole = userRoles.FirstOrDefault()!
             };
+          
 
             return response;
         }
@@ -99,13 +122,14 @@ namespace Application.Services
 
             var token = new JwtSecurityToken(
                 claims: authClaims,
-                expires: DateTime.UtcNow.AddMinutes(20),
+                expires: DateTime.Now.AddMinutes(20),
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256));
 
             return token;
         }
         public async Task<AuthenticationModel> RefreshTokenAsync(TokenRequestModel tokenRequest)
         {
+            var token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
             var claimsPrincipal = GetPrincipalFromExpiredToken(tokenRequest.Token);
             var userId = claimsPrincipal.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).Select(x => x.Value).FirstOrDefault();
             var user = await _dbContext.Users.FindAsync(Guid.Parse(userId!));
@@ -129,6 +153,24 @@ namespace Application.Services
             var newJwtToken = GenerateJwtToken(claimsPrincipal.Claims.ToList());
             var newJwtTokenString = new JwtSecurityTokenHandler().WriteToken(newJwtToken);
             var newRefreshToken = await GenerateRefreshToken(user, refreshToken);
+            var httpContext = _httpContextAccessor.HttpContext;
+
+            if (httpContext != null)
+            {
+                httpContext.Response.Cookies.Append("jwtToken", newJwtTokenString, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true, // Set to true if using HTTPS
+                    Expires = DateTime.Now.AddMinutes(20)
+                });
+
+                httpContext.Response.Cookies.Append("refreshToken", newRefreshToken.Token, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true, // Set to true if using HTTPS
+                    Expires = DateTime.Now.AddHours(8)
+                });
+            }
 
             var userData = _mapper.Map<UserModel>(user);
             var userRoles = await userManager.GetRolesAsync(user);

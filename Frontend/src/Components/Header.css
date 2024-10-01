@@ -1,3 +1,7 @@
+* {
+  margin: 0;
+  padding: 0;
+}
 .header {
   display: flex;
   align-items: center;
@@ -68,8 +72,11 @@
   .menu-bars:hover {
     background-color: teal;
   }
+  .nav-menu {
+    width: 100%;
+    left: 0; /* Make the sidebar cover the entire screen */
+  }
 }
-
 /* Mobile-specific icon styles */
 @media (max-width: 480px) {
   .navbar .menu-bars {

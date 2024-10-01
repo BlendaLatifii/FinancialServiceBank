@@ -99,7 +99,12 @@ builder.Services.AddAuthentication(options =>
             ValidateIssuerSigningKey = false,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWTSettings:TokenKey"]))
         };
-    });
+  }).AddCookie(options =>
+   {
+        options.Cookie.HttpOnly = true; // Sigurohuni që cookie të jetë vetëm për serverin
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Përdorimi i cookies për HTTPS
+   });
+
 
 builder.Services.AddHttpContextAccessor();
 

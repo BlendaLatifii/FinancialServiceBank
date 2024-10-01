@@ -34,13 +34,14 @@ namespace Api.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<AuthenticationModel>> Login([FromBody] LoginModel loginModel, CancellationToken cancellationToken)
         {
-            var userModel = await accountService.LoginAsync(loginModel, cancellationToken);
+          var userModel = await accountService.LoginAsync(loginModel, cancellationToken);
    
             return Ok(userModel);
         }
         [HttpPost("RefreshToken")]
         public async Task<IActionResult> RefreshToken([FromBody] TokenRequestModel tokenRequest)
         {
+            var token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
             try
             {
                 var authModel = await accountService.RefreshTokenAsync(tokenRequest);

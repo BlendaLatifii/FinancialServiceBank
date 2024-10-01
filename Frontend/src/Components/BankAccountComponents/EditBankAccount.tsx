@@ -84,7 +84,7 @@ export default function EditBankAccount() {
            label={<label> Account Type</label>}
             placeholder="accountType"
             name="accountType"
-             onchange={handleChange}
+             onChange={handleChange}
           />
           </div>
           <div className="col-md-6-w-100%">
@@ -92,7 +92,7 @@ export default function EditBankAccount() {
            label={<label> Account Description</label>}
             placeholder="Account Description"
             name="accountDescription"
-            onchange={handleChange}
+            onChange={handleChange}
           />
           </div>
           <div className="col-md-6-w-100%">
@@ -100,7 +100,7 @@ export default function EditBankAccount() {
            label={<label> Tarifa Mirembajtese</label>}
             placeholder="Tarifa Mirembajtese"
             name="tarifaMirembajtese"
-            onchange={handleChange}
+            onChange={handleChange}
           />
           </div>
         <br/>  

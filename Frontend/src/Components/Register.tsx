@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AuthService } from '../services/AuthService';
 import { StateOfClient } from '../interfaces/StateOfClient';
 import { CityOfClient } from '../interfaces/CityOfClient';
+import { RegisterModel } from '../interfaces/register-model';
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -37,8 +38,8 @@ export default function Register() {
         email:formData.email,
         password: formData.password,
         personalNumberId: formData.personalNumberId,
-        middleName: formData.middleName,
-      }
+        middleName: formData.middleName
+      } 
       const response = await AuthService.Register(body);
        setRegistered(true);
        navigate("/");

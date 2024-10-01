@@ -80,13 +80,13 @@ export default function EditTypesOfCreditCards() {
           label={<label>Name</label>}
             placeholder="name"
             name="name"
-             onchange={handleChange}
+             onChange={handleChange}
           />
           <MyTextInput fluid
           label={<label>Description</label>}
             placeholder="description"
             name="description"
-             onchange={handleChange}
+             onChange={handleChange}
           />
 
            <Button floated="right" disabled={!isValid}  positive type="submit" content="Submit" style={{ backgroundColor: "rgb(32 76 60)", color: "#fff" }} />

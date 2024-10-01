@@ -14,6 +14,16 @@ export default function MyProfile() {
     const [creditCards, setCreditCards] = useState<CreditCardsModel[]>([]);
     const [transactions, setTransactions] = useState<TransactionModel[]>([]);
     const [loans, setLoans] = useState<LoanModel[]>([]);
+    const getTransactionType = (type:any) => {
+        switch (type) {
+          case 1:
+            return 'Deposite';
+          case 2:
+            return 'WithDrawal';
+          default:
+            return 'Transfer';
+        }
+      };
     useEffect(() => {
         const fetchUsers = async () => {
             try {
@@ -165,12 +175,13 @@ export default function MyProfile() {
         right: '20px',
         fontSize: '1.5em',
         color: '#004080'}} />
+        
                             <h2 style={styles.cardTitle}>Transaction Details</h2>
                             {transactions.map(transaction => (
                                 <div key={transaction.id} style={styles.details}>
-                                    <p><strong>Transaction Type:</strong> {transaction.transactionType}</p>
+                                    <p><strong>Transaction Type:</strong> {getTransactionType(transaction.transactionType) }</p>
                                     <p><strong>Amount:</strong> ${transaction.transactionAmount}</p>
-                                    <p><strong>Destination Account:</strong> {transaction.destinationClientBankAccount!}</p>
+                                    <p><strong>Destination Account:</strong> {transaction.destinationClientBankAccountId!}</p>
                                     <hr/>
                                 </div>
                             ))}

@@ -27,16 +27,14 @@ namespace Application.Services
         public async Task<List<UserModel>> GetAllUsersAsync(CancellationToken cancellationToken)
         {
             var users = await _dbContext.Users.ToListAsync(cancellationToken);
-
             var usermodel = _mapper.Map<List<UserModel>>(users);
             return usermodel;
-
-
         }
 
         public async Task<UserModel> AddOrEditUserAsync(UserModel model, CancellationToken cancellationToken)
         {
             var user = new User();
+            Guid? userId = _authorizationManager.GetUserId();
 
             if (!model.Id.HasValue)
             {
