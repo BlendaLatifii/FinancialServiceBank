@@ -160,14 +160,12 @@ namespace Application.Services
                 httpContext.Response.Cookies.Append("jwtToken", newJwtTokenString, new CookieOptions
                 {
                     HttpOnly = true,
-                    Secure = true, // Set to true if using HTTPS
                     Expires = DateTime.Now.AddMinutes(20)
                 });
 
                 httpContext.Response.Cookies.Append("refreshToken", newRefreshToken.Token, new CookieOptions
                 {
                     HttpOnly = true,
-                    Secure = true, // Set to true if using HTTPS
                     Expires = DateTime.Now.AddHours(8)
                 });
             }

@@ -12,10 +12,12 @@ import { BranchService } from "../../services/BranchService";
 import Header from "../Header";
 import Footer from "../Footer";
 import { AuthService } from "../../services/AuthService";
+import { UserService } from "../../services/UsersService";
 
 
 export default function EditClientAccount() {
  const { id } = useParams<{ id: string}>();
+ const [accountSelectList, setAccountSelectList] = useState<SelectListItem[]>([]);
  const [accountTypeSelectList, setAccountTypeSelectList] = useState<SelectListItem[]>([]);
  const [branchSelectList, setBranchSelectList] = useState<SelectListItem[]>([]);
  const [values, setValues] = useState<ClientBankAccountModel>({
@@ -45,6 +47,7 @@ export default function EditClientAccount() {
       }
     };
     fetchBranch();
+    fetchAccount();
     fetchAccountTypes();
     fetchData();
     if (id) {
@@ -76,6 +79,18 @@ export default function EditClientAccount() {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
   };
+  const fetchAccount = async () => {
+    try {
+      const response = await UserService.GetSelectList(); 
+      setAccountSelectList(response.map((item,i) => ({
+        key: i,
+        value: item.name,
+        text: item.name
+      } as SelectListItem)).filter(x=> x.text != '' && x.text != null)); 
+    } catch (error) {
+      console.error('Error fetching account types:', error);
+    }
+  };
 
   const fetchAccountTypes = async () => {
     try {
@@ -91,6 +106,7 @@ export default function EditClientAccount() {
       console.error('Error fetching account types:', error);
     }
   };
+
   const fetchBranch = async () => {
     try {
       const response = await BranchService.GetSelectList(); 
@@ -126,13 +142,25 @@ export default function EditClientAccount() {
             <Form className='ui form' style={{ backgroundColor: "#f9f9f9", padding: "20px" }} onSubmit={handleSubmit} autoComplete="off">
               
                 <div className="col-md-6-w-100%">
-                  <MyTextInput
-                  label={<label><i className="fas fa-user"></i> Personal Number</label>}
-                    placeholder="Personal Number"
-                    name="personalNumber"
-                    onChange={handleChange}
-                    style={{ marginBottom: "15px" }}
-                  />
+                
+                  {/* //label={<label><i className="fas fa-user"></i> Personal Number</label>}
+                   // placeholder="Personal Number"
+                   // name="personalNumber"
+                   // onChange={handleChange}
+                   // style={{ marginBottom: "15px" }} */}
+                   <label htmlFor="personalNumber">PersonalNumber:</label>
+                   <select
+                     style={{ padding: "5px", margin: "5px" }}
+                     className="form-control"
+                     id="personalNumber"
+                     name="personalNumber"
+                     value={values.personalNumber!}
+                     onChange={handleChange}
+                   >
+                     <option value="" disabled>Select PersonalNumber</option>
+                     {accountSelectList.map((x)=>
+                       (<option key={x.key} value={x.value}>{x.text}</option>))}
+                   </select>
                 </div>
                 <div className="col-md-6-w-100%">
                   <MyTextInput

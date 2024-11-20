@@ -138,5 +138,59 @@ namespace Application.Services
                await _dbContext.SaveChangesAsync(cancellationToken);
             }
         }
+
+        public async Task<List<ListItemModel>> GetUsersSelectListAsync(CancellationToken cancellationToken)
+        {
+            List<ListItemModel> model;
+            const string AdminRole = "Admin";
+            const string MemberRole = "Member";
+            Guid? userId = _authorizationManager.GetUserId();
+
+            if (userId is null)
+            {
+                throw new UnauthorizedAccessException("User is not authenticated.");
+            }
+            var user = await _userManager.FindByIdAsync(userId.Value.ToString());
+
+            if (user == null)
+            {
+                throw new UnauthorizedAccessException("User not found.");
+            }
+            // Merr rolet e përdoruesit nga userManager
+            var userRoles = await _userManager.GetRolesAsync(user);
+
+            if (userRoles == null || !userRoles.Any())
+            {
+                throw new UnauthorizedAccessException("User has no roles assigned.");
+            }
+
+            if (userRoles.Contains(AdminRole))
+            {
+                model = await _dbContext.Users
+                    .Select(x => new ListItemModel
+                    {
+                        Id = x.Id,
+                        Name = x.PersonalNumberId
+                    })
+                    .ToListAsync(cancellationToken);
+            }
+            else if (userRoles.Contains(MemberRole))
+            {
+                model = await _dbContext.Users
+                    .Where(x => x.Id == userId.Value)
+                    .Select(x => new ListItemModel
+                    {
+                        Id = x.Id,
+                        Name = x.PersonalNumberId
+                    })
+                    .ToListAsync(cancellationToken);
+            }
+            else
+            {
+                model = new List<ListItemModel>();
+            }
+
+            return model;
+        }
     }
 }

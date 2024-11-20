@@ -7,7 +7,6 @@ export class BankAccountService {
     public static async DeleteBankAcc(id: string): Promise<void> {
       var result = await axios.delete(`${BankAccountService.baseUrl}/${id}`);
     }
-  
     public static async GetAllBankAcc(): Promise<BankAccountModel[]> {
       const result = await axios.get(BankAccountService.baseUrl);
       return result.data;
@@ -16,7 +15,6 @@ export class BankAccountService {
         const result = await axios.get(`${BankAccountService.baseUrl}/${id}`);
         return result.data;
     }
-
    public static async EditOrAddBankAcc(model: BankAccountModel): Promise<void> {
     const result = await axios.post(`${BankAccountService.baseUrl}`, model);
   }

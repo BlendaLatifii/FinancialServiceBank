@@ -56,12 +56,10 @@ export default function EditBankAccount() {
   function sendToOverview(){
    navigate('/AccountTable');
   }
-
   const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value })
   };
-
   return (
     <>
       <Header/>

@@ -2,6 +2,7 @@
 using Domain.Interfaces;
 using Domain.Models;
 using Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,13 @@ namespace Api.Controllers
             var users = await _userService.GetAllUsersAsync(cancellationToken);
 
             return Ok(users);
+        }
+        [AllowAnonymous]
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetUsersSelectListAsync(CancellationToken cancellationToken)
+        {
+            var model = await _userService.GetUsersSelectListAsync(cancellationToken);
+            return Ok(model);
         }
 
         [HttpGet("{id}")]
