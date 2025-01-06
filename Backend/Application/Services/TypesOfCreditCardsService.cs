@@ -39,23 +39,25 @@ namespace Application.Services
             {
                 throw new UnauthorizedAccessException("User is not authenticated.");
             }
+            TypesOfCreditCards typesOfCreditCards = new TypesOfCreditCards();
             if (model.Id == null )
             {
-                var newCard = new TypesOfCreditCards()
-                {
-                    Name = model.Name,
-                    Description = model.Description,
-                    UserId = userId ?? Guid.Empty
-                };
-                await appDbContext.TypesOfCreditCards.AddAsync(newCard, cancellationToken);
-                await appDbContext.SaveChangesAsync(cancellationToken);
+                /* var newCard = new TypesOfCreditCards()
+                 {
+                     Name = model.Name,
+                     Description = model.Description,
+                   */
+                typesOfCreditCards.UserId = userId ?? Guid.Empty;
+                //};
+               await appDbContext.TypesOfCreditCards.AddAsync(typesOfCreditCards, cancellationToken);
+              //  await appDbContext.SaveChangesAsync(cancellationToken);
 
-                return await GetTypesOfCreditCardsById(newCard.Id, cancellationToken);
+              //  return await GetTypesOfCreditCardsById(newCard.Id, cancellationToken);
             }
             else
             {
-                var existingCard = await appDbContext.TypesOfCreditCards.FindAsync(model.Id);
-                if (existingCard == null)
+                typesOfCreditCards = await appDbContext.TypesOfCreditCards.FindAsync(model.Id);
+               /* if (existingCard == null)
                 {
                     throw new AppBadDataException();
                 }
@@ -70,7 +72,13 @@ namespace Application.Services
                     Name = model.Name,
                     Description = model.Description
                 };
+                */
+
             }
+            typesOfCreditCards.Name = model.Name;
+            typesOfCreditCards.Description = model.Description;
+            await appDbContext.SaveChangesAsync(cancellationToken);
+            return await GetTypesOfCreditCardsById(typesOfCreditCards.Id, cancellationToken);
         }
         public async Task<List<ListItemModel>> GetTypesOfCreditCardsSelectListAsync(CancellationToken cancellationToken)
         {

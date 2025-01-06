@@ -90,7 +90,7 @@ namespace Application.Services
             ClientBankAccount? destinationAccount = null;
 
             decimal prevousAmount = 0;
-            TranType? previousType = null;
+            TransactionType? previousType = null;
 
             if (!string.IsNullOrEmpty(model.SourceClientBankAccount))
             {
@@ -143,7 +143,7 @@ namespace Application.Services
 
             switch (model.TransactionType)
             {
-                case TranType.Deposit:
+                case TransactionType.Deposit:
                     if (destinationAccount == null)
                         throw new Exception("Destination account is required for a deposit.");
                     destinationAccount.CurrentBalance += model.TransactionAmount;
@@ -151,7 +151,7 @@ namespace Application.Services
                     _context.ClientBankAccounts.Update(destinationAccount);
                     break;
 
-                case TranType.WithDrawal:
+                case TransactionType.WithDrawal:
                     
                     if (sourceAccount == null)
                         throw new Exception("Source account is required for a withdrawal.");
@@ -163,7 +163,7 @@ namespace Application.Services
                     sourceAccount.DateLastUpdated = DateTime.Now;
                     break;
 
-                case TranType.Transfer:
+                case TransactionType.Transfer:
                     if (sourceAccount == null || destinationAccount == null)
                         throw new Exception("Both source and destination accounts are required for a transfer.");
 
@@ -186,19 +186,19 @@ namespace Application.Services
             {
                 switch (previousType)
                 {
-                    case TranType.Deposit:
+                    case TransactionType.Deposit:
 
                         destinationAccount.CurrentBalance -= prevousAmount;
                         destinationAccount.DateLastUpdated = DateTime.Now;
                         break;
 
-                    case TranType.WithDrawal:
+                    case TransactionType.WithDrawal:
 
                         sourceAccount.CurrentBalance += prevousAmount;
                         sourceAccount.DateLastUpdated = DateTime.Now;
                         break;
 
-                    case TranType.Transfer:
+                    case TransactionType.Transfer:
 
                         sourceAccount.CurrentBalance += prevousAmount;
                         destinationAccount.CurrentBalance -= prevousAmount;
@@ -233,7 +233,7 @@ namespace Application.Services
 
             switch (transaction.TransactionType)
             {
-                case TranType.Deposit:
+                case TransactionType.Deposit:
                     if (destinationAccount != null)
                     {
                         destinationAccount.CurrentBalance -= transaction.TransactionAmount;
@@ -242,7 +242,7 @@ namespace Application.Services
                     }
                     break;
 
-                case TranType.WithDrawal:
+                case TransactionType.WithDrawal:
                     if (sourceAccount != null)
                     {
                         sourceAccount.CurrentBalance += transaction.TransactionAmount;
@@ -251,7 +251,7 @@ namespace Application.Services
                     }
                     break;
 
-                case TranType.Transfer:
+                case TransactionType.Transfer:
                     if (sourceAccount != null && destinationAccount != null)
                     {
                         sourceAccount.CurrentBalance += transaction.TransactionAmount;

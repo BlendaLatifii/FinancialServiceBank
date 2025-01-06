@@ -10,7 +10,7 @@ namespace Domain.Entities
         public TranStatus TransactionStatus { get; set; }
         public Guid? SourceClientBankAccountId { get; set; }
         public Guid? DestinationClientBankAccountId { get; set; }
-        public TranType TransactionType { get; set; }
+        public TransactionType TransactionType { get; set; }
         public DateTime TransactionDate { get; set; } = DateTime.UtcNow;
         public DateTime TransactionDateUpdated { get; set; } = DateTime.UtcNow;
         public User User{ get; set; } = default!;

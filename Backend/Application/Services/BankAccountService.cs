@@ -67,25 +67,26 @@ namespace Application.Services
             {
                 throw new UnauthorizedAccessException("User is not authenticated.");
             }
+            BankAccount bankAccount = new BankAccount();
             if (model.Id == null || model.Id == Guid.Empty)
             {
-                var newBankAcc = new BankAccount()
-                {
-                    AccountType = model.AccountType,
-                    AccountDescription = model.AccountDescription,
-                    TarifaMirembajtese=model.TarifaMirembajtese,
-                    UserId = userId ?? Guid.Empty
-                };
+                // var newBankAcc = new BankAccount()
+                // {
+                //   AccountType = model.AccountType,
+                // AccountDescription = model.AccountDescription,
+                // TarifaMirembajtese=model.TarifaMirembajtese,
+                bankAccount.UserId = userId ?? Guid.Empty;
+               // };
 
-                await _context.BankAccounts.AddAsync(newBankAcc, cancellationToken);
-                await _context.SaveChangesAsync(cancellationToken);
+                await _context.BankAccounts.AddAsync(bankAccount, cancellationToken);
+              //  await _context.SaveChangesAsync(cancellationToken);
 
-                return await GetBankAccountById(newBankAcc.Id, cancellationToken);
+              //  return await GetBankAccountById(newBankAcc.Id, cancellationToken);
             }
             else
             {
-                var existingBankAcc = await _context.BankAccounts.FindAsync(model.Id);
-                if (existingBankAcc == null)
+                bankAccount = await _context.BankAccounts.FindAsync(model.Id);
+               /* if (existingBankAcc == null)
                 {
                     throw new AppBadDataException();
                 }
@@ -102,8 +103,15 @@ namespace Application.Services
                     AccountType = existingBankAcc.AccountType,
                     AccountDescription = existingBankAcc.AccountDescription,
                     TarifaMirembajtese=existingBankAcc.TarifaMirembajtese
-                };
+                };*/
             }
+            bankAccount.AccountType=model.AccountType;
+            bankAccount.AccountDescription=model.AccountDescription;
+            bankAccount.TarifaMirembajtese = model.TarifaMirembajtese;
+            await _context.SaveChangesAsync(cancellationToken);
+            return await GetBankAccountById(bankAccount.Id, cancellationToken);
+            
+
         }
 
 

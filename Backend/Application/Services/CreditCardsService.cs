@@ -51,7 +51,7 @@ namespace Application.Services
             if (clientAccount == null)
             {
                 throw new Exception("Client not found with the provided Account Number.");
-            }
+            } 
             if (!model.Id.HasValue)
             {
                 var newCard = new CreditCards()

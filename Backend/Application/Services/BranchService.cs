@@ -70,27 +70,16 @@ namespace Application.Services
             {
                 throw new UnauthorizedAccessException("User is not authenticated.");
             }
+            Branch branch = new Branch();
 
             if (model.BranchId == null || model.BranchId == Guid.Empty)
             {
-                var newBranch = new Branch()
-                {
-                    BranchName = model.BranchName,
-                    Address = model.Address,
-                    PhoneNumber = model.PhoneNumber,
-                    Opened = model.Opened,
-                    UserId = userId ?? Guid.Empty
-                };
-
-                await _context.Branches.AddAsync(newBranch, cancellationToken);
-                await _context.SaveChangesAsync(cancellationToken);
-
-                return await GetBranchById(newBranch.BranchId, cancellationToken);
+                await _context.Branches.AddAsync(branch, cancellationToken);
             }
             else
             {
-                var existingBranch = await _context.Branches.FindAsync(model.BranchId);
-                if (existingBranch == null)
+                branch = await _context.Branches.FindAsync(model.BranchId);
+             /*   if (existingBranch == null)
                 {
                     throw new AppBadDataException();
                 }
@@ -110,8 +99,18 @@ namespace Application.Services
                     PhoneNumber = existingBranch.PhoneNumber,
                     Opened = existingBranch.Opened,
                     UserId = existingBranch.UserId
-                };
+                }; */
             }
+           
+            branch.BranchName = model.BranchName;
+            branch.Address = model.Address;
+            branch.PhoneNumber = model.PhoneNumber; 
+            branch.Opened = model.Opened;
+            branch.UserId = (Guid)userId;
+
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return await GetBranchById(branch.BranchId, cancellationToken);
         }
 
         public async Task DeleteBranch(Guid id, CancellationToken cancellationToken)

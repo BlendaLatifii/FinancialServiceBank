@@ -9,7 +9,7 @@ namespace Domain.Models
 {
     public class TransactionTypePercentageModel
     {
-        public TranType TransactionType { get; set; }
+        public TransactionType TransactionType { get; set; }
         public int Count { get; set; }
         public double Percentage { get; set; }
     }

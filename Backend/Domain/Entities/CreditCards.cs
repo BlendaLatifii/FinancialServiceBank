@@ -23,7 +23,7 @@ namespace Domain.Entities
         private static string GenerateCvv()
         {
             Random rnd = new Random();
-            return rnd.Next(100, 999).ToString(); 
+            return rnd.Next(100, 999).ToString();
         }
 
     }

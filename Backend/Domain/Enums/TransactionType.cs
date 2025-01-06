@@ -1,6 +1,6 @@
 ﻿namespace Domain.Enums
 {
-        public enum TranType
+        public enum TransactionType
         {
             Transfer,
             Deposit,

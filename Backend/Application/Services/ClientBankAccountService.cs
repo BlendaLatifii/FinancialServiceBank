@@ -66,9 +66,18 @@ namespace Application.Services
             {
                 throw new UnauthorizedAccessException("User is not authenticated.");
             }
+            ClientBankAccount clientBankAccount= new ClientBankAccount();
             if (!model.Id .HasValue)
             {
-                var newBankAcc = new ClientBankAccount()
+                clientBankAccount.DateCreated = DateTime.Now;
+                clientBankAccount.DateLastUpdated = DateTime.Now;
+                clientBankAccount.CreatedByUserId = userId ?? Guid.Empty;
+
+
+
+                await _context.ClientBankAccounts.AddAsync(clientBankAccount, cancellationToken);
+
+           /*     var newBankAcc = new ClientBankAccount()
                 {
                     BankAccountId = model.BankAccountId,
                     BranchId = model.BranchId,
@@ -83,12 +92,15 @@ namespace Application.Services
                 await _context.ClientBankAccounts.AddAsync(newBankAcc, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
 
-                return await GetClientAccountById(newBankAcc.Id, cancellationToken);
+                return await GetClientAccountById(newBankAcc.Id, cancellationToken); */
             }
             else
             {
-                var existingBankAcc = await _context.ClientBankAccounts.FindAsync(model.Id);
-                if (existingBankAcc == null)
+                 clientBankAccount = await _context.ClientBankAccounts.FindAsync(model.Id);
+                clientBankAccount.DateLastUpdated = DateTime.Now;
+                clientBankAccount.LastUpdatedByUserId = userId ?? Guid.Empty;
+
+              /*  if (existingBankAcc == null)
                 {
                     throw new AppBadDataException();
                 }
@@ -110,8 +122,16 @@ namespace Application.Services
                     CurrentBalance = existingBankAcc.CurrentBalance,
                     DateCreated = existingBankAcc.DateCreated,
                     DateLastUpdated = existingBankAcc.DateLastUpdated,
-            };
+            };*/
             }
+            clientBankAccount.BankAccountId= model.BankAccountId;
+            clientBankAccount.BranchId= model.BranchId;
+            clientBankAccount.CurrentBalance= model.CurrentBalance;
+            clientBankAccount.UserId = clientUserId;
+
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return await GetClientAccountById(clientBankAccount.Id, cancellationToken);
         }
         public async Task<List<ClientBankAccountModel>> GetByPersonalNumberAsync(string personalNumber, CancellationToken cancellationToken)
         {

@@ -11,7 +11,7 @@ namespace Domain.Models
         public Guid? DestinationClientBankAccountId { get; set; }
         public string? SourceClientBankAccount { get; set; }
         public string? DestinationClientBankAccount { get; set; }
-        public TranType TransactionType { get; set; }
+        public TransactionType TransactionType { get; set; }
         public DateTime? TransactionDate { get; set; }
         public DateTime? TransactionDateUpdated { get; set; }
     }
