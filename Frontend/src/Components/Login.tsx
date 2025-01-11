@@ -28,7 +28,7 @@ function Login() {
 
     if(AuthService.role == "Member" || AuthService.role == "Admin"){
       setTimeout(()=>{
-        navigete("/HomePage");
+        navigete("/");
       },2000)
     }
 

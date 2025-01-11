@@ -42,7 +42,7 @@ export default function Register() {
       } 
       const response = await AuthService.Register(body);
        setRegistered(true);
-       navigate("/");
+       navigate("/Login");
     } catch (error) {
       console.error('Error registering user:', error);
     }
@@ -128,7 +128,7 @@ export default function Register() {
 
             <p>
                     Already a member?{' '}
-                    <Link to="/" className="link-info">
+                    <Link to="/Login" className="link-info">
                       Log in
                     </Link>
                   </p>

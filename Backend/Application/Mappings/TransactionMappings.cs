@@ -15,8 +15,8 @@ namespace Application.Mappings
                .ForMember(x => x.TransactionAmount, y => y.MapFrom(x => x.TransactionAmount))
                .ForMember(x => x.SourceClientBankAccountId, y => y.MapFrom(x => x.SourceClientBankAccountId))
                .ForMember(x => x.DestinationClientBankAccountId, y => y.MapFrom(x => x.DestinationClientBankAccountId))
-               .ForMember(x => x.SourceClientBankAccount, y => y.MapFrom(x => x.SourceClientBankAccount.AccountNumberGeneratedID))
-               .ForMember(x => x.DestinationClientBankAccount, y => y.MapFrom(x => x.DestinationClientBankAccount.AccountNumberGeneratedID))
+               .ForMember(x => x.SourceClientBankAccount, y => y.MapFrom(x => x.SourceClientBankAccount.ClientBankAccount.AccountNumberGeneratedID))
+               .ForMember(x => x.DestinationClientBankAccount, y => y.MapFrom(x => x.DestinationClientBankAccount.ClientBankAccount.AccountNumberGeneratedID))
                .ForMember(x => x.TransactionType, y => y.MapFrom(x => x.TransactionType))
                .ForMember(x=>x.TransactionDate, y=> y.MapFrom(x=>x.TransactionDate));
 

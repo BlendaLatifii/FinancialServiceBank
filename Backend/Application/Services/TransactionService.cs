@@ -27,8 +27,8 @@ namespace Application.Services
         {
             var transactions = await _context.Transactions
                 .Include(x => x.User)
-                .Include(x=> x.SourceClientBankAccount)
-                .Include(x=> x.DestinationClientBankAccount)
+                .Include(x => x.SourceClientBankAccount.ClientBankAccount)
+                .Include(x => x.DestinationClientBankAccount.ClientBankAccount)
                 .ToListAsync(cancellationToken);
 
             var transactionmodel = mapper.Map<List<TransactionModel>>(transactions);
@@ -44,8 +44,8 @@ namespace Application.Services
             var transaction = await _context.Transactions
                 .Where(x => x.Id == id)
                 .Include(x => x.User)
-                .Include(x=> x.SourceClientBankAccount)
-                .Include(x=> x.DestinationClientBankAccount)
+                .Include(x => x.SourceClientBankAccount.ClientBankAccount)
+                .Include(x => x.DestinationClientBankAccount.ClientBankAccount)
                 .FirstOrDefaultAsync(cancellationToken);
 
             if (transaction == null)
@@ -62,7 +62,7 @@ namespace Application.Services
        public async Task<List<TransactionModel>> GetByAccountNumberAsync(string accountNumber, CancellationToken cancellationToken)
         {
             var clientAccounts = await _context.Transactions
-                .Where(x => x.SourceClientBankAccount.AccountNumberGeneratedID == accountNumber)
+                .Where(x => x.SourceClientBankAccount.ClientBankAccount.AccountNumberGeneratedID == accountNumber)
                 .ToListAsync(cancellationToken);
 
             if (clientAccounts == null)
@@ -214,7 +214,7 @@ namespace Application.Services
 
 
 
-        private async Task RevertTransaction(Transaction transaction, CancellationToken cancellationToken)
+      /*  private async Task RevertTransaction(Transaction transaction, CancellationToken cancellationToken)
         {
             ClientBankAccount sourceAccount = null;
             ClientBankAccount destinationAccount = null;
@@ -266,7 +266,7 @@ namespace Application.Services
             }
 
             await _context.SaveChangesAsync(cancellationToken);
-        }
+        } */
         public async Task DeleteTransaction(Guid id, CancellationToken cancellationToken)
         {
             var transaction = await _context.Transactions

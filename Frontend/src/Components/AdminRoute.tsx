@@ -7,7 +7,7 @@ interface AdminRouteProps {
 }
 
 const AdminRoute: React.FC<AdminRouteProps> = ({ component: Component,...rest }) => {
-  return AuthService.isAdmin() ? <Component {...rest} /> :  <Navigate to="/HomePage" replace />;
+  return AuthService.isAdmin() ? <Component {...rest} /> :  <Navigate to="/" replace />;
 };
 
 export default AdminRoute;

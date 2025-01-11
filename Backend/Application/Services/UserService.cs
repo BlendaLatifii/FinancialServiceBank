@@ -141,28 +141,23 @@ namespace Application.Services
 
         public async Task<List<ListItemModel>> GetUsersSelectListAsync(CancellationToken cancellationToken)
         {
-            List<ListItemModel> model;
+            List<ListItemModel> model= new List<ListItemModel>(); 
             const string AdminRole = "Admin";
             const string MemberRole = "Member";
             Guid? userId = _authorizationManager.GetUserId();
 
             if (userId is null)
             {
-                throw new UnauthorizedAccessException("User is not authenticated.");
+                return model;
             }
             var user = await _userManager.FindByIdAsync(userId.Value.ToString());
 
             if (user == null)
             {
-                throw new UnauthorizedAccessException("User not found.");
+                return model;
             }
             // Merr rolet e përdoruesit nga userManager
             var userRoles = await _userManager.GetRolesAsync(user);
-
-            if (userRoles == null || !userRoles.Any())
-            {
-                throw new UnauthorizedAccessException("User has no roles assigned.");
-            }
 
             if (userRoles.Contains(AdminRole))
             {

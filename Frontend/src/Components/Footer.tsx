@@ -22,7 +22,7 @@ function Footer(){
                 <div className="col-lg-2 col-6 footer-links">
                   <h4>Useful Links</h4>
                   <ul>
-                  <li><Link to="/HomePage">Home</Link></li>
+                  <li><Link to="/">Home</Link></li>
                     <li><Link to="/AboutUs">About us</Link></li>
                     <li><Link to="/Services">Services</Link></li>
                   </ul>

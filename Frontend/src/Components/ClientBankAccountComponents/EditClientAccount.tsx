@@ -71,7 +71,7 @@ export default function EditClientAccount() {
     if(isAdmin){
       navigate('/ClientAccountTable');
     } else{
-      navigate('/HomePage');
+      navigate('/');
     }
   }
 

@@ -73,7 +73,7 @@ export default function LoanForm() {
     if(isAdmin){
       navigate('/LoanTable');
     } else{
-      navigate('/HomePage');
+      navigate('/');
     }
   }
   const typeSelectList = Object.keys(employmentStatus)

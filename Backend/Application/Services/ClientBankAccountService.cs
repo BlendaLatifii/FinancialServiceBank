@@ -77,22 +77,7 @@ namespace Application.Services
 
                 await _context.ClientBankAccounts.AddAsync(clientBankAccount, cancellationToken);
 
-           /*     var newBankAcc = new ClientBankAccount()
-                {
-                    BankAccountId = model.BankAccountId,
-                    BranchId = model.BranchId,
-                    CurrentBalance = model.CurrentBalance,
-                    DateCreated = DateTime.Now,
-                    DateLastUpdated = DateTime.Now,
-                    UserId = clientUserId,
-                    CreatedByUserId = userId ?? Guid.Empty,
-                    LastUpdatedByUserId = userId ?? Guid.Empty
-                };
-
-                await _context.ClientBankAccounts.AddAsync(newBankAcc, cancellationToken);
-                await _context.SaveChangesAsync(cancellationToken);
-
-                return await GetClientAccountById(newBankAcc.Id, cancellationToken); */
+          
             }
             else
             {
@@ -100,29 +85,6 @@ namespace Application.Services
                 clientBankAccount.DateLastUpdated = DateTime.Now;
                 clientBankAccount.LastUpdatedByUserId = userId ?? Guid.Empty;
 
-              /*  if (existingBankAcc == null)
-                {
-                    throw new AppBadDataException();
-                }
-                existingBankAcc.BankAccountId = model.BankAccountId;
-                existingBankAcc.BranchId = model.BranchId;
-                existingBankAcc.CurrentBalance = model.CurrentBalance;
-                existingBankAcc.DateLastUpdated = DateTime.Now;
-                existingBankAcc.LastUpdatedByUserId = userId ?? Guid.Empty;
-
-
-                await _context.SaveChangesAsync(cancellationToken);
-
-                return new ClientBankAccountModel
-                {
-                    Id = existingBankAcc.Id,
-                    UserId = existingBankAcc.UserId,
-                    BankAccountId = existingBankAcc.BankAccountId,
-                    BranchId=existingBankAcc.BranchId,
-                    CurrentBalance = existingBankAcc.CurrentBalance,
-                    DateCreated = existingBankAcc.DateCreated,
-                    DateLastUpdated = existingBankAcc.DateLastUpdated,
-            };*/
             }
             clientBankAccount.BankAccountId= model.BankAccountId;
             clientBankAccount.BranchId= model.BranchId;
@@ -210,30 +172,31 @@ namespace Application.Services
 
             return clientNames;
         }
-        public async Task<List<ListItemModel>> GetClientAccountsSelectListAsync(CancellationToken cancellationToken)
+       /* public async Task<List<ListItemModel>> GetClientAccountsSelectListAsync(CancellationToken cancellationToken)
         {
             List<ListItemModel> model;
             const string AdminRole = "Admin";
             const string MemberRole = "Member";
             Guid? userId = _authorizationManager.GetUserId();
+           
 
-            if (userId is null)
-            {
-                throw new UnauthorizedAccessException("User is not authenticated.");
-            }
+            //  if (userId is null)
+            //  {
+            //    throw new UnauthorizedAccessException("User is not authenticated.");
+            // }
             var user = await userManager.FindByIdAsync(userId.Value.ToString());
 
-            if (user == null)
-            {
-                throw new UnauthorizedAccessException("User not found.");
-            }
+         //   if (user == null)
+           // {
+           //     throw new UnauthorizedAccessException("User not found.");
+            //}
             // Merr rolet e përdoruesit nga userManager
-            var userRoles = await userManager.GetRolesAsync(user);
+         var userRoles = await userManager.GetRolesAsync(user);
 
-            if (userRoles == null || !userRoles.Any())
-            {
-                throw new UnauthorizedAccessException("User has no roles assigned.");
-            }
+           // if (userRoles == null || !userRoles.Any())
+           //{
+           //     throw new UnauthorizedAccessException("User has no roles assigned.");
+            //}
 
             if (userRoles.Contains(AdminRole))
             {
@@ -262,6 +225,56 @@ namespace Application.Services
             }
 
             return model;
+        }*/
+        public async Task<List<ListItemModel>> GetClientAccountsSelectListAsync(CancellationToken cancellationToken)
+        {
+            List<ListItemModel> model = new List<ListItemModel>();
+            const string AdminRole = "Admin";
+            const string MemberRole = "Member";
+
+            Guid? userId = _authorizationManager.GetUserId();
+
+            // Kontrollo nëse përdoruesi është i loguar
+            if (userId == null)
+            {
+                // Kthe listë bosh për përdoruesin jo të loguar
+                return model;
+            }
+
+            var user = await userManager.FindByIdAsync(userId.Value.ToString());
+            if (user == null)
+            {
+                // Kthe listë bosh nëse përdoruesi nuk gjendet
+                return model;
+            }
+
+            // Merr rolet e përdoruesit
+            var userRoles = await userManager.GetRolesAsync(user);
+
+            if (userRoles.Contains(AdminRole))
+            {
+                model = await _context.ClientBankAccounts
+                    .Select(x => new ListItemModel
+                    {
+                        Id = x.Id,
+                        Name = x.AccountNumberGeneratedID
+                    })
+                    .ToListAsync(cancellationToken);
+            }
+            else if (userRoles.Contains(MemberRole))
+            {
+                model = await _context.ClientBankAccounts
+                    .Where(x => x.UserId == userId.Value)
+                    .Select(x => new ListItemModel
+                    {
+                        Id = x.Id,
+                        Name = x.AccountNumberGeneratedID
+                    })
+                    .ToListAsync(cancellationToken);
+            }
+
+            return model;
         }
     }
+          
 }

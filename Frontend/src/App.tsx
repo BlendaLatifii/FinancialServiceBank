@@ -4,7 +4,6 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { AuthService } from "./services/AuthService";
 import "react-toastify/dist/ReactToastify.css";
-import Cookies from "js-cookie";
 import AdminRoute from "./Components/AdminRoute";
 import AuthenticatedRoute from "./Components/AuthenticatedRoute";
 const Header=lazy(()=>import("./Components/Header")); 
@@ -85,13 +84,13 @@ function App() {
         <Route  path="/Dashboard" element={<AdminRoute component={Dashboard}/>}/>
         <Route path="/Header" element={<Header />} />
         <Route path="/Footer" element={<Footer />} />
-        <Route path="/HomePage" element={ <AuthenticatedRoute component={HomePage} />  } />
-        <Route path="/Services"element={<AuthenticatedRoute component={Services} />  } />
+        <Route path="/" element={ <HomePage />  } />
+        <Route path="/Services"element={<Services/>  } />
         <Route path="/MyProfile" element={ <AuthenticatedRoute component={MyProfile} />  } />
-        <Route path="/AboutUs" element={ <AuthenticatedRoute component={AboutUs} /> } />
-        <Route path="/ContactUs" element={ <AuthenticatedRoute component={ContactUs} /> } />
+        <Route path="/AboutUs" element={ <AboutUs/> } />
+        <Route path="/ContactUs" element={ <ContactUs /> } />
         <Route path="/Register" element={<Register />} />
-        <Route path="/" element={<Login/>}/>
+        <Route path="/Login" element={<Login/>}/>
         <Route path="/EditUser/:id" element={<AdminRoute component={EditUser}/>} />
         <Route path="/AddUser" element={<EditUser />} />
        <Route path="/RegisterTable" element={<AdminRoute component={RegisterTable}/>} />
@@ -104,7 +103,7 @@ function App() {
        <Route path="/AccountTable" element={<AdminRoute component={AccountTable}/>}/>
         <Route path="/AddClientAccount" element={<EditClientAccount />} />
         <Route path="/EditClientAccount/:id" element={<AdminRoute component={EditClientAccount}/>} /> 
-        <Route path="/EditClientAccount" element={<AdminRoute component={EditClientAccount}/>} />
+        <Route path="/EditClientAccount" element={<EditClientAccount/>} />
         <Route path="/ClientAccountTable" element={<AdminRoute component={ClientAccountTable}/>}/> 
         <Route path="/EditTypesOfCreditCards/:id" element ={<AdminRoute component={EditTypesOfCreditCards}/>} />
         <Route path="/AddTypesOfCreditCards" element ={<AdminRoute component={EditTypesOfCreditCards}/>} />

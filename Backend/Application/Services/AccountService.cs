@@ -72,7 +72,7 @@ namespace Application.Services
             }
             var authSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["JWTSettings:TokenKey"]));
 
-            var expireAt = DateTime.Now.AddMinutes(20);
+            var expireAt = DateTime.Now.AddMinutes(30);
             var token = new JwtSecurityToken(
                 claims: authClaims,
                 expires: expireAt,
@@ -122,7 +122,7 @@ namespace Application.Services
 
             var token = new JwtSecurityToken(
                 claims: authClaims,
-                expires: DateTime.Now.AddMinutes(20),
+                expires: DateTime.Now.AddMinutes(30),
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256));
 
             return token;
@@ -160,7 +160,7 @@ namespace Application.Services
                 httpContext.Response.Cookies.Append("jwtToken", newJwtTokenString, new CookieOptions
                 {
                     HttpOnly = true,
-                    Expires = DateTime.Now.AddMinutes(20)
+                    Expires = DateTime.Now.AddMinutes(30)
                 });
 
                 httpContext.Response.Cookies.Append("refreshToken", newRefreshToken.Token, new CookieOptions

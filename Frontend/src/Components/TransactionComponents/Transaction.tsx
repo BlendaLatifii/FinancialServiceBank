@@ -121,7 +121,7 @@ export default function Transaction() {
     if(isAdmin){
       navigate('/TransactionTable');
     } else{
-      navigate('/HomePage');
+      navigate('/');
     }
   }
   return (
