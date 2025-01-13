@@ -127,4 +127,63 @@ namespace Domain.Entities
 
 
     }
+
+    public class LoanBuilder
+    {
+        private Loan _loan;
+
+        public LoanBuilder()
+        {
+            _loan = new Loan();
+        }
+
+        public LoanBuilder WithClientBankAccountId(Guid clientBankAccountId)
+        {
+            _loan.ClientBankAccountId = clientBankAccountId;
+            return this;
+        }
+
+        public LoanBuilder WithLoansTypesId(LoanType loanType)
+        {
+            _loan.LoansTypesId = loanType;
+            return this;
+        }
+
+        public LoanBuilder WithLoanAmount(string loanAmount)
+        {
+            _loan.LoanAmount = loanAmount;
+            return this;
+        }
+
+        public LoanBuilder WithIncome(string income)
+        {
+            _loan.Income = income;
+            return this;
+        }
+
+        public LoanBuilder WithEmploymentStatus(EmploymentStatus employmentStatus)
+        {
+            _loan.EmploymentStatus = employmentStatus;
+            return this;
+        }
+
+        public LoanBuilder WithUserId(Guid userId)
+        {
+            _loan.UserId = userId;
+            return this;
+        }
+
+        public LoanBuilder CalculateDerivedFields()
+        {
+            _loan.LoanPeriod = Loan.CalculateLoanPeriod(_loan.LoanAmount, _loan.Income, _loan.EmploymentStatus);
+            _loan.InterestRate = Loan.CalculateAnnualInterestRate(_loan.EmploymentStatus, _loan.Income, _loan.LoanPeriod);
+            _loan.MonthlyPayment = Loan.CalculateMonthlyPayment(_loan.LoanAmount, _loan.InterestRate, _loan.LoanPeriod);
+            return this;
+        }
+
+        public Loan Build()
+        {
+            return _loan;
+        }
+    }
 }
