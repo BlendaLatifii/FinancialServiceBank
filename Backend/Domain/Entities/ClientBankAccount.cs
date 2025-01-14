@@ -23,8 +23,6 @@ namespace Domain.Entities
         public Branch Branch { get; set; } = default!;
         public CreditCards CreditCards { get; set; } = default!;
         public Loan Loans { get; set; } = default!;
-        public List<Transaction> SendTransations { get; set; } = new List<Transaction>();
-        public List<Transaction> RecivedTransations { get; set; } = new List<Transaction>();
 
         private static string GenerateAccountNumber()
         {

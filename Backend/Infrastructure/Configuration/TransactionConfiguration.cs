@@ -9,10 +9,13 @@ namespace Infrastructure.Configuration
         public void Configure(EntityTypeBuilder<Transaction> builder)
         {
             builder.HasKey(x => x.Id);
+
             builder.HasIndex(x => x.TransactionType);
+
             builder.HasOne(x => x.User)
                .WithMany(x => x.Transactions)
               .HasForeignKey(x => x.UserId);
+
             builder.HasOne(x => x.SourceClientBankAccount)
                .WithMany(x => x.SendTransations)
                .HasForeignKey(x => x.SourceClientBankAccountId)

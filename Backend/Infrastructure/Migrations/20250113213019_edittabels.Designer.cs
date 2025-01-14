@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240930154358_editloans")]
-    partial class editloans
+    [Migration("20250113213019_edittabels")]
+    partial class edittabels
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -692,12 +692,12 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Transaction", b =>
                 {
-                    b.HasOne("Domain.Entities.ClientBankAccount", "DestinationClientBankAccount")
+                    b.HasOne("Domain.Entities.CreditCards", "DestinationClientBankAccount")
                         .WithMany("RecivedTransations")
                         .HasForeignKey("DestinationClientBankAccountId")
                         .OnDelete(DeleteBehavior.NoAction);
 
-                    b.HasOne("Domain.Entities.ClientBankAccount", "SourceClientBankAccount")
+                    b.HasOne("Domain.Entities.CreditCards", "SourceClientBankAccount")
                         .WithMany("SendTransations")
                         .HasForeignKey("SourceClientBankAccountId")
                         .OnDelete(DeleteBehavior.NoAction);
@@ -798,7 +798,10 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("Loans")
                         .IsRequired();
+                });
 
+            modelBuilder.Entity("Domain.Entities.CreditCards", b =>
+                {
                     b.Navigation("RecivedTransations");
 
                     b.Navigation("SendTransations");

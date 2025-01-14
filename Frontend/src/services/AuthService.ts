@@ -5,6 +5,7 @@ import { UserModel } from "../interfaces/users";
 import { AuthenticationModel } from "../interfaces/auth-model";
 import { RegisterModel } from "../interfaces/register-model";
 import { ToastContainer, toast } from "react-toastify";
+import { ListItemModel } from "../interfaces/list-item-model";
 
 export class AuthService {
   private static BaseUrl = "https://localhost:7254/api/Account/";
@@ -141,5 +142,25 @@ export class AuthService {
   public static isAdmin(): boolean{
     console.log(AuthService.GetUserRole());
      return AuthService.GetUserRole() == 'Admin';
+  }
+
+  public static async DeleteUser(id: string): Promise<void> {
+    var result = await axios.delete(`${AuthService.BaseUrl}/${id}`);
+  }
+
+  public static async GetAllUsers(): Promise<UserModel[]> {
+    const result = await axios.get(AuthService.BaseUrl);
+    return result.data;
+  }
+  public static async GetUserDetails(id: string): Promise<UserModel> {
+    const result = await axios.get(`${AuthService.BaseUrl}/${id}`);
+    return result.data;
+  }
+  public static async EditOrAddUser(model: UserModel): Promise<void> {
+    const result = await axios.post(`${this.BaseUrl}`, model);
+  }
+  public static async GetSelectList(): Promise<ListItemModel[]>{
+    const result = await axios.get<ListItemModel[]>(`${AuthService.BaseUrl}GetUsersSelectList`);
+    return result.data;
   }
 }

@@ -23,7 +23,7 @@ namespace Api.Controllers
         private readonly UserManager<User> userManager;
 
         private readonly IAccountService accountService;
-        public AccountController(UserManager<User> userMenager, 
+        public AccountController(UserManager<User> userMenager,
              IAccountService accountService)
         {
             this.userManager = userMenager;
@@ -34,8 +34,8 @@ namespace Api.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<AuthenticationModel>> Login([FromBody] LoginModel loginModel, CancellationToken cancellationToken)
         {
-          var userModel = await accountService.LoginAsync(loginModel, cancellationToken);
-   
+            var userModel = await accountService.LoginAsync(loginModel, cancellationToken);
+
             return Ok(userModel);
         }
         [HttpPost("RefreshToken")]
@@ -67,7 +67,7 @@ namespace Api.Controllers
         }
 
         [Authorize]
-        [HttpGet ("id")]
+        [HttpGet("id")]
         public async Task<ActionResult<UserModel>> GetCurrentUser()
         {
             var user = await userManager.FindByEmailAsync(User.FindFirstValue(ClaimTypes.Email));
@@ -77,6 +77,42 @@ namespace Api.Controllers
                 Email = user.Email,
             };
 
+        }
+        [HttpGet]
+        public async Task<ActionResult<List<UserModel>>> GetAllUsers(CancellationToken cancellationToken)
+        {
+            var users = await accountService.GetAllUsersAsync(cancellationToken);
+
+            return Ok(users);
+        }
+        [AllowAnonymous]
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetUsersSelectListAsync(CancellationToken cancellationToken)
+        {
+            var model = await accountService.GetUsersSelectListAsync(cancellationToken);
+            return Ok(model);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetUserById([FromRoute] Guid id, CancellationToken cancellationToken)
+        {
+
+            var model = await accountService.GetUserById(id!, cancellationToken);
+            return Ok(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddOrEditUserAsync([FromBody] UserModel model, CancellationToken cancellationToken)
+        {
+            var updateUser = await accountService.AddOrEditUserAsync(model, cancellationToken);
+            return Ok(updateUser);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(CancellationToken cancellationToken, Guid id)
+        {
+            await accountService.DeleteUser(id, cancellationToken);
+            return Ok();
         }
     }
 }

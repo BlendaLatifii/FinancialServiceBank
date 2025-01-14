@@ -15,7 +15,9 @@ namespace Domain.Entities
         public User User { get; set; } = default!;
         public TypesOfCreditCards TypesOfCreditCards { get; set; } = default!;
         public ClientBankAccount ClientBankAccount { get; set; } = default!;
-        
+        public List<Transaction> SendTransations { get; set; } = new List<Transaction>();
+        public List<Transaction> RecivedTransations { get; set; } = new List<Transaction>();
+
         private static DateTime generateValidThru()
         {
             DateTime today = DateTime.Today;

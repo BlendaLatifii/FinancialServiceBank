@@ -12,9 +12,9 @@ import {
 } from "semantic-ui-react";
 import { UserModel } from "../../interfaces/users";
 import axios from "axios";
-import { UserService } from "../../services/UsersService";
 import { Link, useNavigate } from "react-router-dom";
 import Header from "../Header";
+import { AuthService } from "../../services/AuthService";
 
 export default function RegisterTable() {
   const [users, setUsers] = useState<UserModel[]>([]);
@@ -25,7 +25,7 @@ export default function RegisterTable() {
   const navigate =  useNavigate();
   useEffect(() => {
     const fetchData = async () => {
-      const result = await UserService.GetAllUsers();
+      const result = await AuthService.GetAllUsers();
       setUsers(result);
       setFilteredUsers(result);
   }; fetchData();
@@ -50,7 +50,7 @@ export default function RegisterTable() {
 
     async function confirmedDeleteUser(id:string)
     {
-      var result = await UserService.DeleteUser(id);
+      var result = await AuthService.DeleteUser(id);
       setUsers(users.filter((user) => user.id !== id))
       setOpenConfirm(false);
       setDeleteUserId("");

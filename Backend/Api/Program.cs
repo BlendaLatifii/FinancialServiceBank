@@ -115,7 +115,6 @@ builder.Services.AddTransient(s => s.GetService<IHttpContextAccessor>()?.HttpCon
 
 // Add Dependencies here
 
-builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IBranchService, BranchService>();
 builder.Services.AddScoped<ILoanService, LoanService>();
 builder.Services.AddScoped<DbInitialization>();

@@ -62,10 +62,10 @@ namespace Application.Services
             var clientUserId = client.Id;
             Guid? userId = _authorizationManager.GetUserId();
            
-            if (userId is null)
+          if (userId is null)
             {
-                throw new UnauthorizedAccessException("User is not authenticated.");
-            }
+              throw new UnauthorizedAccessException("User is not authenticated.");
+           }
             ClientBankAccount clientBankAccount= new ClientBankAccount();
             if (!model.Id .HasValue)
             {
@@ -172,60 +172,7 @@ namespace Application.Services
 
             return clientNames;
         }
-       /* public async Task<List<ListItemModel>> GetClientAccountsSelectListAsync(CancellationToken cancellationToken)
-        {
-            List<ListItemModel> model;
-            const string AdminRole = "Admin";
-            const string MemberRole = "Member";
-            Guid? userId = _authorizationManager.GetUserId();
-           
-
-            //  if (userId is null)
-            //  {
-            //    throw new UnauthorizedAccessException("User is not authenticated.");
-            // }
-            var user = await userManager.FindByIdAsync(userId.Value.ToString());
-
-         //   if (user == null)
-           // {
-           //     throw new UnauthorizedAccessException("User not found.");
-            //}
-            // Merr rolet e përdoruesit nga userManager
-         var userRoles = await userManager.GetRolesAsync(user);
-
-           // if (userRoles == null || !userRoles.Any())
-           //{
-           //     throw new UnauthorizedAccessException("User has no roles assigned.");
-            //}
-
-            if (userRoles.Contains(AdminRole))
-            {
-                model = await _context.ClientBankAccounts
-                    .Select(x => new ListItemModel
-                    {
-                        Id = x.Id,
-                        Name = x.AccountNumberGeneratedID
-                    })
-                    .ToListAsync(cancellationToken);
-            }
-            else if (userRoles.Contains(MemberRole))
-            {
-                model = await _context.ClientBankAccounts
-                    .Where(x => x.UserId == userId.Value)
-                    .Select(x => new ListItemModel
-                    {
-                        Id = x.Id,
-                        Name = x.AccountNumberGeneratedID
-                    })
-                    .ToListAsync(cancellationToken);
-            }
-            else
-            {
-                model = new List<ListItemModel>();
-            }
-
-            return model;
-        }*/
+      
         public async Task<List<ListItemModel>> GetClientAccountsSelectListAsync(CancellationToken cancellationToken)
         {
             List<ListItemModel> model = new List<ListItemModel>();
@@ -234,21 +181,17 @@ namespace Application.Services
 
             Guid? userId = _authorizationManager.GetUserId();
 
-            // Kontrollo nëse përdoruesi është i loguar
             if (userId == null)
             {
-                // Kthe listë bosh për përdoruesin jo të loguar
                 return model;
             }
 
             var user = await userManager.FindByIdAsync(userId.Value.ToString());
             if (user == null)
             {
-                // Kthe listë bosh nëse përdoruesi nuk gjendet
                 return model;
             }
 
-            // Merr rolet e përdoruesit
             var userRoles = await userManager.GetRolesAsync(user);
 
             if (userRoles.Contains(AdminRole))

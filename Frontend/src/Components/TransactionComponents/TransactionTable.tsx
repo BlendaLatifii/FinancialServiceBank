@@ -28,6 +28,7 @@ export default function TransactionTable() {
   useEffect(()=>{
     const fetchData = async () => {
       const result = await TransactionService.GetAllTransactions();
+      console.log(result,"test");
       setTransactions(result);
       setFilteredTransactions(result);
     };
@@ -54,18 +55,18 @@ export default function TransactionTable() {
     navigate(`/AddTransaction`);
   }
 
-  useEffect(() => {
-    const filtered = transactions.filter(
-      (transaction) =>
-        transaction.sourceClientBankAccount && 
-      transaction.sourceClientBankAccount
-          .toLowerCase()
-          .includes(sourceAccountFilter.toLowerCase()) &&
-        (transactionTypeFilter === "" ||
-          transaction.transactionType === transactionTypeFilter)
-    );
-    setFilteredTransactions(filtered);
-  }, [sourceAccountFilter, transactionTypeFilter, transactions]);
+  // useEffect(() => {
+  //   const filtered = transactions.filter(
+  //     (transaction) =>
+  //       transaction.sourceClientBankAccount && 
+  //     transaction.sourceClientBankAccount
+  //         .toLowerCase()
+  //         .includes(sourceAccountFilter.toLowerCase()) &&
+  //       (transactionTypeFilter === "" ||
+  //         transaction.transactionType === transactionTypeFilter)
+  //   );
+  //   setFilteredTransactions(filtered);
+  // }, [sourceAccountFilter, transactionTypeFilter, transactions]);
 
   
   const transactionTypeOptions = [

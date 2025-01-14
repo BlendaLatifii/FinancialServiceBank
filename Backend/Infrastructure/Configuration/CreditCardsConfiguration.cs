@@ -10,6 +10,7 @@ namespace Infrastructure.Configuration
         public void Configure(EntityTypeBuilder<CreditCards> builder)
         {
             builder.HasKey(x => x.Id);
+
             builder.HasOne(x => x.User)
                .WithMany(x => x.CreditCards)
               .HasForeignKey(x => x.UserId);

@@ -11,6 +11,7 @@ namespace Domain.Interfaces
     {
         Task<ContactUsModel> GetContactById(int Id, CancellationToken cancellationToken);
         Task<List<ContactUsModel>> GetAllContactsAsync(CancellationToken cancellationToken);
+        Task<ContactUsModel> AddContact(ContactUsModel model, CancellationToken cancellationToken);
         Task DeleteContact(int Id, CancellationToken cancellationToken);
     }
 }

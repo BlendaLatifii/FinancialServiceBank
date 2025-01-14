@@ -56,7 +56,7 @@ namespace Application.Services
                 .Select(x => new ListItemModel()
                 {
                     Id = x.BranchId,
-                    Name = x.BranchName
+                    Name = x.Address
                 }).ToListAsync(cancellationToken);
 
             return model;
@@ -79,29 +79,7 @@ namespace Application.Services
             else
             {
                 branch = await _context.Branches.FindAsync(model.BranchId);
-             /*   if (existingBranch == null)
-                {
-                    throw new AppBadDataException();
-                }
-
-                existingBranch.BranchName = model.BranchName;
-                existingBranch.Address = model.Address;
-                existingBranch.PhoneNumber = model.PhoneNumber;
-                existingBranch.Opened = model.Opened;
-
-                await _context.SaveChangesAsync(cancellationToken);
-
-                return new BranchModel
-                {
-                    BranchId = existingBranch.BranchId,
-                    BranchName = existingBranch.BranchName,
-                    Address = existingBranch.Address,
-                    PhoneNumber = existingBranch.PhoneNumber,
-                    Opened = existingBranch.Opened,
-                    UserId = existingBranch.UserId
-                }; */
             }
-           
             branch.BranchName = model.BranchName;
             branch.Address = model.Address;
             branch.PhoneNumber = model.PhoneNumber; 

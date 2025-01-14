@@ -12,7 +12,6 @@ import { BranchService } from "../../services/BranchService";
 import Header from "../Header";
 import Footer from "../Footer";
 import { AuthService } from "../../services/AuthService";
-import { UserService } from "../../services/UsersService";
 
 
 export default function EditClientAccount() {
@@ -81,7 +80,7 @@ export default function EditClientAccount() {
   };
   const fetchAccount = async () => {
     try {
-      const response = await UserService.GetSelectList(); 
+      const response = await AuthService.GetSelectList(); 
       setAccountSelectList(response.map((item,i) => ({
         key: i,
         value: item.name,

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
@@ -45,8 +46,30 @@ namespace Application.Services
             return model;
 
         }
+        public async Task<ContactUsModel> AddContact(ContactUsModel model, CancellationToken cancellationToken)
+        {
+            Guid? userId = _authorizationManager.GetUserId();
 
-        public async Task DeleteContact(int Id, CancellationToken cancellationToken)
+            if (userId is null)
+            {
+                throw new UnauthorizedAccessException("User is not authenticated.");
+            }
+
+            var contact = new ContactUs();
+
+            contact.Name = model.Name;
+            contact.Email = model.Email;
+            contact.Subject = model.Subject;
+            contact.Message = model.Message;
+            contact.UserId = (Guid)userId;
+
+
+            await _context.Contacts.AddAsync(contact);
+            await _context.SaveChangesAsync(cancellationToken);
+            return await GetContactById(contact.Id, cancellationToken);
+        }
+
+            public async Task DeleteContact(int Id, CancellationToken cancellationToken)
         {
             var contact = await _context.Contacts
                  .Where(x => x.Id == Id)

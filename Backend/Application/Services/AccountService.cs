@@ -242,6 +242,170 @@ namespace Application.Services
             await userManager.AddToRoleAsync(user, "Member");
             return result;
         }
+        public async Task<List<UserModel>> GetAllUsersAsync(CancellationToken cancellationToken)
+        {
+            var users = await _dbContext.Users.ToListAsync(cancellationToken);
+            var usermodel = _mapper.Map<List<UserModel>>(users);
+            return usermodel;
+        }
+
+        public async Task<UserModel> AddOrEditUserAsync(UserModel model, CancellationToken cancellationToken)
+        {
+            var user = new User();
+            Guid? userId = authorizationManager.GetUserId();
+
+            if (!model.Id.HasValue)
+            {
+                user = new User
+                {
+                    UserName = model.UserName,
+                    LastName = model.LastName,
+                    Email = model.Email,
+                    MiddleName = model.MiddleName,
+                    PersonalNumberId = model.PersonalNumberId
+                };
+
+                var result = await userManager.CreateAsync(user, model.Password);
+
+                if (!result.Succeeded)
+                {
+                    throw new AppBadDataException();
+                }
+
+            }
+            else
+            {
+                user = await _dbContext.Users
+               .Include(x => x.UserRoles)
+               .Where(x => x.Id == model.Id.Value)
+               .FirstOrDefaultAsync(cancellationToken);
+
+                if (user is null)
+                {
+                    throw new AppBadDataException();
+                }
+
+                var roles = await userManager.GetRolesAsync(user);
+                await userManager.RemoveFromRolesAsync(user, roles);
+
+                if (model.Password != null)
+                {
+                    await userManager.RemovePasswordAsync(user);
+
+                    await userManager.AddPasswordAsync(user, model.Password);
+                }
+
+            }
+
+            user.Email = model.Email;
+            user.LastName = model.LastName;
+            user.UserName = model.UserName;
+            user.MiddleName = model.MiddleName;
+            user.PersonalNumberId = model.PersonalNumberId;
+
+            if (model.Role == Domain.Enums.Role.Admin)
+            {
+                await userManager.AddToRoleAsync(user, "Admin");
+            }
+            else
+            {
+                await userManager.AddToRoleAsync(user, "Member");
+            }
+
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            return model;
+        }
+        public async Task<UserModel> GetUserById(Guid userId, CancellationToken cancellationToken)
+        {
+            var user = await _dbContext.Users
+                .Include(x => x.UserRoles)
+                .Where(x => x.Id == userId)
+                .FirstOrDefaultAsync(cancellationToken);
+
+
+
+            if (user is null)
+            {
+                throw new AppBadDataException();
+            }
+            var roles = await userManager.GetRolesAsync(user);
+            var model = _mapper.Map<UserModel>(user);
+
+            if (roles.Any(x => x == "Admin"))
+            {
+                model.Role = Domain.Enums.Role.Admin;
+            }
+            else
+            {
+                model.Role = Domain.Enums.Role.Member;
+            }
+
+            return model;
+
+        }
+
+        public async Task DeleteUser(Guid userId, CancellationToken cancellationToken)
+        {
+            var user = await _dbContext.Users
+                 .Where(x => x.Id == userId)
+                 .FirstOrDefaultAsync(cancellationToken);
+
+            if (user != null)
+            {
+                _dbContext.Users.Remove(user);
+                await _dbContext.SaveChangesAsync(cancellationToken);
+            }
+        }
+
+        public async Task<List<ListItemModel>> GetUsersSelectListAsync(CancellationToken cancellationToken)
+        {
+            List<ListItemModel> model = new List<ListItemModel>();
+            const string AdminRole = "Admin";
+            const string MemberRole = "Member";
+            Guid? userId = authorizationManager.GetUserId();
+
+            if (userId is null)
+            {
+                return model;
+            }
+            var user = await userManager.FindByIdAsync(userId.Value.ToString());
+
+            if (user == null)
+            {
+                return model;
+            }
+            // Merr rolet e përdoruesit nga userManager
+            var userRoles = await userManager.GetRolesAsync(user);
+
+            if (userRoles.Contains(AdminRole))
+            {
+                model = await _dbContext.Users
+                    .Select(x => new ListItemModel
+                    {
+                        Id = x.Id,
+                        Name = x.PersonalNumberId
+                    })
+                    .ToListAsync(cancellationToken);
+            }
+            else if (userRoles.Contains(MemberRole))
+            {
+                model = await _dbContext.Users
+                    .Where(x => x.Id == userId.Value)
+                    .Select(x => new ListItemModel
+                    {
+                        Id = x.Id,
+                        Name = x.PersonalNumberId
+                    })
+                    .ToListAsync(cancellationToken);
+            }
+            else
+            {
+                model = new List<ListItemModel>();
+            }
+
+            return model;
+        }
     }
 
 }

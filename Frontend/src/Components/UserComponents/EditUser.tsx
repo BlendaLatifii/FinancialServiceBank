@@ -3,7 +3,7 @@
  import { UserModel } from "../../interfaces/users";
  import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { UserService } from "../../services/UsersService";
+import { AuthService } from "../../services/AuthService";
 import { Role } from "../../interfaces/role";
 import Header from "../Header";
 import Footer from "../Footer";
@@ -41,7 +41,7 @@ export default function EditUser() {
       value: +i,
       text: Role[+key]
     })).filter(x=> x.text != '' && x.text != null);
-      const response = await UserService.GetUserDetails(id!);
+      const response = await AuthService.GetUserDetails(id!);
       const userData = response;
       setValues({
         id: userData.id,
@@ -70,7 +70,7 @@ export default function EditUser() {
         password:values.password,
         role: +(values.role?? Role.Member)
       }
-      const response = await axios.post(`https://localhost:7254/api/Users`,model);
+      const response = await axios.post(`https://localhost:7254/api/Account/`,model);
       setRegistred(true);
       navigate("/RegisterTable");
     } catch (error) {

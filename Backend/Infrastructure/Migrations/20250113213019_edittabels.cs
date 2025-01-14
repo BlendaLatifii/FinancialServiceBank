@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Infrastructure.Migrations
 {
-    public partial class editloans : Migration
+    public partial class edittabels : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -389,14 +389,14 @@ namespace Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Transactions_ClientBankAccounts_DestinationClientBankAccountId",
+                        name: "FK_Transactions_CreditCards_DestinationClientBankAccountId",
                         column: x => x.DestinationClientBankAccountId,
-                        principalTable: "ClientBankAccounts",
+                        principalTable: "CreditCards",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Transactions_ClientBankAccounts_SourceClientBankAccountId",
+                        name: "FK_Transactions_CreditCards_SourceClientBankAccountId",
                         column: x => x.SourceClientBankAccountId,
-                        principalTable: "ClientBankAccounts",
+                        principalTable: "CreditCards",
                         principalColumn: "Id");
                 });
 
@@ -560,9 +560,6 @@ namespace Infrastructure.Migrations
                 name: "Contacts");
 
             migrationBuilder.DropTable(
-                name: "CreditCards");
-
-            migrationBuilder.DropTable(
                 name: "Loans");
 
             migrationBuilder.DropTable(
@@ -575,10 +572,13 @@ namespace Infrastructure.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "TypesOfCreditCards");
+                name: "CreditCards");
 
             migrationBuilder.DropTable(
                 name: "ClientBankAccounts");
+
+            migrationBuilder.DropTable(
+                name: "TypesOfCreditCards");
 
             migrationBuilder.DropTable(
                 name: "BankAccounts");

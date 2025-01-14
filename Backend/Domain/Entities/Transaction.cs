@@ -14,7 +14,7 @@ namespace Domain.Entities
         public DateTime TransactionDate { get; set; } = DateTime.UtcNow;
         public DateTime TransactionDateUpdated { get; set; } = DateTime.UtcNow;
         public User User{ get; set; } = default!;
-        public ClientBankAccount? SourceClientBankAccount { get; set; } = default!;
-        public ClientBankAccount? DestinationClientBankAccount { get; set; } = default!;
+        public CreditCards? SourceClientBankAccount { get; set; } = default!;
+        public CreditCards? DestinationClientBankAccount { get; set; } = default!;
     }
 }

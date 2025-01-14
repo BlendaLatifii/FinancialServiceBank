@@ -60,7 +60,7 @@ namespace Application.Services
 
         }
         public async Task<BankAccountModel> CreateOrUpdateBankAccount(BankAccountModel model, CancellationToken cancellationToken)
-        { 
+        {
             Guid? userId = _authorizationManager.GetUserId();
 
             if (userId is null)
@@ -71,7 +71,7 @@ namespace Application.Services
             if (model.Id == null || model.Id == Guid.Empty)
             {
                 bankAccount.UserId = userId ?? Guid.Empty;
-               
+
 
                 await _context.BankAccounts.AddAsync(bankAccount, cancellationToken);
             }
@@ -79,13 +79,11 @@ namespace Application.Services
             {
                 bankAccount = await _context.BankAccounts.FindAsync(model.Id);
             }
-            bankAccount.AccountType=model.AccountType;
-            bankAccount.AccountDescription=model.AccountDescription;
+            bankAccount.AccountType = model.AccountType;
+            bankAccount.AccountDescription = model.AccountDescription;
             bankAccount.TarifaMirembajtese = model.TarifaMirembajtese;
             await _context.SaveChangesAsync(cancellationToken);
             return await GetBankAccountById(bankAccount.Id, cancellationToken);
-            
-
         }
 
 
